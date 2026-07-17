@@ -15,8 +15,11 @@ namespace Game
             if (!LaneRaycaster.TryBreak(board, laneIndex, dir, shooterColor))
                 return false;
 
+            Debug.Log("Hit! Lane: " + laneIndex + ", Direction: " + dir + ", Shooter Color: " + shooterColor);
             remainingCubes--;
             return true;
         }
     }
+
+
 }

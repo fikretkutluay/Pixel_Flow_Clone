@@ -39,7 +39,7 @@ namespace Game
 
                 TrackSample sample = path.Evaluate(s.Distance);
                 s.transform.position = sample.worldPos;
-
+                
                 if (s.HasFiredAt(sample.edge, sample.lane))
                     continue;
 
@@ -54,7 +54,7 @@ namespace Game
                     if (s.IsSpent)
                         RemoveShooter(s);
                 }
-            }
+            } 
         }
 
         private void OnLapCompleted(Shooter s)
