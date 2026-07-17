@@ -10,11 +10,12 @@ namespace Game
         public ColorId[] boardPixels;
         public ColorId[] palette;
         public ShooterDef[] queue;
-
+        public int columnCount = 4;
         public int trackCapacity = 5;
         public int parkCapacity = 5;
         public float trackSpeed;
         public float rescueWindowSeconds = 2f;
+
 
         private void OnValidate()
         {
@@ -59,6 +60,20 @@ namespace Game
                     if (totalAmmo < kvp.Value)
                     {
                         Debug.LogError($"[{name}] color '{kvp.Key}' has {kvp.Value} cubes but only {totalAmmo} ammo in queue");
+                    }
+                }
+
+
+            }
+
+            if (queue != null)
+            {
+                foreach (var shooter in queue)
+                {
+                    if (shooter.column < 0 || shooter.column >= columnCount)
+                    {
+                        Debug.LogError($"[{name}] queue has shooter with column {shooter.column}, " +
+                                        $"but columnCount is {columnCount} (valid: 0..{columnCount - 1})");
                     }
                 }
             }

@@ -9,22 +9,23 @@ namespace Game
         [SerializeField] private float trackSpeed = 3f;
 
         private TrackPath path;
-        private readonly List<Shooter> shooters = new List<Shooter>();
-
-        public void Init(int boardWidth, int boardHeight, float cellSize, Vector3 origin)
+        private BoundedBuffer<Shooter> shooters;
+        
+        public void Init(int boardWidth, int boardHeight, float cellSize, Vector3 origin, int trackCapacity)
         {
             path = new TrackPath(boardWidth, boardHeight, cellSize, origin);
+            shooters = new BoundedBuffer<Shooter>(trackCapacity);
         }
 
-        public bool TryAddShooter(Shooter shooter)
+ 
+        private void Start()
         {
-            shooters.Add(shooter);
-            return true;
+            Init(4, 4, 1f, Vector3.zero, 5);
         }
 
         private void Update()
         {
-            if (path == null) return;
+            if (path == null || shooters == null) return;
 
             for (int i = shooters.Count - 1; i >= 0; i--)
             {
@@ -62,26 +63,27 @@ namespace Game
             Debug.Log($"Lap done. Ammo left: {s.Ammo}");
             RemoveShooter(s);
         }
+        public bool TryAddShooter(Shooter shooter) => shooters.TryAdd(shooter);
 
         private void RemoveShooter(Shooter s)
         {
-            shooters.Remove(s);
+            shooters.TryRemove(s);
             ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
         }
 
         [ContextMenu("Spawn Test Shooter")]
         private void SpawnTestShooter()
         {
+            if (!shooters.HasFreeSlot) { Debug.Log("Track full"); return; }
+            
             GameObject obj = ObjectPooler.Instance.SpawnFromPool("Shooter", Vector3.zero, Quaternion.identity);
             if (obj == null) return;
+            
             Shooter s = obj.GetComponent<Shooter>();
-            s.Init(ColorId.Red, 3);
+            s.Init(ColorId.Red, 3, false);
             TryAddShooter(s);
+            
         }
 
-        private void Start()
-        {
-            Init(4, 4, 1f, Vector3.zero);
-        }
     }
 }

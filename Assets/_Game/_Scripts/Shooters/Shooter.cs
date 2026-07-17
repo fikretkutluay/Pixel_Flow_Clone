@@ -4,9 +4,10 @@ namespace Game
 {
     public class Shooter : MonoBehaviour
     {
+        [SerializeField] private bool isHidden;
+        public bool IsHidden => isHidden;
         [SerializeField] private ColorId color;
         [SerializeField] private int ammo;
-
         public ColorId Color => color;
         public int Ammo => ammo;
         public bool IsSpent => ammo <= 0;
@@ -15,15 +16,20 @@ namespace Game
         public TrackEdge LastFiredEdge { get; set; }
         public int LastFiredLane { get; set; }
 
-        public void Init(ColorId color, int ammo)
+        public void Init(ColorId color, int ammo, bool isHidden)
         {
             this.color = color;
             this.ammo = ammo;
+            this.isHidden = isHidden;
             Distance = 0f;
             LastFiredLane = -1;
             LastFiredEdge = TrackEdge.Bottom;
         }
 
+        public void Reveal()
+        {
+            isHidden = false;
+        }
         public void ConsumeAmmo()
         {
             if (ammo > 0)

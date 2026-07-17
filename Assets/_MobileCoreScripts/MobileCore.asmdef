@@ -2,7 +2,8 @@
     "name": "MobileCore",
     "rootNamespace": "",
     "references": [
-        "GUID:4a67ae9575a9f4a419dd013814f1b3b8"
+        "GUID:4a67ae9575a9f4a419dd013814f1b3b8",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

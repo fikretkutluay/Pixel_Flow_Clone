@@ -67,5 +67,8 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Pixel_Flow_Clone.slnx"
+    "dotnet.defaultSolution": "Pixel_Flow_Clone.slnx",
+    "cSpell.words": [
+        "Scriptable"
+    ]
 }

@@ -125,5 +125,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 690f43ee497b0c742bc9a45f7239aaba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.Shooter
-  color: 0
+  isHidden: 0
+  color: 2
   ammo: 0
