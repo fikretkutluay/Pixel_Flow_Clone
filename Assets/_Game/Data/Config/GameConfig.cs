@@ -9,6 +9,8 @@ namespace Game
         public float boardPhysicalSize = 8f;    
         public float queuePhysicalWidth = 8f;   
         public float queueSlotSpacing = 1f;
-        public Vector3 queueOrigin;             
+        public Vector3 queueOrigin;  
+        public Vector3 parkOrigin;
+        public float parkSlotSpacing = 1f;           
     }
 }

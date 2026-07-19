@@ -16,6 +16,7 @@ namespace Game
         public TrackEdge LastFiredEdge { get; set; }
         public int LastFiredLane { get; set; }
 
+        public bool IsWaitingForPark { get; set; }
         public void Init(ColorId color, int ammo, bool isHidden)
         {
             this.color = color;
@@ -24,6 +25,7 @@ namespace Game
             Distance = 0f;
             LastFiredLane = -1;
             LastFiredEdge = TrackEdge.Bottom;
+            IsWaitingForPark = false;
         }
 
         public void Reveal()
