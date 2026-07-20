@@ -1,5 +1,6 @@
 using UnityEngine;
 using MobileCore;
+using System.Linq;
 
 namespace Game
 {
@@ -20,19 +21,33 @@ namespace Game
             remainingCubes--;
             return true;
         }
-        [ContextMenu("Build Test Board")]
-        private void BuildTestBoard()
+
+        public void Setup(LevelData data, float cellSize)
         {
-            board = new GridManager<CubeCell>(4, 4, 1f, Vector3.zero);
+            board = new GridManager<CubeCell>(data.boardSize.x, data.boardSize.y, cellSize, Vector3.zero);
+            for (int y = 0; y < data.boardSize.y; y++)
+            {
+                for(int x = 0; x < data.boardSize.x; x++)
+                {
+                    int index = y * data.boardSize.x + x;
+                    ColorId pixel = data.boardPixels[index];
 
-            board.SetValue(0, 0, CubeCell.Create(ColorId.Red, false));
-            board.SetValue(1, 0, CubeCell.Create(ColorId.Red, false));
-            board.SetValue(2, 0, CubeCell.Create(ColorId.Blue, false));
-            board.SetValue(3, 0, CubeCell.Create(ColorId.None, true));   // crate
+                    if (pixel == ColorId.Crate)
+                    {
+                        board.SetValue(x,y, CubeCell.Create(ColorId.None, true));
+                    }
+                    else if(pixel == ColorId.None)
+                    {
+                        
+                    }
+                    else
+                    {
+                        board.SetValue(x,y, CubeCell.Create(pixel, false));
+                    }
+                }
+            }
+            remainingCubes = data.boardPixels.Count(p => p != ColorId.None && p != ColorId.Crate);
 
-            remainingCubes = 2;
-
-            Debug.Log("Test board built. Remaining cubes: " + remainingCubes);
         }
     }
 

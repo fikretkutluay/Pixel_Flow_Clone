@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MobileCore;
+using log4net.Core;
+using Unity.Android.Gradle.Manifest;
 namespace Game
 {
     public enum GameState { Loading, Playing, Won, Lost }
@@ -26,6 +28,13 @@ namespace Game
             trackController.OnShooterFinishedLap -= HandleLapCompleted;
         }
 
+        public void StartLevel(LevelData data)
+        {
+            levelData = data;
+            rescueTimers.Clear();
+            currentState = GameState.Playing;
+        }
+
         private void HandleLapCompleted(Shooter shooter)
         {
             if (parkController.TryPark(shooter))
@@ -39,10 +48,7 @@ namespace Game
             rescueTimers[shooter] = levelData.rescueWindowSeconds;
             Debug.Log($"{shooter.name} waiting for park slot — rescue window started.");   // ← yeni
         }
-        private void Start()
-        {
-            currentState = GameState.Playing;
-        }
+  
         private void Update()
         {
             if (currentState != GameState.Playing) return;

@@ -136,18 +136,6 @@ namespace Game
             return -1;
         }
 
-        [ContextMenu("Build Test Queue")]
-        private void BuildTestQueue()
-        {
-            var defs = new ShooterDef[]
-            {
-                new ShooterDef { column = 0, color = ColorId.Green, ammo = 3, isHidden = false, linkedCount = 1 },
-                new ShooterDef { column = 0, color = ColorId.Green, ammo = 3, isHidden = false, linkedCount = 1 },
-            };
-            Init(defs, 4);
-        }
-
-
     }
 
 

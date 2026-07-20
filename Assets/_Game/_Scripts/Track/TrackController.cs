@@ -19,11 +19,6 @@ namespace Game
 
         public bool HasFreeTrackSlot => shooters != null && shooters.HasFreeSlot;
 
-        private void Start()
-        {
-            Init(4, 4, 1f, Vector3.zero, 5);
-        }
-
         private void Update()
         {
             if (path == null || shooters == null) return;

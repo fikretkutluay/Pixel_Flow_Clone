@@ -15,10 +15,6 @@ namespace Game
         {
             parkBuffer = new BoundedBuffer<Shooter>(parkCapacity);
         }
-        private void Start()
-        {
-            Init(1);   // test amaçlı düşük kapasite, deadlock'u kolay tetiklemek için
-        }
         public bool TryPark(Shooter shooter)
         {
             if (!parkBuffer.TryAdd(shooter)) return false;
