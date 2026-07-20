@@ -7,7 +7,10 @@ namespace MobileCore
         public static ObjectPooler Instance;
         [SerializeField] private List<Pool> pools;
         private Dictionary<string, Queue<GameObject>> poolDictionary;
-
+        public int GetAvailableCount(string tag)
+        {
+            return poolDictionary.TryGetValue(tag, out var queue) ? queue.Count : -1;
+        }
         private void Awake()
         {
             if (Instance != null && Instance != this)

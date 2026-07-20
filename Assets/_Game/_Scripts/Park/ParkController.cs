@@ -15,6 +15,15 @@ namespace Game
         {
             parkBuffer = new BoundedBuffer<Shooter>(parkCapacity);
         }
+
+        public void Clear()
+        {
+            if (parkBuffer == null) return;
+            foreach (Shooter s in parkBuffer)
+            {
+                ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
+            }
+        }
         public bool TryPark(Shooter shooter)
         {
             if (!parkBuffer.TryAdd(shooter)) return false;

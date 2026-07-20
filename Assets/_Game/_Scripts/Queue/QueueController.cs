@@ -26,7 +26,11 @@ namespace Game
             if (inputRouter != null)
                 inputRouter.OnTap -= HandleTap;
         }
-
+        public Shooter PeekTopShooter(int column)
+        {
+            if (visible == null || column < 0 || column >= visible.Length) return null;
+            return visible[column].Count > 0 ? visible[column][0] : null;
+        }
         private void HandleTap(Vector2 screenPos)
         {
             Ray ray = Camera.main.ScreenPointToRay(screenPos);
@@ -57,6 +61,19 @@ namespace Game
             for (int col = 0; col < columnCount; col++)
             {
                 FillWindow(col);
+            }
+        }
+
+        public void Clear()
+        {
+            if (visible == null) return;
+            for (int col = 0; col < columnCount; col++)
+            {
+                foreach (Shooter s in visible[col])
+                {
+                    ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
+                }
+                visible[col].Clear();
             }
         }
 

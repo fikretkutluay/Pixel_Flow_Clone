@@ -10,13 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 271bf4ec02b1c314db3e1e139e1a6603, type: 3}
-  m_Name: TestLevelData
+  m_Name: TestNextLevelData
   m_EditorClassIdentifier: Game::Game.LevelData
-  levelID: 1
+  levelID: 2
   boardSize: {x: 4, y: 4}
-  boardPixels: 00000000010000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  palette: 02000000
+  boardPixels: 03000000030000000300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  palette: 0300000003000000030000000200000002000000
   queue:
+  - column: 1
+    color: 3
+    ammo: 1
+    isHidden: 0
+    linkedCount: 1
   - column: 0
     color: 2
     ammo: 1
@@ -24,6 +29,6 @@ MonoBehaviour:
     linkedCount: 1
   columnCount: 4
   trackCapacity: 5
-  parkCapacity: 5
+  parkCapacity: 0
   trackSpeed: 3
   rescueWindowSeconds: 2

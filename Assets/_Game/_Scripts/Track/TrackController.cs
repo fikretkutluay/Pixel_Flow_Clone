@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using MobileCore;
 namespace Game
@@ -17,6 +16,14 @@ namespace Game
             shooters = new BoundedBuffer<Shooter>(trackCapacity);
         }
 
+        public void Clear()
+        {
+            if (shooters == null) return;
+            foreach (Shooter s in shooters)
+            {
+                ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
+            }
+        }
         public bool HasFreeTrackSlot => shooters != null && shooters.HasFreeSlot;
 
         private void Update()
@@ -32,8 +39,6 @@ namespace Game
                 {
                     continue;   // hareket etmiyor, ateş etmiyor, sadece rayı işgal ediyor
                 }
-
-                s.Distance += trackSpeed * Time.deltaTime;
 
                 if (s.Distance >= path.Perimeter)
                 {

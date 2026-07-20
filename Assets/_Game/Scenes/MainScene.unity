@@ -431,6 +431,61 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1135676409
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1135676411}
+  - component: {fileID: 1135676410}
+  m_Layer: 0
+  m_Name: LevelManaer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1135676410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135676409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272da2c091d60434f9712263c6d2791e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.LevelManager
+  boardController: {fileID: 1452927803}
+  trackController: {fileID: 1890879080}
+  queueController: {fileID: 1650600846}
+  parkController: {fileID: 1067469442}
+  gameManager: {fileID: 431223711}
+  config: {fileID: 11400000, guid: edd0adcaaa326024d8887b2b5758d238, type: 2}
+  testLevel: {fileID: 11400000, guid: f8ec785d429054642b2572e768206084, type: 2}
+  currentLevel: {fileID: 0}
+  nextTestLevel: {fileID: 11400000, guid: 4d7bd2a668507384aaa5043d7364b3fc, type: 2}
+  midLevelDelaySeconds: 0.5
+  rescueTestDelaySeconds: 6
+--- !u!4 &1135676411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135676409}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1189894814
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,3 +773,4 @@ SceneRoots:
   - {fileID: 142941643}
   - {fileID: 431223712}
   - {fileID: 1067469443}
+  - {fileID: 1135676411}

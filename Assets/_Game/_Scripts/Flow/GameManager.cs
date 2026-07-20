@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MobileCore;
-using log4net.Core;
-using Unity.Android.Gradle.Manifest;
 namespace Game
 {
     public enum GameState { Loading, Playing, Won, Lost }
@@ -17,6 +15,7 @@ namespace Game
         private GameState currentState;
         private readonly Dictionary<Shooter, float> rescueTimers = new Dictionary<Shooter, float>();
         private readonly List<Shooter> rescuedOrExpired = new List<Shooter>();
+        private readonly List<Shooter> rescueKeysSnapshot = new List<Shooter>();
 
         private void OnEnable()
         {
@@ -35,20 +34,27 @@ namespace Game
             currentState = GameState.Playing;
         }
 
+        public void Clear()
+        {
+            rescueTimers.Clear();
+            rescuedOrExpired.Clear();
+            currentState = GameState.Loading;
+        }
+
         private void HandleLapCompleted(Shooter shooter)
         {
             if (parkController.TryPark(shooter))
             {
                 shooter.IsWaitingForPark = false;
                 trackController.ReleaseShooter(shooter);
-                Debug.Log($"{shooter.name} parked.");   // ← yeni
+                Debug.Log($"{shooter.name} parked.");
                 return;
             }
 
             rescueTimers[shooter] = levelData.rescueWindowSeconds;
-            Debug.Log($"{shooter.name} waiting for park slot — rescue window started.");   // ← yeni
+            Debug.Log($"{shooter.name} waiting for park slot — rescue window started.");
         }
-  
+
         private void Update()
         {
             if (currentState != GameState.Playing) return;
@@ -59,11 +65,14 @@ namespace Game
                 GameEvents.TriggerLevelCompleted();
                 return;
             }
+
             rescuedOrExpired.Clear();
-            foreach (KeyValuePair<Shooter, float> kvp in rescueTimers)
+            rescueKeysSnapshot.Clear();
+            rescueKeysSnapshot.AddRange(rescueTimers.Keys);   // canlı dictionary yerine kopya üzerinde dön
+
+            foreach (Shooter shooter in rescueKeysSnapshot)
             {
-                Shooter shooter = kvp.Key;
-                float timeleft = kvp.Value;
+                float timeleft = rescueTimers[shooter];
 
                 if (parkController.HasFreeSlot)
                 {
@@ -73,6 +82,7 @@ namespace Game
                     rescuedOrExpired.Add(shooter);
                     continue;
                 }
+
                 timeleft -= Time.deltaTime;
                 if (timeleft <= 0)
                 {
@@ -81,8 +91,10 @@ namespace Game
                     GameEvents.TriggerLevelFailed();
                     return;
                 }
-                rescueTimers[shooter] = timeleft;
+
+                rescueTimers[shooter] = timeleft;   // artık güvenli — snapshot üzerinde enumerate ediyoruz
             }
+
             foreach (Shooter shooter in rescuedOrExpired)
             {
                 rescueTimers.Remove(shooter);
