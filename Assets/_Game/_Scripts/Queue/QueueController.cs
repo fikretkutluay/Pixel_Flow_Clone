@@ -13,7 +13,7 @@ namespace Game
         private List<Shooter>[] visible;
         private int columnCount;
 
-        [SerializeField] private PointerRouter inputRouter;   
+        [SerializeField] private PointerRouter inputRouter;
 
         private void OnEnable()
         {
@@ -141,9 +141,8 @@ namespace Game
         {
             var defs = new ShooterDef[]
             {
-            new ShooterDef { column = 0, color = ColorId.Red, ammo = 3, isHidden = false, linkedCount = 1 },
-            new ShooterDef { column = 0, color = ColorId.Blue, ammo = 2, isHidden = false, linkedCount = 1 },
-            new ShooterDef { column = 1, color = ColorId.Red, ammo = 4, isHidden = true, linkedCount = 1 },
+                new ShooterDef { column = 0, color = ColorId.Green, ammo = 3, isHidden = false, linkedCount = 1 },
+                new ShooterDef { column = 0, color = ColorId.Green, ammo = 3, isHidden = false, linkedCount = 1 },
             };
             Init(defs, 4);
         }
