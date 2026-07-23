@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271bf4ec02b1c314db3e1e139e1a6603, type: 3}
+  m_Name: Level_2
+  m_EditorClassIdentifier: Game::Game.LevelData
+  levelID: 1
+  boardSize: {x: 4, y: 4}
+  boardPixels: 00000000030000000000000000000000010000000200000001000000000000000000000001000000000000000000000000000000000000000000000000000000
+  palette: 0300000002000000
+  queue:
+  - column: 0
+    color: 3
+    ammo: 1
+    isHidden: 0
+    linkedCount: 0
+  - column: 1
+    color: 2
+    ammo: 1
+    isHidden: 0
+    linkedCount: 0
+  columnCount: 4
+  trackCapacity: 5
+  parkCapacity: 5
+  trackSpeed: 3
+  rescueWindowSeconds: 2

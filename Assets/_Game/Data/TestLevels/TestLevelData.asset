@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 271bf4ec02b1c314db3e1e139e1a6603, type: 3}
   m_Name: TestLevelData
   m_EditorClassIdentifier: Game::Game.LevelData
-  levelID: 1
+  levelID: 0
   boardSize: {x: 4, y: 4}
   boardPixels: 00000000010000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   palette: 02000000

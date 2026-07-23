@@ -466,6 +466,11 @@ MonoBehaviour:
   parkController: {fileID: 1067469442}
   gameManager: {fileID: 431223711}
   config: {fileID: 11400000, guid: edd0adcaaa326024d8887b2b5758d238, type: 2}
+  levels:
+  - {fileID: 11400000, guid: 7c6f3104514ff2f47945916f08c4a150, type: 2}
+  - {fileID: 11400000, guid: 8b80ef45baf356b4291e491effad9a82, type: 2}
+  - {fileID: 11400000, guid: 25eae2f245bf7444a9e0f88ae8492bfa, type: 2}
+  - {fileID: 11400000, guid: 003ae08bc5dfc134a9da1eb245f724de, type: 2}
   testLevel: {fileID: 11400000, guid: f8ec785d429054642b2572e768206084, type: 2}
   currentLevel: {fileID: 0}
   nextTestLevel: {fileID: 11400000, guid: 4d7bd2a668507384aaa5043d7364b3fc, type: 2}

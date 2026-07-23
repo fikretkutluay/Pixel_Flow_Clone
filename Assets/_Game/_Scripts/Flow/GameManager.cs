@@ -62,6 +62,7 @@ namespace Game
             if (boardController.RemainingCubes <= 0)
             {
                 currentState = GameState.Won;
+                Debug.Log("WON!");
                 GameEvents.TriggerLevelCompleted();
                 return;
             }

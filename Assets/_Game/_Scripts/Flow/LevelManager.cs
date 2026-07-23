@@ -1,6 +1,8 @@
 using UnityEngine;
 using MobileCore;
 using System.Collections;
+using System;
+using log4net.Core;
 
 namespace Game
 {
@@ -12,13 +14,38 @@ namespace Game
         [SerializeField] private ParkController parkController;
         [SerializeField] private GameManager gameManager;
         [SerializeField] private GameConfig config;
-
+        [SerializeField] private LevelData[] levels;
+        private int currentLevelIndex;
+        private readonly ISerializer serializer = new JsonSaveSystem();
         [SerializeField] private LevelData testLevel;
         [SerializeField] private LevelData currentLevel;
         [SerializeField] private LevelData nextTestLevel;   // rescue senaryosu için crate/park-full level
 
         [SerializeField] private float midLevelDelaySeconds = 0.5f;
         [SerializeField] private float rescueTestDelaySeconds = 6f;
+
+        private void OnEnable()
+        {
+            GameEvents.OnLevelCompleted += HandleLevelCompleted;            
+        }
+
+        private void OnDisable()
+        {
+            GameEvents.OnLevelCompleted -= HandleLevelCompleted;            
+        }
+
+        private void HandleLevelCompleted()
+        {
+            currentLevelIndex ++;
+
+            if (currentLevelIndex >= levels.Length)
+            {
+                currentLevelIndex = levels.Length - 1;
+                Debug.Log("All Levels are Complete!!!");
+                return;
+            }
+            serializer.Save(new SaveData { currentLevelIndex = currentLevelIndex}, "save");
+        }
 
         public void LoadLevel(LevelData data)
         {
@@ -48,6 +75,16 @@ namespace Game
             trackController.Clear();
             queueController.Clear();
             LoadLevel(newData);
+        }
+        [ContextMenu("Continue From Save")]
+        private void ContinueFromSave()
+        {
+            serializer.Load("save", out SaveData data);
+
+            currentLevelIndex = data != null ? data.currentLevelIndex : 0;
+            currentLevelIndex = Mathf.Clamp(currentLevelIndex, 0, levels.Length - 1);
+
+            LoadLevel(levels[currentLevelIndex]);
         }
 
         [ContextMenu("Load Test Level")]
