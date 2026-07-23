@@ -19,6 +19,7 @@ namespace Game
 
             Debug.Log("Hit! Lane: " + laneIndex + ", Direction: " + dir + ", Shooter Color: " + shooterColor);
             remainingCubes--;
+            GameEvents.TriggerRemainingCubesChanged(remainingCubes);
             return true;
         }
 

@@ -26,12 +26,21 @@ namespace Game
 
         private void OnEnable()
         {
-            GameEvents.OnLevelCompleted += HandleLevelCompleted;            
+            GameEvents.OnLevelCompleted += HandleLevelCompleted;     
+            GameEvents.OnPlayRequested += HandlePlayRequested;
+            GameEvents.OnRetryRequested += ReloadLevel;       
         }
+
 
         private void OnDisable()
         {
-            GameEvents.OnLevelCompleted -= HandleLevelCompleted;            
+            GameEvents.OnLevelCompleted -= HandleLevelCompleted;   
+            GameEvents.OnPlayRequested -= HandlePlayRequested;
+            GameEvents.OnRetryRequested -= ReloadLevel;         
+        }
+        private void HandlePlayRequested()
+        {
+            LoadLevel(levels[currentLevelIndex]);
         }
 
         private void HandleLevelCompleted()
@@ -46,6 +55,8 @@ namespace Game
             }
             serializer.Save(new SaveData { currentLevelIndex = currentLevelIndex}, "save");
         }
+
+        
 
         public void LoadLevel(LevelData data)
         {

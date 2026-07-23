@@ -14,6 +14,7 @@ namespace Game
         public void Init(int parkCapacity)
         {
             parkBuffer = new BoundedBuffer<Shooter>(parkCapacity);
+            parkBuffer.OnChanged += () => GameEvents.TriggerParkOccupancyChanged(parkBuffer.Count, parkBuffer.Capacity);
         }
 
         public void Clear()

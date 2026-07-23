@@ -14,6 +14,7 @@ namespace Game
         {
             path = new TrackPath(boardWidth, boardHeight, cellSize, origin);
             shooters = new BoundedBuffer<Shooter>(trackCapacity);
+            shooters.OnChanged += () => GameEvents.TriggerTrackOccupancyChanged(shooters.Count, shooters.Capacity);
         }
 
         public void Clear()

@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
         GameEvents.OnGameStarted += ShowMainMenu;
         GameEvents.OnLevelCompleted += ShowWinPanel;
         GameEvents.OnLevelFailed += ShowLosePanel;
+        GameEvents.OnPlayRequested += HideCurrentPanel;
+        GameEvents.OnRetryRequested += HideCurrentPanel;
 
         SwitchPanel(mainMenuPanel);
     }
@@ -30,6 +32,15 @@ public class UIManager : MonoBehaviour
         currentPanel = newPanel;
     }
 
+    private void HideCurrentPanel()
+    {
+        if (currentPanel != null)
+        {
+            currentPanel.Hide();
+            currentPanel = null;
+        }
+    }
+
     private void ShowMainMenu() { SwitchPanel(mainMenuPanel); }
     private void ShowWinPanel() { SwitchPanel(winPanel); }
     private void ShowLosePanel() { SwitchPanel(losePanel); }
@@ -39,6 +50,8 @@ public class UIManager : MonoBehaviour
         GameEvents.OnGameStarted -= ShowMainMenu;
         GameEvents.OnLevelCompleted -= ShowWinPanel;
         GameEvents.OnLevelFailed -= ShowLosePanel;
+        GameEvents.OnPlayRequested -= HideCurrentPanel;
+        GameEvents.OnRetryRequested -= HideCurrentPanel;
     }
 }
 }
