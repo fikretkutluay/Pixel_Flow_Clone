@@ -5,14 +5,15 @@ namespace Game
     public class TrackController : MonoBehaviour
     {
         [SerializeField] private BoardController boardController;
-        [SerializeField] private float trackSpeed = 3f;
+        private float trackSpeed;
 
         private TrackPath path;
         private BoundedBuffer<Shooter> shooters;
         public event System.Action<Shooter> OnShooterFinishedLap;
 
-        public void Init(int boardWidth, int boardHeight, float cellSize, Vector3 origin, float trackMargin, int trackCapacity)
+        public void Init(int boardWidth, int boardHeight, float cellSize, Vector3 origin, float trackMargin, int trackCapacity, float trackSpeed)
         {
+            this.trackSpeed = trackSpeed;
             path = new TrackPath(boardWidth, boardHeight, cellSize, origin, trackMargin);
             shooters = new BoundedBuffer<Shooter>(trackCapacity);
             shooters.OnChanged += () => GameEvents.TriggerTrackOccupancyChanged(shooters.Count, shooters.Capacity);

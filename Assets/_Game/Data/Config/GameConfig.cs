@@ -22,5 +22,7 @@ namespace Game
 
         [Tooltip("Ray ile board kenarı arası sabit dünya mesafesi (hücre boyutundan bağımsız).")]
         public float trackMargin = 0.3f;
+        [Tooltip("Küpler arası görsel boşluk oranı (0 = bitişik, 0.1 = %10 boşluk).")]
+        public float cubeGap = 0.08f;
     }
 }

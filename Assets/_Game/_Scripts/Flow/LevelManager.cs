@@ -69,7 +69,7 @@ namespace Game
                 0f);
 
             boardController.Setup(data, cellSize, boardOrigin);
-            trackController.Init(data.boardSize.x, data.boardSize.y, cellSize, boardOrigin, config.trackMargin, data.trackCapacity);
+            trackController.Init(data.boardSize.x, data.boardSize.y, cellSize, boardOrigin, config.trackMargin, data.trackCapacity, data.trackSpeed);
             queueController.Init(data.queue, data.columnCount);
             parkController.Init(data.parkCapacity);
             gameManager.StartLevel(data);

@@ -36,6 +36,7 @@ namespace Game
 
         private void HandleTap(Vector2 screenPos)
         {
+            if (mainCam == null) return;   // level yüklenmeden gelen tap'i yok say
             Ray ray = mainCam.ScreenPointToRay(screenPos);
             if (!Physics.Raycast(ray, out RaycastHit hit)) return;
 

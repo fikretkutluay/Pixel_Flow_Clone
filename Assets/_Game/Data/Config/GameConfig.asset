@@ -22,3 +22,4 @@ MonoBehaviour:
   contentWidthFactor: 0.92
   queueSlotSpacing: 1.4
   trackMargin: 0.3
+  cubeGap: 0.08

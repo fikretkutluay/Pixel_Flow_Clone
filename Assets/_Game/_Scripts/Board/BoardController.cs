@@ -6,8 +6,11 @@ namespace Game
 {
     public class BoardController : MonoBehaviour
     {
+        [SerializeField] private GameConfig config;
+
         private GridManager<CubeCell> board;
         private int remainingCubes;
+        private float cellSize;   // Setup'ta saklanır, SpawnCubeView kullanır
 
         public int RemainingCubes => remainingCubes;
         private CubeView[,] cubeViews;
@@ -32,10 +35,9 @@ namespace Game
             return true;
         }
 
-        // origin artık dışarıdan (LevelManager) geliyor — board'un dünya
-        // yerleşimini merkezlemek için. Vector3.zero sabiti kaldırıldı.
         public void Setup(LevelData data, float cellSize, Vector3 origin)
         {
+            this.cellSize = cellSize;
             board = new GridManager<CubeCell>(data.boardSize.x, data.boardSize.y, cellSize, origin);
             cubeViews = new CubeView[data.boardSize.x, data.boardSize.y];
 
@@ -69,6 +71,12 @@ namespace Game
         {
             GameObject obj = ObjectPooler.Instance.SpawnFromPool("Cube", board.GetWorldPosition(x, y), Quaternion.identity);
             if (obj == null) return;
+
+            // Küpü hücre boyutuna göre ölçekle (cubeGap kadar küçültülmüş → ızgara boşluğu).
+            // Prefab'ın orijinal en-boy oranı 1:1:1 varsayılıyor; z'yi de eşitliyoruz.
+            float gap = config != null ? config.cubeGap : 0f;
+            float scale = cellSize * (1f - gap);
+            obj.transform.localScale = new Vector3(scale, scale, scale);
 
             CubeView view = obj.GetComponent<CubeView>();
             view.SetColor(color);

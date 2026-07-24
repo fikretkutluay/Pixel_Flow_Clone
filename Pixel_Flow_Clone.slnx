@@ -42,6 +42,7 @@
   <Project Path="UnityEditor.UI.csproj" />
   <Project Path="Unity.RenderPipelines.Universal.2D.Editor.Overrides.csproj" />
   <Project Path="Unity.AI.Navigation.Editor.csproj" />
+  <Project Path="Game.Editor.csproj" />
   <Project Path="Unity.Multiplayer.Center.Common.csproj" />
   <Project Path="DOTween.Modules.csproj" />
   <Project Path="Unity.InputSystem.ForUI.csproj" />
