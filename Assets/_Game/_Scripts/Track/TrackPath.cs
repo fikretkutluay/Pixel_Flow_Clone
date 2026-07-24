@@ -16,15 +16,17 @@ namespace Game
         private readonly int height;
         private readonly float cellSize;
         private readonly Vector3 origin;
+        private readonly float margin;   // board kenarı ile ray arası sabit dünya mesafesi
 
         public float Perimeter => 2f * (width + height);
 
-        public TrackPath(int width, int height, float cellSize, Vector3 origin)
+        public TrackPath(int width, int height, float cellSize, Vector3 origin, float margin)
         {
             this.width = width;
             this.height = height;
             this.cellSize = cellSize;
             this.origin = origin;
+            this.margin = margin;
         }
 
         public TrackSample Evaluate(float distance)
@@ -58,13 +60,12 @@ namespace Game
             {
                 edge = TrackEdge.Left;
                 offset = distance - (2 * width + height);
-                lane = height - 1 - Mathf.FloorToInt(offset); 
+                lane = height - 1 - Mathf.FloorToInt(offset);
                 lane = Mathf.Clamp(lane, 0, height - 1);
             }
 
             Vector3 worldPos = WorldPosOf(edge, offset);
             return new TrackSample { edge = edge, lane = lane, worldPos = worldPos };
-
         }
 
         public static Direction FireDirectionOf(TrackEdge edge) => edge switch
@@ -76,33 +77,31 @@ namespace Game
             _ => throw new System.ArgumentException($"Invalid edge: {edge}")
         };
 
+        // Kenar-boyu koordinat cellSize ile ölçeklenir (lane hizası korunur);
+        // dikey/yatay marj ise SABİT dünya mesafesidir (cellSize'dan bağımsız).
+        // Böylece ray footprint'i = boardPhysicalSize + 2*margin → her board boyutunda sabit.
         private Vector3 WorldPosOf(TrackEdge edge, float offset)
         {
-            float x, y;
+            // Board'un küp-kenar sınırları (hücre merkezleri 0..width-1, küpler ±0.5 hücre taşar):
+            float halfCell = 0.5f * cellSize;
+            float leftX   = origin.x - halfCell - margin;
+            float rightX  = origin.x + (width - 1) * cellSize + halfCell + margin;
+            float bottomY = origin.y - halfCell - margin;
+            float topY    = origin.y + (height - 1) * cellSize + halfCell + margin;
 
             switch (edge)
             {
                 case TrackEdge.Bottom:
-                    x = offset;
-                    y = -1f;
-                    break;
+                    return new Vector3(origin.x + offset * cellSize, bottomY, 0f);
                 case TrackEdge.Right:
-                    x = width;
-                    y = offset;
-                    break;
+                    return new Vector3(rightX, origin.y + offset * cellSize, 0f);
                 case TrackEdge.Top:
-                    x = width - 1 - offset;
-                    y = height;
-                    break;
+                    return new Vector3(origin.x + (width - 1 - offset) * cellSize, topY, 0f);
                 case TrackEdge.Left:
-                    x = -1f;
-                    y = height - 1 - offset;
-                    break;
+                    return new Vector3(leftX, origin.y + (height - 1 - offset) * cellSize, 0f);
                 default:
                     throw new System.ArgumentException($"Invalid edge: {edge}");
             }
-
-            return origin + new Vector3(x, y, 0f) * cellSize;
         }
     }
 }

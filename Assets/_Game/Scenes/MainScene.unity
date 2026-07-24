@@ -1961,6 +1961,8 @@ GameObject:
   - component: {fileID: 1189894816}
   - component: {fileID: 1189894815}
   - component: {fileID: 1189894818}
+  - component: {fileID: 1189894819}
+  - component: {fileID: 1189894820}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1985,8 +1987,8 @@ Camera:
   m_GameObject: {fileID: 1189894814}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.18039216, g: 0.16470589, b: 0.2901961, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2011,7 +2013,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10.297709
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2036,7 +2038,7 @@ Transform:
   m_GameObject: {fileID: 1189894814}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 2, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2086,6 +2088,35 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1189894819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189894814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af4a9f8659c1dab418c913a9b7b419eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.CameraFitter
+  cam: {fileID: 1189894816}
+  visibleWorldWidth: 9.5
+--- !u!114 &1189894820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189894814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88f832cfa9b8d6f4394e8902fd2902ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.LayoutGizmos
+  config: {fileID: 11400000, guid: edd0adcaaa326024d8887b2b5758d238, type: 2}
+  cam: {fileID: 1189894816}
+  show: 1
 --- !u!1 &1236540535
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,12 +9,14 @@ namespace Game
         [SerializeField] private GameObject slotViewPrefab;
 
         private BoundedBuffer<Shooter> parkBuffer;
+        private ParkSlotView[] slotViews;
+        private Camera mainCam;
 
         public bool HasFreeSlot => parkBuffer != null && parkBuffer.HasFreeSlot;
-        private ParkSlotView[] slotViews;
 
         public void Init(int parkCapacity)
         {
+            mainCam = Camera.main;
             parkBuffer = new BoundedBuffer<Shooter>(parkCapacity);
             parkBuffer.OnChanged += () => GameEvents.TriggerParkOccupancyChanged(parkBuffer.Count, parkBuffer.Capacity);
 
@@ -36,13 +38,12 @@ namespace Game
                 foreach (var view in slotViews)
                     if (view != null) Destroy(view.gameObject);
         }
+
         public bool TryPark(Shooter shooter)
         {
             if (!parkBuffer.TryAdd(shooter)) return false;
-
             RefreshSlotPositions();
             return true;
-
         }
 
         public bool TryLaunch(Shooter shooter, TrackController trackController)
@@ -53,14 +54,17 @@ namespace Game
             trackController.TryAddShooter(shooter);
             RefreshSlotPositions();
             return true;
-
         }
 
+        // Park yatay dizilir: parkBand merkezinde, ekran genişliğine yayılmış slotlar.
         private Vector3 SlotPosition(int index)
         {
-            float x = config.parkOrigin.x;
-            float y = config.parkOrigin.y - index * config.parkSlotSpacing;
-            return new Vector3(x, y, 0);
+            int capacity = parkBuffer.Capacity;
+            float usableWidth = GameLayout.VisibleWidth(mainCam) * config.contentWidthFactor;
+            float spacing = usableWidth / capacity;
+            float x = -usableWidth * 0.5f + spacing * (index + 0.5f);
+            float y = GameLayout.ParkBandCenterY(mainCam, config);
+            return new Vector3(x, y, 0f);
         }
 
         private void RefreshSlotPositions()
@@ -78,6 +82,20 @@ namespace Game
             if (slotViews == null) return;
             foreach (var view in slotViews)
                 view.SetAlert(active);
+        }
+
+        // Park slotlarını yatay kutular olarak çizer — placeholder.
+        private void OnDrawGizmos()
+        {
+            if (parkBuffer == null || mainCam == null || config == null) return;
+
+            float usableWidth = GameLayout.VisibleWidth(mainCam) * config.contentWidthFactor;
+            float spacing = usableWidth / parkBuffer.Capacity;
+            Vector3 slotSize = new Vector3(spacing * 0.85f, spacing * 0.85f, 0.01f);
+
+            Gizmos.color = Color.cyan;
+            for (int i = 0; i < parkBuffer.Capacity; i++)
+                Gizmos.DrawWireCube(SlotPosition(i), slotSize);
         }
     }
 }

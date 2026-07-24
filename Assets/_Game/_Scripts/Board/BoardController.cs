@@ -11,6 +11,7 @@ namespace Game
 
         public int RemainingCubes => remainingCubes;
         private CubeView[,] cubeViews;
+
         public bool TryBreakCube(int laneIndex, Direction dir, ColorId shooterColor)
         {
             if (board == null) return false;
@@ -31,9 +32,11 @@ namespace Game
             return true;
         }
 
-        public void Setup(LevelData data, float cellSize)
+        // origin artık dışarıdan (LevelManager) geliyor — board'un dünya
+        // yerleşimini merkezlemek için. Vector3.zero sabiti kaldırıldı.
+        public void Setup(LevelData data, float cellSize, Vector3 origin)
         {
-            board = new GridManager<CubeCell>(data.boardSize.x, data.boardSize.y, cellSize, Vector3.zero);
+            board = new GridManager<CubeCell>(data.boardSize.x, data.boardSize.y, cellSize, origin);
             cubeViews = new CubeView[data.boardSize.x, data.boardSize.y];
 
             for (int y = 0; y < data.boardSize.y; y++)
@@ -82,6 +85,4 @@ namespace Game
             }
         }
     }
-
-
 }

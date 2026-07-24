@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b982ee9e40918d44aea9b7138bd11fe, type: 3}
-  m_Name: TestConfig
+  m_Name: GameConfig
   m_EditorClassIdentifier: Game::Game.GameConfig
   visibleQueueWindow: 3
-  boardPhysicalSize: 8
-  queuePhysicalWidth: 4
-  queueSlotSpacing: 1
-  queueOrigin: {x: 0, y: -3, z: 0}
-  parkOrigin: {x: 6, y: 0, z: 0}
-  parkSlotSpacing: 1
+  boardPhysicalSize: 7
+  topBarBand: 0.09
+  boardBand: 0.44
+  parkBand: 0.11
+  queueBand: 0.28
+  bottomBand: 0.08
+  contentWidthFactor: 0.92
+  queueSlotSpacing: 1.4
+  trackMargin: 0.3

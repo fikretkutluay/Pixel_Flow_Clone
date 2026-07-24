@@ -2,7 +2,6 @@ using UnityEngine;
 using MobileCore;
 using System.Collections;
 using System;
-using log4net.Core;
 
 namespace Game
 {
@@ -26,18 +25,18 @@ namespace Game
 
         private void OnEnable()
         {
-            GameEvents.OnLevelCompleted += HandleLevelCompleted;     
+            GameEvents.OnLevelCompleted += HandleLevelCompleted;
             GameEvents.OnPlayRequested += HandlePlayRequested;
-            GameEvents.OnRetryRequested += ReloadLevel;       
+            GameEvents.OnRetryRequested += ReloadLevel;
         }
-
 
         private void OnDisable()
         {
-            GameEvents.OnLevelCompleted -= HandleLevelCompleted;   
+            GameEvents.OnLevelCompleted -= HandleLevelCompleted;
             GameEvents.OnPlayRequested -= HandlePlayRequested;
-            GameEvents.OnRetryRequested -= ReloadLevel;         
+            GameEvents.OnRetryRequested -= ReloadLevel;
         }
+
         private void HandlePlayRequested()
         {
             LoadLevel(levels[currentLevelIndex]);
@@ -45,7 +44,7 @@ namespace Game
 
         private void HandleLevelCompleted()
         {
-            currentLevelIndex ++;
+            currentLevelIndex++;
 
             if (currentLevelIndex >= levels.Length)
             {
@@ -53,18 +52,24 @@ namespace Game
                 Debug.Log("All Levels are Complete!!!");
                 return;
             }
-            serializer.Save(new SaveData { currentLevelIndex = currentLevelIndex}, "save");
+            serializer.Save(new SaveData { currentLevelIndex = currentLevelIndex }, "save");
         }
-
-        
 
         public void LoadLevel(LevelData data)
         {
             currentLevel = data;
             float cellSize = config.boardPhysicalSize / data.boardSize.x;
 
-            boardController.Setup(data, cellSize);
-            trackController.Init(data.boardSize.x, data.boardSize.y, cellSize, Vector3.zero, data.trackCapacity);
+            // Board'un geometrik merkezini boardBand'in dünya-Y merkezine oturt.
+            // X yatay merkezde (genişliğe kilitli). Aynı origin track'e de gidiyor.
+            float boardCenterY = GameLayout.BoardBandCenterY(Camera.main, config);
+            Vector3 boardOrigin = new Vector3(
+                -(data.boardSize.x - 1) * cellSize * 0.5f,
+                boardCenterY - (data.boardSize.y - 1) * cellSize * 0.5f,
+                0f);
+
+            boardController.Setup(data, cellSize, boardOrigin);
+            trackController.Init(data.boardSize.x, data.boardSize.y, cellSize, boardOrigin, config.trackMargin, data.trackCapacity);
             queueController.Init(data.queue, data.columnCount);
             parkController.Init(data.parkCapacity);
             gameManager.StartLevel(data);
@@ -89,6 +94,7 @@ namespace Game
             queueController.Clear();
             LoadLevel(newData);
         }
+
         [ContextMenu("Continue From Save")]
         private void ContinueFromSave()
         {
