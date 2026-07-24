@@ -73,6 +73,7 @@ namespace Game
         public void ReloadLevel()
         {
             gameManager.Clear();
+            boardController.Clear();
             parkController.Clear();
             trackController.Clear();
             queueController.Clear();
@@ -82,6 +83,7 @@ namespace Game
         public void LoadNext(LevelData newData)
         {
             gameManager.Clear();
+            boardController.Clear();
             parkController.Clear();
             trackController.Clear();
             queueController.Clear();

@@ -6,24 +6,35 @@ namespace Game
     public class ParkController : MonoBehaviour
     {
         [SerializeField] private GameConfig config;
+        [SerializeField] private GameObject slotViewPrefab;
 
         private BoundedBuffer<Shooter> parkBuffer;
 
         public bool HasFreeSlot => parkBuffer != null && parkBuffer.HasFreeSlot;
+        private ParkSlotView[] slotViews;
 
         public void Init(int parkCapacity)
         {
             parkBuffer = new BoundedBuffer<Shooter>(parkCapacity);
             parkBuffer.OnChanged += () => GameEvents.TriggerParkOccupancyChanged(parkBuffer.Count, parkBuffer.Capacity);
+
+            slotViews = new ParkSlotView[parkCapacity];
+            for (int i = 0; i < parkCapacity; i++)
+            {
+                GameObject obj = Instantiate(slotViewPrefab, SlotPosition(i), Quaternion.identity, transform);
+                slotViews[i] = obj.GetComponent<ParkSlotView>();
+            }
         }
 
         public void Clear()
         {
             if (parkBuffer == null) return;
             foreach (Shooter s in parkBuffer)
-            {
                 ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
-            }
+
+            if (slotViews != null)
+                foreach (var view in slotViews)
+                    if (view != null) Destroy(view.gameObject);
         }
         public bool TryPark(Shooter shooter)
         {
@@ -60,6 +71,13 @@ namespace Game
                 shooter.transform.position = SlotPosition(index);
                 index++;
             }
+        }
+
+        public void SetRescueAlert(bool active)
+        {
+            if (slotViews == null) return;
+            foreach (var view in slotViews)
+                view.SetAlert(active);
         }
     }
 }

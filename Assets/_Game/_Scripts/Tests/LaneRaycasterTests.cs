@@ -14,10 +14,11 @@ public class LaneRaycasterTests
         var board = NewBoard();
         board.SetValue(0, 0, CubeCell.Create(ColorId.Red, false));
 
-        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red);
+        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red, out Vector2Int brokenPos);
 
         Assert.IsTrue(hit);
         Assert.AreEqual(ColorId.None, board.GetValue(0, 0).color);
+        Assert.AreEqual(new Vector2Int(0, 0), brokenPos);
     }
 
     [Test]
@@ -26,7 +27,7 @@ public class LaneRaycasterTests
         var board = NewBoard();
         board.SetValue(0, 0, CubeCell.Create(ColorId.Blue, false));
 
-        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red);
+        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red, out _);
 
         Assert.IsFalse(hit);
         Assert.AreEqual(ColorId.Blue, board.GetValue(0, 0).color);
@@ -39,7 +40,7 @@ public class LaneRaycasterTests
         board.SetValue(0, 0, CubeCell.Create(ColorId.None, true));
         board.SetValue(0, 1, CubeCell.Create(ColorId.Red, false));
 
-        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red);
+        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red, out _);
 
         Assert.IsFalse(hit);
         Assert.AreEqual(ColorId.Red, board.GetValue(0, 1).color);
@@ -51,7 +52,7 @@ public class LaneRaycasterTests
         var board = NewBoard();
         board.SetValue(0, 2, CubeCell.Create(ColorId.Red, false));
 
-        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red);
+        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red, out _);
 
         Assert.IsTrue(hit);
         Assert.AreEqual(ColorId.None, board.GetValue(0, 2).color);
@@ -64,7 +65,7 @@ public class LaneRaycasterTests
         board.SetValue(0, 0, CubeCell.Create(ColorId.Blue, false));
         board.SetValue(0, 1, CubeCell.Create(ColorId.Red, false));
 
-        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red);
+        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red, out _);
 
         Assert.IsFalse(hit);
         Assert.AreEqual(ColorId.Red, board.GetValue(0, 1).color);
@@ -75,7 +76,7 @@ public class LaneRaycasterTests
     {
         var board = NewBoard();
 
-        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red);
+        bool hit = LaneRaycaster.TryBreak(board, 0, Direction.Up, ColorId.Red, out _);
 
         Assert.IsFalse(hit);
     }
@@ -86,9 +87,10 @@ public class LaneRaycasterTests
         var board = NewBoard();
         board.SetValue(3, 2, CubeCell.Create(ColorId.Red, false));
 
-        bool hit = LaneRaycaster.TryBreak(board, 2, Direction.Left, ColorId.Red);
+        bool hit = LaneRaycaster.TryBreak(board, 2, Direction.Left, ColorId.Red, out Vector2Int brokenPos);
 
         Assert.IsTrue(hit);
         Assert.AreEqual(ColorId.None, board.GetValue(3, 2).color);
+        Assert.AreEqual(new Vector2Int(3, 2), brokenPos);
     }
 }

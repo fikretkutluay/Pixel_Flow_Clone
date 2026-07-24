@@ -6,10 +6,11 @@ namespace Game
     public static class LaneRaycaster
     {
         public static bool TryBreak(GridManager<CubeCell> board, int laneIndex,
-                                    Direction dir, ColorId shooterColor)
+                            Direction dir, ColorId shooterColor, out Vector2Int brokenPos)
         {
             Vector2Int pos = GetLaneStart(board, laneIndex, dir);
             Vector2Int step = GetStep(dir);
+            brokenPos = default;
 
             while (board.IsInBounds(pos.x, pos.y))
             {
@@ -27,6 +28,7 @@ namespace Game
                 if (cell.color == shooterColor)
                 {
                     board.SetValue(pos.x, pos.y, CubeCell.Create(ColorId.None, false));
+                    brokenPos = pos;
                     return true;
                 }
 
@@ -40,10 +42,10 @@ namespace Game
         {
             switch (dir)
             {
-                case Direction.Up:    return new Vector2Int(laneIndex, 0);
-                case Direction.Down:  return new Vector2Int(laneIndex, board.Height - 1);
+                case Direction.Up: return new Vector2Int(laneIndex, 0);
+                case Direction.Down: return new Vector2Int(laneIndex, board.Height - 1);
                 case Direction.Right: return new Vector2Int(0, laneIndex);
-                case Direction.Left:  return new Vector2Int(board.Width - 1, laneIndex);
+                case Direction.Left: return new Vector2Int(board.Width - 1, laneIndex);
                 default: throw new System.ArgumentException("Invalid direction");
             }
         }
@@ -52,10 +54,10 @@ namespace Game
         {
             switch (dir)
             {
-                case Direction.Up:    return new Vector2Int(0, 1);
-                case Direction.Down:  return new Vector2Int(0, -1);
+                case Direction.Up: return new Vector2Int(0, 1);
+                case Direction.Down: return new Vector2Int(0, -1);
                 case Direction.Right: return new Vector2Int(1, 0);
-                case Direction.Left:  return new Vector2Int(-1, 0);
+                case Direction.Left: return new Vector2Int(-1, 0);
                 default: throw new System.ArgumentException("Invalid direction");
             }
         }

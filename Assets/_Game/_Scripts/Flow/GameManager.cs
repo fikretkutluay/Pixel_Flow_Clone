@@ -47,12 +47,15 @@ namespace Game
             {
                 shooter.IsWaitingForPark = false;
                 trackController.ReleaseShooter(shooter);
-                Debug.Log($"{shooter.name} parked.");
                 return;
             }
 
+            if (rescueTimers.Count == 0)
+            {
+                GameEvents.TriggerRescueStarted();
+                parkController.SetRescueAlert(true);
+            }
             rescueTimers[shooter] = levelData.rescueWindowSeconds;
-            Debug.Log($"{shooter.name} waiting for park slot — rescue window started.");
         }
 
         private void Update()
@@ -99,6 +102,12 @@ namespace Game
             foreach (Shooter shooter in rescuedOrExpired)
             {
                 rescueTimers.Remove(shooter);
+            }
+
+            if (rescueTimers.Count == 0 && rescuedOrExpired.Count > 0)
+            {
+                GameEvents.TriggerRescueEnded();
+                parkController.SetRescueAlert(false);
             }
         }
     }
