@@ -13,7 +13,7 @@ namespace Game
         public int columnCount = 4;
         public int trackCapacity = 5;
         public int parkCapacity = 5;
-        public float trackSpeed;
+        public float trackSpeed = 15f;
         public float rescueWindowSeconds = 2f;
 
 

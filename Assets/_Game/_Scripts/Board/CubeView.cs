@@ -1,30 +1,27 @@
 using UnityEngine;
 using MobileCore;
 using System.Collections;
+
 namespace Game
 {
     public class CubeView : MonoBehaviour
     {
         [SerializeField] private Renderer cubeRenderer;
+        [SerializeField] private ColorPalette palette;
+
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private MaterialPropertyBlock mpb;
 
         public void SetColor(ColorId color)
         {
-            cubeRenderer.material.color = ColorToUnityColor(color);
+            // MaterialPropertyBlock: materyali klonlamadan (draw call / instancing dostu)
+            // instance başına renk verir. Tek materyal (M_ToonCube), N renk.
+            if (mpb == null) mpb = new MaterialPropertyBlock();
+            cubeRenderer.GetPropertyBlock(mpb);
+            mpb.SetColor(BaseColorId, palette.Of(color));
+            cubeRenderer.SetPropertyBlock(mpb);
         }
 
-        private Color ColorToUnityColor(ColorId color)
-        {
-            switch (color)
-            {
-                case ColorId.Red: return Color.red;
-                case ColorId.Blue: return Color.blue;
-                case ColorId.Green: return Color.green;
-                case ColorId.Yellow: return Color.yellow;
-                case ColorId.Purple: return new Color(0.6f, 0.2f, 0.8f);
-                case ColorId.Crate: return new Color(0.4f, 0.25f, 0.1f);
-                default: return Color.gray;
-            }
-        }
         public void PlayBreakAndReturn()
         {
             StartCoroutine(BreakRoutine());
@@ -43,7 +40,7 @@ namespace Game
                 yield return null;
             }
 
-            transform.localScale = startScale;   // pool'a dönünce bir sonraki spawn için sıfırla
+            transform.localScale = startScale;
             ObjectPooler.Instance.ReturnToPool("Cube", gameObject);
         }
     }

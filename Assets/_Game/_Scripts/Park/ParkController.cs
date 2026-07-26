@@ -7,12 +7,43 @@ namespace Game
     {
         [SerializeField] private GameConfig config;
         [SerializeField] private GameObject slotViewPrefab;
+        [SerializeField] private TrackController trackController;
+        [SerializeField] private PointerRouter inputRouter;
 
         private BoundedBuffer<Shooter> parkBuffer;
         private ParkSlotView[] slotViews;
         private Camera mainCam;
 
         public bool HasFreeSlot => parkBuffer != null && parkBuffer.HasFreeSlot;
+
+        private void OnEnable()
+        {
+            if (inputRouter != null)
+                inputRouter.OnTap += HandleTap;
+        }
+
+        private void OnDisable()
+        {
+            if (inputRouter != null)
+                inputRouter.OnTap -= HandleTap;
+        }
+
+        // QueueController.HandleTap ile aynı desen: ekran koordinatı → raycast → Shooter.
+        // Fark: yalnızca PARK buffer'ındaki atıcılarla ilgileniyoruz.
+        private void HandleTap(Vector2 screenPos)
+        {
+            if (mainCam == null || parkBuffer == null) return;
+
+            Ray ray = mainCam.ScreenPointToRay(screenPos);
+            if (!Physics.Raycast(ray, out RaycastHit hit)) return;
+
+            Shooter s = hit.collider.GetComponent<Shooter>();
+            if (s == null) return;
+            if (!parkBuffer.Contains(s)) return;   // kuyruktaki/raydaki atıcı bizim işimiz değil
+
+            if (!TryLaunch(s))
+                Debug.Log("[Park] launch rejected — ray dolu");
+        }
 
         public void Init(int parkCapacity)
         {
@@ -21,10 +52,15 @@ namespace Game
             parkBuffer.OnChanged += () => GameEvents.TriggerParkOccupancyChanged(parkBuffer.Count, parkBuffer.Capacity);
 
             slotViews = new ParkSlotView[parkCapacity];
+            float usableWidth = GameLayout.VisibleWidth(mainCam) * config.contentWidthFactor;
+            float spacing = usableWidth / parkCapacity;
+            float scale = spacing * (1f - config.parkSlotGap);   // BoardController.SpawnCubeView ile aynı desen
+
             for (int i = 0; i < parkCapacity; i++)
             {
                 GameObject obj = Instantiate(slotViewPrefab, SlotPosition(i), Quaternion.identity, transform);
-                slotViews[i] = obj.GetComponent<ParkSlotView>();
+                obj.transform.localScale = new Vector3(scale, scale, scale);
+                slotViews[i] = obj.GetComponentInChildren<ParkSlotView>();
             }
         }
 
@@ -46,11 +82,14 @@ namespace Game
             return true;
         }
 
-        public bool TryLaunch(Shooter shooter, TrackController trackController)
+        // Park'tan raya geri yollama. Ray doluysa reddedilir (kayıp koşulunun yarısı budur).
+        public bool TryLaunch(Shooter shooter)
         {
+            if (trackController == null) return false;
             if (!trackController.HasFreeTrackSlot) return false;
             if (!parkBuffer.TryRemove(shooter)) return false;
 
+            shooter.ResetLap();                      // KRİTİK — bkz. Shooter.ResetLap
             trackController.TryAddShooter(shooter);
             RefreshSlotPositions();
             return true;
@@ -91,7 +130,8 @@ namespace Game
 
             float usableWidth = GameLayout.VisibleWidth(mainCam) * config.contentWidthFactor;
             float spacing = usableWidth / parkBuffer.Capacity;
-            Vector3 slotSize = new Vector3(spacing * 0.85f, spacing * 0.85f, 0.01f);
+            float scale = spacing * (1f - config.parkSlotGap);
+            Vector3 slotSize = new Vector3(scale, scale, 0.01f);
 
             Gizmos.color = Color.cyan;
             for (int i = 0; i < parkBuffer.Capacity; i++)

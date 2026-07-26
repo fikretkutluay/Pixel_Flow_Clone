@@ -35,5 +35,5 @@ MonoBehaviour:
   columnCount: 2
   trackCapacity: 5
   parkCapacity: 5
-  trackSpeed: 8
+  trackSpeed: 15
   rescueWindowSeconds: 2

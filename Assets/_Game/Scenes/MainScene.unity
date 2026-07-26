@@ -1340,7 +1340,7 @@ Light:
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 10
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1874,6 +1874,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game::Game.ParkController
   config: {fileID: 11400000, guid: edd0adcaaa326024d8887b2b5758d238, type: 2}
   slotViewPrefab: {fileID: 3774626329875230449, guid: 53e9bdb77087ca64cb77bd5dee6eb693, type: 3}
+  trackController: {fileID: 1890879080}
+  inputRouter: {fileID: 142941642}
 --- !u!4 &1067469443
 Transform:
   m_ObjectHideFlags: 0
@@ -1925,6 +1927,7 @@ MonoBehaviour:
   gameManager: {fileID: 431223711}
   config: {fileID: 11400000, guid: edd0adcaaa326024d8887b2b5758d238, type: 2}
   levels:
+  - {fileID: 11400000, guid: 60b85d9f1bd5d404494fd125057b81a0, type: 2}
   - {fileID: 11400000, guid: 2f3a5c2672e85f34185fc14cc35bd067, type: 2}
   testLevel: {fileID: 11400000, guid: f8ec785d429054642b2572e768206084, type: 2}
   currentLevel: {fileID: 0}
@@ -2034,13 +2037,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189894814}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.258819, y: 0, z: 0, w: 0.9659259}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -30, y: 0, z: 0}
 --- !u!114 &1189894818
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -124,13 +124,11 @@ namespace Game
             float columnWidth = usableWidth / columnCount;
             float x = -usableWidth * 0.5f + columnWidth * (column + 0.5f);
 
-            float visH = GameLayout.VisibleHeight(mainCam);
-            float bandTopY = GameLayout.QueueBandCenterY(mainCam, config) + config.queueBand * visH * 0.5f;
+            float bandTopY = GameLayout.QueueBandTopY(mainCam, config);
             float y = bandTopY - config.queueSlotSpacing * (index + 0.5f);
 
             return new Vector3(x, y, 0f);
         }
-
         public void OnShooterTapped(Shooter tapped)
         {
             int column = FindColumn(tapped);

@@ -3,26 +3,25 @@ using UnityEngine;
 
 namespace Game
 {
+    /// <summary>
+    /// Görsel katman: yuvarlatılmış köşeli koyu panel + rescue sırasında
+    /// kırmızı yanıp sönen kenarlık. SetAlert(bool) sözleşmesi LineRenderer
+    /// sürümüyle birebir aynı — ParkController'da hiçbir değişiklik gerekmez.
+    /// </summary>
     public class ParkSlotView : MonoBehaviour
     {
-        [SerializeField] private LineRenderer border;
-        [SerializeField] private float slotSize = 0.9f;
-        [SerializeField] private Color idleColor = Color.gray;
-        [SerializeField] private Color alertColor = Color.red;
+        [SerializeField] private Renderer borderRenderer;
+        [SerializeField] private Color idleColor = new Color(0.25f, 0.25f, 0.3f);
+        [SerializeField] private Color alertColor = new Color(0.9f, 0.15f, 0.15f);
         [SerializeField] private float blinkInterval = 0.3f;
 
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private MaterialPropertyBlock mpb;
         private Coroutine blinkRoutine;
 
         private void Awake()
         {
-            float h = slotSize / 2f;
-            border.positionCount = 5;
-            border.SetPosition(0, new Vector3(-h, -h, 0));
-            border.SetPosition(1, new Vector3(-h, h, 0));
-            border.SetPosition(2, new Vector3(h, h, 0));
-            border.SetPosition(3, new Vector3(h, -h, 0));
-            border.SetPosition(4, new Vector3(-h, -h, 0));
-            SetColor(idleColor);
+            SetBorderColor(idleColor);
         }
 
         public void SetAlert(bool active)
@@ -33,25 +32,27 @@ namespace Game
             {
                 StopCoroutine(blinkRoutine);
                 blinkRoutine = null;
-                SetColor(idleColor);
+                SetBorderColor(idleColor);
             }
         }
-
         private IEnumerator BlinkRoutine()
         {
             bool on = false;
             while (true)
             {
-                SetColor(on ? alertColor : idleColor);
+                SetBorderColor(on ? alertColor : idleColor);
                 on = !on;
                 yield return new WaitForSeconds(blinkInterval);
             }
         }
 
-        private void SetColor(Color c)
+        private void SetBorderColor(Color c)
         {
-            border.startColor = c;
-            border.endColor = c;
+            if (borderRenderer == null) return;
+            if (mpb == null) mpb = new MaterialPropertyBlock();
+            borderRenderer.GetPropertyBlock(mpb);
+            mpb.SetColor(BaseColorId, c);
+            borderRenderer.SetPropertyBlock(mpb);
         }
     }
 }

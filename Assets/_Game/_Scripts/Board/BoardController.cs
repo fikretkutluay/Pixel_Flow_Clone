@@ -20,8 +20,6 @@ namespace Game
             if (board == null) return false;
             if (!LaneRaycaster.TryBreak(board, laneIndex, dir, shooterColor, out Vector2Int brokenPos))
                 return false;
-
-            Debug.Log("Hit! Lane: " + laneIndex + ", Direction: " + dir + ", Shooter Color: " + shooterColor);
             remainingCubes--;
             GameEvents.TriggerRemainingCubesChanged(remainingCubes);
 

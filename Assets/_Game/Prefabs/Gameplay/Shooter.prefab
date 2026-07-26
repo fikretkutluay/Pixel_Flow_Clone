@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 992756d6a4c659e42ad7f391228da589, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -128,3 +128,5 @@ MonoBehaviour:
   isHidden: 0
   color: 2
   ammo: 0
+  shooterRenderer: {fileID: 3907537037674414180}
+  palette: {fileID: 11400000, guid: 7613fe8f9d4a8c44795b9c7947d8d0db, type: 2}

@@ -52,6 +52,7 @@ namespace Game
 
             if (rescueTimers.Count == 0)
             {
+                Debug.Log($"[Rescue] BAŞLADI — park dolu, {shooter.Color} atıcı bekliyor.");
                 GameEvents.TriggerRescueStarted();
                 parkController.SetRescueAlert(true);
             }
@@ -104,10 +105,10 @@ namespace Game
                 rescueTimers.Remove(shooter);
             }
 
-            if (rescueTimers.Count == 0 && rescuedOrExpired.Count > 0)
+            if (rescueTimers.Count == 0)
             {
-                GameEvents.TriggerRescueEnded();
                 parkController.SetRescueAlert(false);
+                GameEvents.TriggerRescueEnded();
             }
         }
     }
