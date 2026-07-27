@@ -112,6 +112,7 @@ namespace Game
             {
                 Shooter s = visible[column][i];
                 s.transform.position = SlotPosition(column, i);
+                s.SetQueueFront(i == 0);          // YENİ — index 0 tam alpha, gerisi soluk
                 if (i == 0 && s.IsHidden) s.Reveal();
             }
         }

@@ -14,24 +14,36 @@ namespace Game
     {
         private readonly int width;
         private readonly int height;
-        private readonly float cellSize;
-        private readonly Vector3 origin;
-        private readonly float margin;   // board kenarı ile ray arası sabit dünya mesafesi
+        private readonly float cornerRadius;
+        private readonly float startOffset;
+
+        private readonly float leftX, rightX, bottomY, topY;
 
         public float Perimeter => 2f * (width + height);
 
-        public TrackPath(int width, int height, float cellSize, Vector3 origin, float margin)
+        // centerline: rayın merkez hattı dikdörtgeni (dünya uzayı).
+        // width/height yalnızca LANE SAYISI için — dünya konumu artık board'a
+        // değil bu dikdörtgene bağlı.
+        public TrackPath(int width, int height, Rect centerline, float cornerRadius, float startOffset)
         {
             this.width = width;
             this.height = height;
-            this.cellSize = cellSize;
-            this.origin = origin;
-            this.margin = margin;
+            this.startOffset = startOffset;
+
+            leftX = centerline.xMin;
+            rightX = centerline.xMax;
+            bottomY = centerline.yMin;
+            topY = centerline.yMax;
+
+            float maxRadius = Mathf.Min(rightX - leftX, topY - bottomY) * 0.5f - 0.01f;
+            this.cornerRadius = Mathf.Clamp(cornerRadius, 0f, Mathf.Max(0f, maxRadius));
         }
 
         public TrackSample Evaluate(float distance)
         {
-            distance = distance % Perimeter;
+            distance = (distance + startOffset) % Perimeter;
+            if (distance < 0f) distance += Perimeter;
+
             TrackEdge edge;
             float offset;
             int lane;
@@ -39,29 +51,25 @@ namespace Game
             {
                 edge = TrackEdge.Bottom;
                 offset = distance;
-                lane = Mathf.FloorToInt(offset);
-                lane = Mathf.Clamp(lane, 0, width - 1);
+                lane = Mathf.Clamp(Mathf.FloorToInt(offset), 0, width - 1);
             }
             else if (distance < width + height)
             {
                 edge = TrackEdge.Right;
                 offset = distance - width;
-                lane = Mathf.FloorToInt(offset);
-                lane = Mathf.Clamp(lane, 0, height - 1);
+                lane = Mathf.Clamp(Mathf.FloorToInt(offset), 0, height - 1);
             }
             else if (distance < 2 * width + height)
             {
                 edge = TrackEdge.Top;
                 offset = distance - (width + height);
-                lane = width - 1 - Mathf.FloorToInt(offset);
-                lane = Mathf.Clamp(lane, 0, width - 1);
+                lane = Mathf.Clamp(width - 1 - Mathf.FloorToInt(offset), 0, width - 1);
             }
             else
             {
                 edge = TrackEdge.Left;
                 offset = distance - (2 * width + height);
-                lane = height - 1 - Mathf.FloorToInt(offset);
-                lane = Mathf.Clamp(lane, 0, height - 1);
+                lane = Mathf.Clamp(height - 1 - Mathf.FloorToInt(offset), 0, height - 1);
             }
 
             Vector3 worldPos = WorldPosOf(edge, offset);
@@ -77,31 +85,57 @@ namespace Game
             _ => throw new System.ArgumentException($"Invalid edge: {edge}")
         };
 
-        // Kenar-boyu koordinat cellSize ile ölçeklenir (lane hizası korunur);
-        // dikey/yatay marj ise SABİT dünya mesafesidir (cellSize'dan bağımsız).
-        // Böylece ray footprint'i = boardPhysicalSize + 2*margin → her board boyutunda sabit.
         private Vector3 WorldPosOf(TrackEdge edge, float offset)
         {
-            // Board'un küp-kenar sınırları (hücre merkezleri 0..width-1, küpler ±0.5 hücre taşar):
-            float halfCell = 0.5f * cellSize;
-            float leftX   = origin.x - halfCell - margin;
-            float rightX  = origin.x + (width - 1) * cellSize + halfCell + margin;
-            float bottomY = origin.y - halfCell - margin;
-            float topY    = origin.y + (height - 1) * cellSize + halfCell + margin;
+            float r = cornerRadius;
 
             switch (edge)
             {
                 case TrackEdge.Bottom:
-                    return new Vector3(origin.x + offset * cellSize, bottomY, 0f);
+                {
+                    float L = rightX - leftX;
+                    float d = (offset / width) * L;
+                    if (d < r) return ArcPoint(new Vector2(leftX + r, bottomY + r), 225f, 270f, d / r, r);
+                    if (d > L - r) return ArcPoint(new Vector2(rightX - r, bottomY + r), 270f, 315f, (d - (L - r)) / r, r);
+                    float t = (d - r) / (L - 2f * r);
+                    return new Vector3(Mathf.Lerp(leftX + r, rightX - r, t), bottomY, 0f);
+                }
                 case TrackEdge.Right:
-                    return new Vector3(rightX, origin.y + offset * cellSize, 0f);
+                {
+                    float L = topY - bottomY;
+                    float d = (offset / height) * L;
+                    if (d < r) return ArcPoint(new Vector2(rightX - r, bottomY + r), 315f, 360f, d / r, r);
+                    if (d > L - r) return ArcPoint(new Vector2(rightX - r, topY - r), 0f, 45f, (d - (L - r)) / r, r);
+                    float t = (d - r) / (L - 2f * r);
+                    return new Vector3(rightX, Mathf.Lerp(bottomY + r, topY - r, t), 0f);
+                }
                 case TrackEdge.Top:
-                    return new Vector3(origin.x + (width - 1 - offset) * cellSize, topY, 0f);
+                {
+                    float L = rightX - leftX;
+                    float d = (offset / width) * L;
+                    if (d < r) return ArcPoint(new Vector2(rightX - r, topY - r), 45f, 90f, d / r, r);
+                    if (d > L - r) return ArcPoint(new Vector2(leftX + r, topY - r), 90f, 135f, (d - (L - r)) / r, r);
+                    float t = (d - r) / (L - 2f * r);
+                    return new Vector3(Mathf.Lerp(rightX - r, leftX + r, t), topY, 0f);
+                }
                 case TrackEdge.Left:
-                    return new Vector3(leftX, origin.y + (height - 1 - offset) * cellSize, 0f);
+                {
+                    float L = topY - bottomY;
+                    float d = (offset / height) * L;
+                    if (d < r) return ArcPoint(new Vector2(leftX + r, topY - r), 135f, 180f, d / r, r);
+                    if (d > L - r) return ArcPoint(new Vector2(leftX + r, bottomY + r), 180f, 225f, (d - (L - r)) / r, r);
+                    float t = (d - r) / (L - 2f * r);
+                    return new Vector3(leftX, Mathf.Lerp(topY - r, bottomY + r, t), 0f);
+                }
                 default:
                     throw new System.ArgumentException($"Invalid edge: {edge}");
             }
+        }
+
+        private static Vector3 ArcPoint(Vector2 center, float fromDeg, float toDeg, float u, float r)
+        {
+            float angle = Mathf.Lerp(fromDeg, toDeg, u) * Mathf.Deg2Rad;
+            return new Vector3(center.x + r * Mathf.Cos(angle), center.y + r * Mathf.Sin(angle), 0f);
         }
     }
 }

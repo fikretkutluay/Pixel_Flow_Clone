@@ -11,14 +11,14 @@ namespace Game
         private BoundedBuffer<Shooter> shooters;
         public event System.Action<Shooter> OnShooterFinishedLap;
 
-        public void Init(int boardWidth, int boardHeight, float cellSize, Vector3 origin, float trackMargin, int trackCapacity, float trackSpeed)
+        public void Init(int boardWidth, int boardHeight, Rect centerline, int trackCapacity,
+                          float trackSpeed, float cornerRadius, float startOffset)
         {
             this.trackSpeed = trackSpeed;
-            path = new TrackPath(boardWidth, boardHeight, cellSize, origin, trackMargin);
+            path = new TrackPath(boardWidth, boardHeight, centerline, cornerRadius, startOffset);
             shooters = new BoundedBuffer<Shooter>(trackCapacity);
             shooters.OnChanged += () => GameEvents.TriggerTrackOccupancyChanged(shooters.Count, shooters.Capacity);
         }
-
         public void Clear()
         {
             if (shooters == null) return;
@@ -29,6 +29,7 @@ namespace Game
         }
 
         public bool HasFreeTrackSlot => shooters != null && shooters.HasFreeSlot;
+        public TrackPath Path => path;
 
         private void Update()
         {
@@ -52,6 +53,16 @@ namespace Game
 
                 TrackSample sample = path.Evaluate(s.Distance);
                 s.transform.position = sample.worldPos;
+
+                // Atıcı ATEŞ EDECEĞİ yöne bakar (hareket yönüne değil) = teğetin 90° solu.
+                // Köşelerde teğet yay boyunca yumuşak döndüğü için dönüş de smooth.
+                Vector3 ahead = path.Evaluate(s.Distance + 0.1f).worldPos;
+                Vector3 forward = ahead - sample.worldPos;
+                if (forward.sqrMagnitude > 0.0001f)
+                {
+                    float tangentAngle = Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg;
+                    s.SetFacing(-tangentAngle);
+                }
 
                 if (s.HasFiredAt(sample.edge, sample.lane))
                     continue;

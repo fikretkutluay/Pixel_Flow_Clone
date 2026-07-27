@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 namespace Game
 {
@@ -16,8 +17,20 @@ namespace Game
         [SerializeField] private Renderer shooterRenderer;
         [SerializeField] private ColorPalette palette;
 
+        [Header("Gövde — döndürülen görsel (AmmoText bunun DIŞINDA olmalı)")]
+        [SerializeField] private Transform bodyTransform;
+        [Tooltip("Modelin kendi 'ön' yönü +X değilse düzeltme açısı (90 / -90 / 180 dene).")]
+        [SerializeField] private float bodyFacingOffsetDeg = 0f;
+
+        [Header("Kuyruk feedback'i — sadece kuyrukta anlamlı (ray/park'ta tam alpha kalır)")]
+        [SerializeField] private TMP_Text ammoText;
+        [SerializeField, Range(0f, 1f)] private float queueBackAlpha = 0.35f;
+
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private MaterialPropertyBlock mpb;
+
+        private Quaternion bodyBaseRotation;
+        private bool bodyBaseCaptured;
 
         public float Distance { get; set; }
         public TrackEdge LastFiredEdge { get; set; }
@@ -25,13 +38,21 @@ namespace Game
 
         public bool IsWaitingForPark { get; set; }
 
+        private void Awake()
+        {
+            CaptureBodyBase();
+        }
+
         public void Init(ColorId color, int ammo, bool isHidden)
         {
             this.color = color;
             this.ammo = ammo;
             this.isHidden = isHidden;
             ResetLap();
+            ResetFacing();
             ApplyVisual();
+            ApplyAmmoText();
+            SetQueueFront(true);   // varsayılan: tam alpha (yalnızca QueueController arkaya düşürür)
         }
 
         /// <summary>
@@ -50,13 +71,14 @@ namespace Game
         public void Reveal()
         {
             isHidden = false;
-            ApplyVisual();   // gizli tondan gerçek renge geçiş
+            ApplyVisual();
         }
 
         public void ConsumeAmmo()
         {
             if (ammo > 0)
                 ammo--;
+            ApplyAmmoText();
         }
 
         public bool HasFiredAt(TrackEdge edge, int lane)
@@ -68,6 +90,42 @@ namespace Game
         {
             LastFiredEdge = edge;
             LastFiredLane = lane;
+        }
+
+        // QueueController.RefreshColumn her sütunda çağırır: index 0 = tıklanabilir
+        // (tam alpha), gerisi soluk. Tek sinyal bu — mekanik zaten ikili.
+        public void SetQueueFront(bool isFront)
+        {
+            if (ammoText == null) return;
+            ammoText.alpha = isFront ? 1f : queueBackAlpha;
+        }
+
+        /// <summary>
+        /// Gövdeyi verilen dünya-Z açısına döndürür. Kök dönmez, dolayısıyla
+        /// AmmoText de dönmez (okunur kalır). Modelin kendi baz rotasyonu
+        /// (X=180 gibi import düzeltmeleri) korunur.
+        /// </summary>
+        public void SetFacing(float zAngleDeg)
+        {
+            if (bodyTransform == null) return;
+            CaptureBodyBase();
+            bodyTransform.localRotation =
+                bodyBaseRotation * Quaternion.Euler(0f, 0f, zAngleDeg + bodyFacingOffsetDeg);
+        }
+
+        /// <summary>Pool'dan yeniden çıkan atıcı, kuyrukta baz yönüne dönsün.</summary>
+        public void ResetFacing()
+        {
+            if (bodyTransform == null) return;
+            CaptureBodyBase();
+            bodyTransform.localRotation = bodyBaseRotation;
+        }
+
+        private void CaptureBodyBase()
+        {
+            if (bodyBaseCaptured || bodyTransform == null) return;
+            bodyBaseRotation = bodyTransform.localRotation;
+            bodyBaseCaptured = true;
         }
 
         // Board küpleriyle AYNI materyal (M_ToonCube) + AYNI ColorPalette kullanır —
@@ -83,6 +141,12 @@ namespace Game
             shooterRenderer.GetPropertyBlock(mpb);
             mpb.SetColor(BaseColorId, palette.Of(shown));
             shooterRenderer.SetPropertyBlock(mpb);
+        }
+
+        private void ApplyAmmoText()
+        {
+            if (ammoText == null) return;
+            ammoText.text = ammo.ToString();
         }
     }
 }

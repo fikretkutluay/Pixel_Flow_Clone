@@ -23,6 +23,8 @@ namespace Game
         [SerializeField] private float midLevelDelaySeconds = 0.5f;
         [SerializeField] private float rescueTestDelaySeconds = 6f;
 
+        [SerializeField] private TrackRailAnchor railAnchor;
+
         private void OnEnable()
         {
             GameEvents.OnLevelCompleted += HandleLevelCompleted;
@@ -69,7 +71,9 @@ namespace Game
                 0f);
 
             boardController.Setup(data, cellSize, boardOrigin);
-            trackController.Init(data.boardSize.x, data.boardSize.y, cellSize, boardOrigin, config.trackMargin, data.trackCapacity, data.trackSpeed);
+            trackController.Init(data.boardSize.x, data.boardSize.y,
+                railAnchor.GetCenterlineRect(), data.trackCapacity, data.trackSpeed,
+                railAnchor.CornerRadius, railAnchor.StartOffset);
             queueController.Init(data.queue, data.columnCount);
             parkController.Init(data.parkCapacity);
             gameManager.StartLevel(data);

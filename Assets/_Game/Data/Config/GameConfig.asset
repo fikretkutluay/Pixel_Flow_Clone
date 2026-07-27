@@ -14,13 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game::Game.GameConfig
   visibleQueueWindow: 3
   boardPhysicalSize: 7
-  topBarBand: 0.09
-  boardBand: 0.44
-  parkBand: 0.11
-  queueBand: 0.28
-  bottomBand: 0.08
+  topBarBand: 0.13764328
+  boardBand: 0.44207123
+  parkBand: 0.10171507
+  queueBand: 0.29857042
+  bottomBand: 0.019999996
   contentWidthFactor: 0.92
   queueSlotSpacing: 1.4
-  parkSlotGap: 0.15
-  trackMargin: 0.3
   cubeGap: 0.16
+  parkSlotGap: 0.15

@@ -78,6 +78,8 @@ namespace Game
         public bool TryPark(Shooter shooter)
         {
             if (!parkBuffer.TryAdd(shooter)) return false;
+
+            shooter.ResetFacing();   // rayda kalan dönüşü sıfırla — park'ta dik dursun
             RefreshSlotPositions();
             return true;
         }
