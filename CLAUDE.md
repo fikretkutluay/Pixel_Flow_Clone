@@ -4,13 +4,34 @@ Unity 6000.3.9f1 · URP 17.3 · Android portrait · Staj projesi.
 
 ## Önce bunu oku
 
-**`Assets/_Game/Art/Reference/Pixel_Flow_Clone_GDD.docx`** — projenin tam tanımı.
+**`Assets/_Game/Art/References/Pixel_Flow_Clone_GDD.docx`** — projenin tam tanımı.
 Mekanik, mimari sözleşme (KURAL 1-11), renk paleti, ekran tasarımları, mevcut
 durum, kalan iş planı ve teslim checklist'i orada. Bu dosya sadece bir özettir;
 çelişki olursa GDD kazanır.
 
-Referans görseller: `Assets/_Game/Art/Reference/` altında
-`gameplay/`, `panels/`, `ui_textures/`, `font/`.
+Referans görseller `Assets/_Game/Art/References/` altında iki klasörde:
+
+```
+Assets/_Game/Art/References/
+├── Pixel_Flow_Clone_GDD.docx
+├── inGameResources/          (gameplay ekran görüntüleri)
+│   ├── Ekran Resmi 2026-07-27 - 23.12.08.png
+│   ├── Ekran Resmi 2026-07-28 - 17.45.16.png
+│   └── slotlardoldu sıradaki atıcı geldiği anda lose.PNG
+└── uiResources/               (menü/panel referansları)
+    ├── anamenupaneli(level seçmiyoruz yanlış anlaşılmasın oynaya basınca sıradaki level açılıyor.).PNG
+    ├── anamenudeki magaza paneli (ana menudeki altınların yanındaki + ikonu veya dogrudan kendisine tıklayınca acılır.).PNG
+    ├── ayarlarpaneli.PNG
+    ├── losepanel.PNG
+    ├── winpanel.PNG
+    └── profilpaneli.PNG
+```
+
+UI taban dokuları (pill/panel/circle/iconframe) henüz yok — şeffaflık sorunu
+yüzünden yeniden üretilecek (GDD §4.3, doğrulama kontrol listesi). Bir görev
+bu dosyaları gerektiriyorsa önce var olup olmadığı kontrol edilir, yoksa
+üretim GDD §4.3'teki dört kısıtla (şeffaflık, nötr ton, 9-slice payı, boyut)
+yapılır ve ölçülerek doğrulanır.
 
 ## Bağlayıcı kurallar
 
