@@ -151,9 +151,10 @@ namespace Game
             FillWindow(column);
         }
 
+        // Intentionally silent: invalid taps (not top of column, track full) are
+        // ignored rather than surfaced — the shooter simply stays put.
         private void RejectTap(Shooter s)
         {
-            Debug.Log("rejected");
         }
 
         private int FindColumn(Shooter s)

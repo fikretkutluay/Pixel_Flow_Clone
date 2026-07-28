@@ -28,8 +28,8 @@ namespace Game
                 inputRouter.OnTap -= HandleTap;
         }
 
-        // QueueController.HandleTap ile aynı desen: ekran koordinatı → raycast → Shooter.
-        // Fark: yalnızca PARK buffer'ındaki atıcılarla ilgileniyoruz.
+        // Same pattern as QueueController.HandleTap: screen point → raycast → Shooter.
+        // Difference: only shooters in the PARK buffer are relevant here.
         private void HandleTap(Vector2 screenPos)
         {
             if (mainCam == null || parkBuffer == null) return;
@@ -39,10 +39,9 @@ namespace Game
 
             Shooter s = hit.collider.GetComponent<Shooter>();
             if (s == null) return;
-            if (!parkBuffer.Contains(s)) return;   // kuyruktaki/raydaki atıcı bizim işimiz değil
+            if (!parkBuffer.Contains(s)) return;   // Shooters in the queue/rail aren't ours to handle
 
-            if (!TryLaunch(s))
-                Debug.Log("[Park] launch rejected — ray dolu");
+            TryLaunch(s);   // Silently rejected if the rail is full — see TryLaunch below
         }
 
         public void Init(int parkCapacity)
@@ -84,7 +83,8 @@ namespace Game
             return true;
         }
 
-        // Park'tan raya geri yollama. Ray doluysa reddedilir (kayıp koşulunun yarısı budur).
+        // Sends a shooter back from park to the rail. Rejected if the rail is full
+        // (this is half of the lose condition).
         public bool TryLaunch(Shooter shooter)
         {
             if (trackController == null) return false;

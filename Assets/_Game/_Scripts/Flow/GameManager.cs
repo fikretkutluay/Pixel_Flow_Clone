@@ -52,7 +52,6 @@ namespace Game
 
             if (rescueTimers.Count == 0)
             {
-                Debug.Log($"[Rescue] BAŞLADI — park dolu, {shooter.Color} atıcı bekliyor.");
                 GameEvents.TriggerRescueStarted();
                 parkController.SetRescueAlert(true);
             }
@@ -66,14 +65,13 @@ namespace Game
             if (boardController.RemainingCubes <= 0)
             {
                 currentState = GameState.Won;
-                Debug.Log("WON!");
                 GameEvents.TriggerLevelCompleted();
                 return;
             }
 
             rescuedOrExpired.Clear();
             rescueKeysSnapshot.Clear();
-            rescueKeysSnapshot.AddRange(rescueTimers.Keys);   // canlı dictionary yerine kopya üzerinde dön
+            rescueKeysSnapshot.AddRange(rescueTimers.Keys);   // Iterate a snapshot, not the live dictionary
 
             foreach (Shooter shooter in rescueKeysSnapshot)
             {
@@ -92,12 +90,11 @@ namespace Game
                 if (timeleft <= 0)
                 {
                     currentState = GameState.Lost;
-                    Debug.Log("LOST - rescue window expired");
                     GameEvents.TriggerLevelFailed();
                     return;
                 }
 
-                rescueTimers[shooter] = timeleft;   // artık güvenli — snapshot üzerinde enumerate ediyoruz
+                rescueTimers[shooter] = timeleft;   // Safe to mutate now — enumerating the snapshot, not the dictionary
             }
 
             foreach (Shooter shooter in rescuedOrExpired)

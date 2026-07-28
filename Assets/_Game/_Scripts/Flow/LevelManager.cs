@@ -50,8 +50,8 @@ namespace Game
 
             if (currentLevelIndex >= levels.Length)
             {
+                // Final level stays clamped; nothing further to persist.
                 currentLevelIndex = levels.Length - 1;
-                Debug.Log("All Levels are Complete!!!");
                 return;
             }
             serializer.Save(new SaveData { currentLevelIndex = currentLevelIndex }, "save");
@@ -62,8 +62,8 @@ namespace Game
             currentLevel = data;
             float cellSize = config.boardPhysicalSize / data.boardSize.x;
 
-            // Board'un geometrik merkezini boardBand'in dünya-Y merkezine oturt.
-            // X yatay merkezde (genişliğe kilitli). Aynı origin track'e de gidiyor.
+            // Anchor the board's geometric center to boardBand's world-Y center.
+            // X stays horizontally centered (width-locked). Track uses the same origin.
             float boardCenterY = GameLayout.BoardBandCenterY(Camera.main, config);
             Vector3 boardOrigin = new Vector3(
                 -(data.boardSize.x - 1) * cellSize * 0.5f,
@@ -156,13 +156,12 @@ namespace Game
 
             Shooter s = queueController.PeekTopShooter(0);
             if (s != null)
-                queueController.OnShooterTapped(s);   // gerçek tap akışının aynısı
+                queueController.OnShooterTapped(s);   // Same path as a real tap
             else
-                Debug.LogWarning("Kuyrukta shooter bulunamadı — level'daki queue[0].column değerini kontrol et.");
+                Debug.LogWarning("No shooter found in queue — check the level data's queue[0].column value.");
 
             yield return new WaitForSeconds(delaySeconds);
 
-            Debug.Log($"--- {delaySeconds}s sonra Reload tetikleniyor ---");
             ReloadLevel();
             LogPoolStatus();
         }

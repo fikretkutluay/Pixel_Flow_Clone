@@ -9,7 +9,6 @@ public class JsonSaveSystem : ISerializer
         string json = JsonUtility.ToJson(data, true);
         string path = Path.Combine(Application.persistentDataPath, fileName + ".json");
         System.IO.File.WriteAllText(path, json);
-        Debug.Log("Data saved to: " + path);
     }
     public void Load<T>(string fileName, out T data)
     {
@@ -18,11 +17,10 @@ public class JsonSaveSystem : ISerializer
         {
             string json = System.IO.File.ReadAllText(path);
             data = JsonUtility.FromJson<T>(json);
-            Debug.Log("Data loaded from: " + path);
         }
         else
         {
-            Debug.LogWarning("Save file not found at: " + path);
+            // No save file yet (e.g. first launch) — caller gets default(T).
             data = default(T);
         }
     }   

@@ -122,7 +122,7 @@ namespace Game
         [ContextMenu("Spawn Test Shooter")]
         private void SpawnTestShooter()
         {
-            if (!shooters.HasFreeSlot) { Debug.Log("Track full"); return; }
+            if (!shooters.HasFreeSlot) return;
 
             GameObject obj = ObjectPooler.Instance.SpawnFromPool("Shooter", Vector3.zero, Quaternion.identity);
             if (obj == null) return;
