@@ -1,4 +1,3 @@
-using UnityEngine;
 using MobileCore;
 
 namespace Game
@@ -8,6 +7,12 @@ namespace Game
         public void OnRetryButtonClicked()
         {
             GameEvents.TriggerRetryRequested();
+        }
+
+        /// <summary>Closing a lost level drops back to the main menu.</summary>
+        public void OnCloseButtonClicked()
+        {
+            GameEvents.TriggerMainMenuRequested();
         }
     }
 }

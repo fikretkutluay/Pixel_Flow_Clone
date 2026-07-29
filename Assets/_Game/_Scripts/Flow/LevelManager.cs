@@ -77,6 +77,10 @@ namespace Game
             queueController.Init(data.queue, data.columnCount);
             parkController.Init(data.parkCapacity);
             gameManager.StartLevel(data);
+
+            // levelID is authored per asset; test levels leave it at 0, so fall
+            // back to the position in the campaign list.
+            GameEvents.TriggerLevelStarted(data.levelID > 0 ? data.levelID : currentLevelIndex + 1);
         }
 
         public void ReloadLevel()

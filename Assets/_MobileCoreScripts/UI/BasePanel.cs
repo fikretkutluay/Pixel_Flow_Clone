@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 namespace MobileCore
 {
+    [RequireComponent(typeof(CanvasGroup))]
     public abstract class BasePanel : MonoBehaviour
     {
         private CanvasGroup canvasGroup;

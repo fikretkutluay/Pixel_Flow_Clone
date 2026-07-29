@@ -17,6 +17,14 @@ namespace MobileCore
         public static event Action OnRescueStarted;
         public static event Action OnRescueEnded;
 
+        // UI-to-UI requests. Direction is still one-way — a panel raises them and
+        // UIManager answers; no gameplay class touches these (RULE 6).
+        public static event Action<int> OnLevelStarted;
+        public static event Action OnMainMenuRequested;
+        public static event Action OnSettingsRequested;
+        public static event Action OnStoreRequested;
+        public static event Action OnProfileRequested;
+
         public static void TriggerRescueStarted() => OnRescueStarted?.Invoke();
         public static void TriggerRescueEnded() => OnRescueEnded?.Invoke();
 
@@ -29,6 +37,11 @@ namespace MobileCore
         public static void TriggerTrackOccupancyChanged(int count, int cap) => OnTrackOccupancyChanged?.Invoke(count, cap);
         public static void TriggerParkOccupancyChanged(int count, int cap) => OnParkOccupancyChanged?.Invoke(count, cap);
 
+        public static void TriggerLevelStarted(int level) => OnLevelStarted?.Invoke(level);
+        public static void TriggerMainMenuRequested() => OnMainMenuRequested?.Invoke();
+        public static void TriggerSettingsRequested() => OnSettingsRequested?.Invoke();
+        public static void TriggerStoreRequested() => OnStoreRequested?.Invoke();
+        public static void TriggerProfileRequested() => OnProfileRequested?.Invoke();
     }
 
 }

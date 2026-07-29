@@ -1,4 +1,3 @@
-using UnityEngine;
 using MobileCore;
 
 namespace Game
@@ -8,6 +7,21 @@ namespace Game
         public void OnPlayButtonClicked()
         {
             GameEvents.TriggerPlayRequested();
+        }
+
+        public void OnSettingsButtonClicked()
+        {
+            GameEvents.TriggerSettingsRequested();
+        }
+
+        public void OnStoreButtonClicked()
+        {
+            GameEvents.TriggerStoreRequested();
+        }
+
+        public void OnProfileButtonClicked()
+        {
+            GameEvents.TriggerProfileRequested();
         }
     }
 }

@@ -6,6 +6,9 @@ namespace MobileCore
     {
         public static AudioManager Instance { get; private set; }
 
+        private const string SfxVolumeKey = "sfxVolume";
+        private const string MusicVolumeKey = "musicVolume";
+
         [Header("Sources")]
         [SerializeField] private AudioSource sfxSource;
         [SerializeField] private AudioSource musicSource;
@@ -38,6 +41,9 @@ namespace MobileCore
             }
 
             Instance = this;
+
+            sfxVolume = PlayerPrefs.GetFloat(SfxVolumeKey, sfxVolume);
+            musicVolume = PlayerPrefs.GetFloat(MusicVolumeKey, musicVolume);
             ApplyVolumes();
         }
 
@@ -99,12 +105,14 @@ namespace MobileCore
         public void SetSfxVolume(float value)
         {
             sfxVolume = Mathf.Clamp01(value);
+            PlayerPrefs.SetFloat(SfxVolumeKey, sfxVolume);
         }
 
         public void SetMusicVolume(float value)
         {
             musicVolume = Mathf.Clamp01(value);
             if (musicSource != null) musicSource.volume = musicVolume;
+            PlayerPrefs.SetFloat(MusicVolumeKey, musicVolume);
         }
 
         private void ApplyVolumes()
