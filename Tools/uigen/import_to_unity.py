@@ -20,10 +20,12 @@ BORDERS = [
     ("pixelflow_ui_buttonsq_", (84, 0, 84, 0)),
     ("pixelflow_ui_button_", (59, 0, 59, 0)),
     ("pixelflow_ui_iconframe", (62, 62, 62, 62)),
+    ("pixelflow_ui_selection", (62, 62, 62, 62)),
     ("pixelflow_ui_ribbon", (100, 0, 100, 0)),
     ("pixelflow_ui_pill", (60, 0, 60, 0)),
     ("pixelflow_ui_circle", (0, 0, 0, 0)),
     ("pixelflow_icon_", (0, 0, 0, 0)),
+    ("pixelflow_avatar_", (0, 0, 0, 0)),
 ]
 
 PLATFORMS = ["DefaultTexturePlatform", "iOS", "Android", "Standalone",
@@ -168,13 +170,20 @@ def main():
         open(DST + ".meta", "w", newline="\n").write(folder_meta(rel_dir))
 
     files = sorted(glob.glob(f"{SRC}/pixelflow_*.png"))
+    written = 0
     for f in files:
         name = os.path.basename(f)
         rel = f"{rel_dir}/{name}"
         shutil.copyfile(f, f"{DST}/{name}")
-        open(f"{DST}/{name}.meta", "w", newline="\n").write(
-            meta_for(rel, border_for(name[:-4])))
-    print(f"imported {len(files)} sprites -> {rel_dir}")
+
+        # Only author the .meta for assets Unity has not imported yet. Rewriting
+        # an existing one would drop the sprite IDs Unity stamps on import.
+        meta = f"{DST}/{name}.meta"
+        if not os.path.exists(meta):
+            open(meta, "w", newline="\n").write(meta_for(rel, border_for(name[:-4])))
+            written += 1
+
+    print(f"{len(files)} sprites in {rel_dir} ({written} newly imported)")
 
 
 if __name__ == "__main__":

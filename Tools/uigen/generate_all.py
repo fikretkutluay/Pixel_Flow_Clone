@@ -57,6 +57,25 @@ header("pixelflow_ui_panel_header", 800, 130, 34)
 header("pixelflow_ui_panel_header_blue", 800, 130, 34, "#1F86F3")
 
 
+# --------------------------------------------------------- selection frame
+def selection_frame(name, W, H, radius, thickness):
+    """Hollow rounded-square ring. Hollow matters: in UGUI a child always draws
+    over its parent's own Image, so a filled marker would hide the avatar."""
+    w, h = W * SS, H * SS
+    t, rad = thickness * SS, radius * SS
+    outer = mask_rrect(w, h, (0, 0, w - 1, h - 1), rad)
+    inner = mask_rrect(w, h, (t, t, w - t - 1, h - t - 1), max(rad - t, 1))
+    ring = np.clip(outer - inner, 0, 1)
+
+    rgb = np.zeros((h, w, 3)) + 250.0
+    edge = np.clip(ring - erode(ring, max(int(0.10 * t), 1)), 0, 1) * 0.55
+    rgb = rgb * (1 - edge[..., None])          # darker lip on both sides of the ring
+    return save(rgb, ring, W, H, name)
+
+
+selection_frame("pixelflow_ui_selection", 300, 300, 62, 16)
+
+
 # ------------------------------------------------------------------ ribbon
 def ribbon(name, W, H, face="#2F9BF6", tail="#1668C4", keyline=KEYLINE):
     """Banner whose tails emerge from behind the face and fall away outward,

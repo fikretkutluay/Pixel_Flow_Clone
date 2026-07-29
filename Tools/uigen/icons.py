@@ -256,11 +256,49 @@ def hand(d, n):
         d.line(P(n, [(0.62, y), (0.76, y)]), fill=0, width=int(0.020 * n))
 
 
+def dog(d, n, eyes="open"):
+    """The Cubic_Dog mascot flattened to a 2D mark — game's own character."""
+    def R(box, r):
+        d.rounded_rectangle([(box[0] * n, box[1] * n), (box[2] * n, box[3] * n)],
+                            radius=int(r * n), fill=255)
+
+    def E(cx, cy, rx, ry):
+        d.ellipse([((cx - rx) * n, (cy - ry) * n), ((cx + rx) * n, (cy + ry) * n)], fill=0)
+
+    R((0.05, 0.22, 0.30, 0.70), 0.12)          # ears
+    R((0.70, 0.22, 0.95, 0.70), 0.12)
+    R((0.24, 0.40, 0.42, 0.93), 0.08)          # legs
+    R((0.58, 0.40, 0.76, 0.93), 0.08)
+    R((0.15, 0.09, 0.85, 0.79), 0.22)          # head
+
+    w = max(int(0.016 * n), 2)
+
+    def open_eye(cx):
+        E(cx, 0.40, 0.075, 0.095)
+
+    def closed_eye(cx):
+        d.arc([((cx - 0.085) * n, 0.34 * n), ((cx + 0.085) * n, 0.50 * n)],
+              180, 360, fill=0, width=int(0.030 * n))
+
+    left, right = {"open": (open_eye, open_eye),
+                   "wink": (open_eye, closed_eye),
+                   "happy": (closed_eye, closed_eye)}[eyes]
+    left(0.355)
+    right(0.645)
+
+    R((0.36, 0.50, 0.64, 0.74), 0.10)          # muzzle sits over the head
+    d.rounded_rectangle([(0.36 * n, 0.50 * n), (0.64 * n, 0.74 * n)],
+                        radius=int(0.10 * n), outline=0, width=w)
+    E(0.50, 0.575, 0.055, 0.042)               # nose
+    d.line([(0.50 * n, 0.60 * n), (0.50 * n, 0.71 * n)], fill=0, width=w)
+
+
 ICONS = dict(gear=gear, close=close_x, heart=heart, heart_broken=heart_broken,
              coin=coin, plus=plus, cube=cube, trophy=trophy, skull=skull,
              speaker=speaker, bell=bell, phone=phone, shield=shield, chat=chat,
              floppy=floppy, store=store, lock=lock, pencil=pencil,
-             refresh=refresh, play=play, diamond=diamond, star=star, hand=hand)
+             refresh=refresh, play=play, diamond=diamond, star=star, hand=hand,
+             dog=dog)
 
 if __name__ == "__main__":
     for name, fn in ICONS.items():
