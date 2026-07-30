@@ -257,6 +257,7 @@ MonoBehaviour:
   ammo: 0
   shooterRenderer: {fileID: 4706297123843326658}
   palette: {fileID: 11400000, guid: 7613fe8f9d4a8c44795b9c7947d8d0db, type: 2}
+  hiddenMaterial: {fileID: 2100000, guid: fc3d8c78d5ee730bd30d630fbcf5a2d5, type: 2}
   bodyTransform: {fileID: 5844278755098376621}
   muzzle: {fileID: 4383440184715047471}
   bodyFacingOffsetDeg: 0
@@ -379,8 +380,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: b8355fb294513424ea9ecd96ce8c09fd, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 992756d6a4c659e42ad7f391228da589, type: 2}
+      value:
+      objectReference: {fileID: 2100000, guid: 13bf63cad30325630b60f17416744f6f, type: 2}
     - target: {fileID: 919132149155446097, guid: b8355fb294513424ea9ecd96ce8c09fd, type: 3}
       propertyPath: m_Name
       value: Cubic_Dog

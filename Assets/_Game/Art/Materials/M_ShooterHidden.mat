@@ -7,11 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_RailFrame
+  m_Name: M_ShooterHidden
   m_Shader: {fileID: 4800000, guid: ddbafe7de3ff6dcf649a951cb94310fa, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _OUTLINE_ON
+  - _PATTERN_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -24,12 +26,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _PatternMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: c026fcbac52457c689f3b6e96aa4124d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EdgeDarken: 0.25
+    - _EdgeDarken: 0.47
     - _EdgePower: 2.5
     - _FaceExtent: 0.5
     - _FaceGradient: 0
@@ -37,10 +39,10 @@ Material:
     - _HighlightSmooth: 0.25
     - _HighlightStart: 0.45
     - _OutlineDepthBias: 0.004
-    - _OutlineEnabled: 0
+    - _OutlineEnabled: 1
     - _OutlineFromPosition: 0
     - _OutlineWidth: 2.5
-    - _PatternEnabled: 0
+    - _PatternEnabled: 1
     - _PatternGain: 1.15
     - _PatternLift: 0.16
     - _PatternStrength: 1
@@ -51,7 +53,7 @@ Material:
     - _ShadowTintAmount: 0.18
     - _ShadowValue: 0.55
     m_Colors:
-    - _BaseColor: {r: 0.556863, g: 0.52549, b: 0.784314, a: 1}
+    - _BaseColor: {r: 0.518, g: 0.486, b: 0.913, a: 1}
     - _HighlightColor: {r: 1, g: 1, b: 0.68, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadowTint: {r: 0.35, g: 0.37, b: 0.6, a: 1}
