@@ -6,8 +6,8 @@ using UnityEngine.UI;
 namespace MobileCore
 {
     /// <summary>
-    /// Press feedback for UI buttons: squash on press, spring back on release.
-    /// Drop it next to a Button; no per-button setup needed.
+    /// Press feedback for UI buttons: squash on press, spring back on release, and
+    /// the click sound. Drop it next to a Button; no per-button setup needed.
     /// </summary>
     [RequireComponent(typeof(Button))]
     [DisallowMultipleComponent]
@@ -16,6 +16,9 @@ namespace MobileCore
         [SerializeField] private float pressedScale = 0.92f;
         [SerializeField] private float pressDuration = 0.07f;
         [SerializeField] private float releaseDuration = 0.28f;
+
+        [Tooltip("Turn off for buttons that already make their own noise.")]
+        [SerializeField] private bool playClickSound = true;
 
         private Button button;
         private Vector3 restScale;
@@ -36,6 +39,9 @@ namespace MobileCore
         public void OnPointerDown(PointerEventData eventData)
         {
             if (button == null || !button.IsInteractable()) return;
+
+            if (playClickSound && AudioManager.Instance != null)
+                AudioManager.Instance.PlayUiClick();
 
             tween?.Kill();
             tween = transform.DOScale(restScale * pressedScale, pressDuration)

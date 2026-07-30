@@ -15,9 +15,15 @@ namespace MobileCore
 
         [Header("Gameplay Clips")]
         [SerializeField] private AudioClip cubeBreakClip;
+        [SerializeField] private AudioClip shooterLaunchClip;
         [SerializeField] private AudioClip rescueWarningClip;
+
+        [Header("Stingers — short pieces played over the win/lose panels")]
         [SerializeField] private AudioClip levelCompletedClip;
         [SerializeField] private AudioClip levelFailedClip;
+
+        [Header("UI")]
+        [SerializeField] private AudioClip uiClickClip;
 
         [Header("Music")]
         [SerializeField] private AudioClip backgroundMusic;
@@ -50,6 +56,7 @@ namespace MobileCore
         private void OnEnable()
         {
             GameEvents.OnRemainingCubesChanged += HandleCubeBroken;
+            GameEvents.OnShooterLaunched += HandleShooterLaunched;
             GameEvents.OnRescueStarted += HandleRescueStarted;
             GameEvents.OnLevelCompleted += HandleLevelCompleted;
             GameEvents.OnLevelFailed += HandleLevelFailed;
@@ -58,6 +65,7 @@ namespace MobileCore
         private void OnDisable()
         {
             GameEvents.OnRemainingCubesChanged -= HandleCubeBroken;
+            GameEvents.OnShooterLaunched -= HandleShooterLaunched;
             GameEvents.OnRescueStarted -= HandleRescueStarted;
             GameEvents.OnLevelCompleted -= HandleLevelCompleted;
             GameEvents.OnLevelFailed -= HandleLevelFailed;
@@ -69,10 +77,27 @@ namespace MobileCore
         }
 
 
-        private void HandleCubeBroken(int remaining) => PlaySfx(cubeBreakClip);
+        // Slight pitch scatter so a fast chain of breaks doesn't sound like a machine.
+        private void HandleCubeBroken(int remaining) =>
+            PlaySfx(cubeBreakClip, Random.Range(0.94f, 1.06f));
+
+        private void HandleShooterLaunched() => PlaySfx(shooterLaunchClip);
         private void HandleRescueStarted() => PlaySfx(rescueWarningClip);
-        private void HandleLevelCompleted() => PlaySfx(levelCompletedClip);
-        private void HandleLevelFailed() => PlaySfx(levelFailedClip);
+        private void HandleLevelCompleted() => PlayStinger(levelCompletedClip);
+        private void HandleLevelFailed() => PlayStinger(levelFailedClip);
+
+        public void PlayUiClick() => PlaySfx(uiClickClip);
+
+        /// <summary>
+        /// Win / lose pieces. Skips the anti-machine-gun throttle, which would
+        /// otherwise swallow the sting when it lands right after a cube break.
+        /// </summary>
+        public void PlayStinger(AudioClip clip)
+        {
+            if (clip == null || sfxSource == null) return;
+            sfxSource.pitch = 1f;
+            sfxSource.PlayOneShot(clip, sfxVolume);
+        }
 
 
         public void PlaySfx(AudioClip clip, float pitch = 1f)
