@@ -16,6 +16,9 @@ namespace Game
 
         [SerializeField] private PointerRouter inputRouter;
 
+        [Tooltip("Gecikme adımı — sütunun dalga hâlinde ilerlemesini sağlar.")]
+        [SerializeField] private float queueStagger = 0.045f;
+
         private void OnEnable()
         {
             if (inputRouter != null)
@@ -89,6 +92,14 @@ namespace Game
             {
                 ShooterDef def = pending[column].Dequeue();
                 Shooter s = SpawnShooter(def);
+                if (s == null) break;
+
+                // Start one slot further back so RefreshColumn walks it into place —
+                // that is what makes a new shooter appear to feed into the column
+                // rather than blink into existence.
+                int index = visible[column].Count;
+                s.transform.position = SlotPosition(column, index)
+                                       + Vector3.down * config.queueSlotSpacing;
                 visible[column].Add(s);
             }
 
@@ -111,7 +122,14 @@ namespace Game
             for (int i = 0; i < visible[column].Count; i++)
             {
                 Shooter s = visible[column][i];
-                s.transform.position = SlotPosition(column, i);
+                Vector3 target = SlotPosition(column, i);
+
+                // Staggered so the column ripples forward instead of snapping as one.
+                if (s.Animator != null)
+                    s.Animator.SlideTo(target, i * queueStagger);
+                else
+                    s.transform.position = target;
+
                 s.SetQueueFront(i == 0);          // YENİ — index 0 tam alpha, gerisi soluk
                 if (i == 0 && s.IsHidden) s.Reveal();
             }
@@ -146,6 +164,9 @@ namespace Game
                 RejectTap(tapped);
                 return;
             }
+
+            tapped.Animator?.PunchLaunch();
+            GameEvents.TriggerShooterLaunched();
 
             visible[column].RemoveAt(0);
             FillWindow(column);

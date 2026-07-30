@@ -19,6 +19,8 @@ namespace Game
 
         [Header("Gövde — döndürülen görsel (AmmoText bunun DIŞINDA olmalı)")]
         [SerializeField] private Transform bodyTransform;
+        [Tooltip("Merminin çıktığı nokta. Boşsa gövdenin merkezi kullanılır.")]
+        [SerializeField] private Transform muzzle;
         [Tooltip("Modelin kendi 'ön' yönü +X değilse düzeltme açısı (90 / -90 / 180 dene).")]
         [SerializeField] private float bodyFacingOffsetDeg = 0f;
 
@@ -38,8 +40,17 @@ namespace Game
 
         public bool IsWaitingForPark { get; set; }
 
+        public Transform Body => bodyTransform;
+        public Vector3 MuzzlePosition => muzzle != null ? muzzle.position : transform.position;
+        public ShooterAnimator Animator { get; private set; }
+
+        /// <summary>Palette colour this shooter shows — used to tint its tracer.</summary>
+        public UnityEngine.Color DisplayColor =>
+            palette != null ? palette.Of(isHidden ? ColorId.Purple : color) : UnityEngine.Color.white;
+
         private void Awake()
         {
+            Animator = GetComponent<ShooterAnimator>();
             CaptureBodyBase();
         }
 

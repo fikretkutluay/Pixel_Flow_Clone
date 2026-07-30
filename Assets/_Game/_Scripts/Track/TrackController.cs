@@ -101,7 +101,8 @@ namespace Game
                     continue;
 
                 Direction dir = TrackPath.FireDirectionOf(sample.edge);
-                bool hit = boardController.TryBreakCube(sample.lane, dir, s.Color);
+                bool hit = boardController.TryBreakCube(sample.lane, dir, s.Color,
+                                                        s.MuzzlePosition, s.DisplayColor);
 
                 s.MarkFired(sample.edge, sample.lane);
 
@@ -109,7 +110,7 @@ namespace Game
                 {
                     s.ConsumeAmmo();
                     if (s.IsSpent)
-                        RemoveShooter(s);
+                        RetireShooter(s);
                 }
             }
         }
@@ -122,10 +123,23 @@ namespace Game
 
         public bool TryAddShooter(Shooter shooter) => shooters.TryAdd(shooter);
 
-        private void RemoveShooter(Shooter s)
+        /// <summary>
+        /// Out of ammo. It leaves the buffer at once — the rail must stop driving it
+        /// and the freed slot must count immediately — then spins out and only then
+        /// goes back to the pool.
+        /// </summary>
+        private void RetireShooter(Shooter s)
         {
             shooters.TryRemove(s);
-            ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
+
+            if (s.Animator == null)
+            {
+                ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
+                return;
+            }
+
+            s.Animator.PlaySpentExit(() =>
+                ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject));
         }
 
         public void ReleaseShooter(Shooter s)

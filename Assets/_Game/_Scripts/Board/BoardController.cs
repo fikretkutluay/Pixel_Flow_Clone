@@ -15,7 +15,13 @@ namespace Game
         public int RemainingCubes => remainingCubes;
         private CubeView[,] cubeViews;
 
-        public bool TryBreakCube(int laneIndex, Direction dir, ColorId shooterColor)
+        /// <summary>
+        /// Resolves a shot. The cell is cleared and the count drops immediately —
+        /// the win check must not wait on presentation — while the tracer flies and
+        /// the cube's break is held back to meet it.
+        /// </summary>
+        public bool TryBreakCube(int laneIndex, Direction dir, ColorId shooterColor,
+                                 Vector3 muzzle, Color tracerColor)
         {
             if (board == null) return false;
             if (!LaneRaycaster.TryBreak(board, laneIndex, dir, shooterColor, out Vector2Int brokenPos))
@@ -23,14 +29,34 @@ namespace Game
             remainingCubes--;
             GameEvents.TriggerRemainingCubesChanged(remainingCubes);
 
+            Vector3 hitPosition = board.GetWorldPosition(brokenPos.x, brokenPos.y);
+            float flightTime = FireTracer(muzzle, hitPosition, tracerColor);
+
             CubeView view = cubeViews[brokenPos.x, brokenPos.y];
             if (view != null)
             {
-                view.PlayBreakAndReturn();
+                view.PlayBreakAndReturn(flightTime);
                 cubeViews[brokenPos.x, brokenPos.y] = null;
             }
 
             return true;
+        }
+
+        /// <summary>Returns the flight time, or zero when there is no tracer pool.</summary>
+        private float FireTracer(Vector3 from, Vector3 to, Color color)
+        {
+            GameObject obj = ObjectPooler.Instance.SpawnFromPool(Tracer.PoolTag, from, Quaternion.identity);
+            if (obj == null) return 0f;
+
+            Tracer tracer = obj.GetComponent<Tracer>();
+            if (tracer == null)
+            {
+                ObjectPooler.Instance.ReturnToPool(Tracer.PoolTag, obj);
+                return 0f;
+            }
+
+            tracer.Fire(from, to, color);
+            return tracer.DurationFor(from, to);
         }
 
         public void Setup(LevelData data, float cellSize, Vector3 origin)

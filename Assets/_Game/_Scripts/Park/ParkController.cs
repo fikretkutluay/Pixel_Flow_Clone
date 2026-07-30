@@ -10,6 +10,10 @@ namespace Game
         [SerializeField] private TrackController trackController;
         [SerializeField] private PointerRouter inputRouter;
 
+        [Tooltip("Beyond this the shooter is arriving from the rail and hops in; " +
+                 "below it, it is just shuffling along the row.")]
+        [SerializeField] private float arrivalDistance = 1.5f;
+
         private BoundedBuffer<Shooter> parkBuffer;
         private ParkSlotView[] slotViews;
         private Camera mainCam;
@@ -84,6 +88,18 @@ namespace Game
             return true;
         }
 
+        /// <summary>Where a shooter sits once parked — used to aim its landing hop.</summary>
+        private int IndexOf(Shooter shooter)
+        {
+            int index = 0;
+            foreach (Shooter s in parkBuffer)
+            {
+                if (s == shooter) return index;
+                index++;
+            }
+            return -1;
+        }
+
         // Sends a shooter back from park to the rail. Rejected if the rail is full
         // (this is half of the lose condition).
         public bool TryLaunch(Shooter shooter)
@@ -94,6 +110,12 @@ namespace Game
 
             shooter.ResetLap();                      // KRİTİK — bkz. Shooter.ResetLap
             trackController.TryAddShooter(shooter);
+
+            // A stretch, not a jump: the rail owns this shooter's position from the
+            // next frame on, so a positional tween would be fought and lost.
+            shooter.Animator?.PunchLaunch();
+            GameEvents.TriggerShooterLaunched();
+
             RefreshSlotPositions();
             return true;
         }
@@ -109,12 +131,23 @@ namespace Game
             return new Vector3(x, y, 0f);
         }
 
+        // Everyone already parked slides across; the newcomer arcs in. Telling them
+        // apart by distance keeps this from needing extra bookkeeping.
         private void RefreshSlotPositions()
         {
             int index = 0;
             foreach (var shooter in parkBuffer)
             {
-                shooter.transform.position = SlotPosition(index);
+                Vector3 target = SlotPosition(index);
+                ShooterAnimator anim = shooter.Animator;
+
+                if (anim == null)
+                    shooter.transform.position = target;
+                else if (Vector3.Distance(shooter.transform.position, target) > arrivalDistance)
+                    anim.HopTo(target);
+                else
+                    anim.SlideTo(target);
+
                 index++;
             }
         }

@@ -17,6 +17,9 @@ namespace MobileCore
         public static event Action OnRescueStarted;
         public static event Action OnRescueEnded;
 
+        /// <summary>A shooter was committed to the rail, from the queue or the park.</summary>
+        public static event Action OnShooterLaunched;
+
         // UI-to-UI requests. Direction is still one-way — a panel raises them and
         // UIManager answers; no gameplay class touches these (RULE 6).
         public static event Action<int> OnLevelStarted;
@@ -24,6 +27,8 @@ namespace MobileCore
         public static event Action OnSettingsRequested;
         public static event Action OnStoreRequested;
         public static event Action OnProfileRequested;
+
+        public static void TriggerShooterLaunched() => OnShooterLaunched?.Invoke();
 
         public static void TriggerRescueStarted() => OnRescueStarted?.Invoke();
         public static void TriggerRescueEnded() => OnRescueEnded?.Invoke();
