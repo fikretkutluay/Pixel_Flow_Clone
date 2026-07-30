@@ -23,3 +23,7 @@ MonoBehaviour:
   queueSlotSpacing: 1.4
   cubeGap: 0.16
   parkSlotGap: 0.15
+  trackLapSeconds: 2.7
+  tensionShooterThreshold: 7
+  tensionSpeedMultiplier: 1.25
+  tensionRampSeconds: 0.35

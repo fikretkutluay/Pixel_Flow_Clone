@@ -13,7 +13,8 @@ namespace Game
         public int columnCount = 4;
         public int trackCapacity = 5;
         public int parkCapacity = 5;
-        public float trackSpeed = 15f;
+        // Rail speed is game-wide, not per level: it lives in GameConfig as a lap
+        // duration so every level runs at the same visual pace (RULE 2).
         public float rescueWindowSeconds = 2f;
 
 

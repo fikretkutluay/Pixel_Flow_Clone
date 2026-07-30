@@ -27,6 +27,18 @@ namespace Game
         [Tooltip("Park slotu ile komşu slot arası görsel boşluk oranı.")]
         public float parkSlotGap = 0.15f;
 
-        
+        [Header("Ray hızı")]
+        [Tooltip("Bir turun kaç saniye sürdüğü. Ray dünyada sabit olduğu için bu " +
+                 "değer görsel hızı doğrudan verir ve board boyutundan etkilenmez. " +
+                 "Oyun geneli: her level aynı hızda akar.")]
+        public float trackLapSeconds = 2.7f;
+
+        [Header("Baskı hızlanması")]
+        [Tooltip("Ray + park toplamı bu sayıya ulaşınca ray hızlanır.")]
+        public int tensionShooterThreshold = 7;
+        [Tooltip("Baskı altındayken hız çarpanı.")]
+        public float tensionSpeedMultiplier = 1.25f;
+        [Tooltip("Hız değişiminin oturma süresi — ani sıçramayı önler.")]
+        public float tensionRampSeconds = 0.35f;
     }
 }

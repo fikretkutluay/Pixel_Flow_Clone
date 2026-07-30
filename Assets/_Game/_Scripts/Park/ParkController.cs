@@ -15,6 +15,7 @@ namespace Game
         private Camera mainCam;
 
         public bool HasFreeSlot => parkBuffer != null && parkBuffer.HasFreeSlot;
+        public int Count => parkBuffer != null ? parkBuffer.Count : 0;
 
         private void OnEnable()
         {

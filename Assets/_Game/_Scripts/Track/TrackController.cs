@@ -5,19 +5,48 @@ namespace Game
     public class TrackController : MonoBehaviour
     {
         [SerializeField] private BoardController boardController;
-        private float trackSpeed;
+
+        private float baseSpeed;                 // cells per second
+        private float tensionMultiplier = 1f;
+        private float rampSeconds = 0.35f;
+        private float speedMultiplier = 1f;      // current, eased toward the target
+        private float targetMultiplier = 1f;
 
         private TrackPath path;
         private BoundedBuffer<Shooter> shooters;
         public event System.Action<Shooter> OnShooterFinishedLap;
 
         public void Init(int boardWidth, int boardHeight, Rect centerline, int trackCapacity,
-                          float trackSpeed, float cornerRadius, float startOffset)
+                          float lapSeconds, float cornerRadius, float startOffset,
+                          float tensionMultiplier, float rampSeconds)
         {
-            this.trackSpeed = trackSpeed;
             path = new TrackPath(boardWidth, boardHeight, centerline, cornerRadius, startOffset);
+
+            // Distance is measured in cells but the rail is a fixed rectangle in
+            // world space, so a bigger board means more cells over the same
+            // physical loop. Deriving the speed from the lap duration cancels
+            // that out and every level runs at the same visual pace.
+            baseSpeed = path.Perimeter / Mathf.Max(lapSeconds, 0.01f);
+
+            this.tensionMultiplier = Mathf.Max(tensionMultiplier, 1f);
+            this.rampSeconds = Mathf.Max(rampSeconds, 0.01f);
+            speedMultiplier = targetMultiplier = 1f;
+
             shooters = new BoundedBuffer<Shooter>(trackCapacity);
             shooters.OnChanged += () => GameEvents.TriggerTrackOccupancyChanged(shooters.Count, shooters.Capacity);
+        }
+
+        public int Count => shooters != null ? shooters.Count : 0;
+
+        /// <summary>
+        /// Raised by GameManager, which is the only place that judges combined
+        /// rail + park pressure. Deliberately not random: the design leans on the
+        /// player being able to predict when a shooter lands (GDD 1.4), so the
+        /// speed-up has to be something they can see coming.
+        /// </summary>
+        public void SetUnderPressure(bool pressured)
+        {
+            targetMultiplier = pressured ? tensionMultiplier : 1f;
         }
         public void Clear()
         {
@@ -35,10 +64,14 @@ namespace Game
         {
             if (path == null || shooters == null) return;
 
+            speedMultiplier = Mathf.MoveTowards(speedMultiplier, targetMultiplier,
+                                                Time.deltaTime / rampSeconds);
+            float speed = baseSpeed * speedMultiplier;
+
             for (int i = shooters.Count - 1; i >= 0; i--)
             {
                 Shooter s = shooters[i];
-                s.Distance += trackSpeed * Time.deltaTime;
+                s.Distance += speed * Time.deltaTime;
 
                 if (s.IsWaitingForPark)
                 {

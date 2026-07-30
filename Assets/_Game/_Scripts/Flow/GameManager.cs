@@ -10,6 +10,7 @@ namespace Game
         [SerializeField] private TrackController trackController;
         [SerializeField] private ParkController parkController;
         [SerializeField] private BoardController boardController;
+        [SerializeField] private GameConfig config;
         [SerializeField] private LevelData levelData;
 
         private GameState currentState;
@@ -41,6 +42,19 @@ namespace Game
             currentState = GameState.Loading;
         }
 
+        /// <summary>
+        /// Both buffers filling up is the game's tension curve, so the rail speeds
+        /// up to match. This lives here for the same reason the lose decision does
+        /// (RULE 7): it is the one place that sees rail and park together.
+        /// </summary>
+        private void UpdatePressure()
+        {
+            if (config == null) return;
+
+            int occupied = trackController.Count + parkController.Count;
+            trackController.SetUnderPressure(occupied >= config.tensionShooterThreshold);
+        }
+
         private void HandleLapCompleted(Shooter shooter)
         {
             if (parkController.TryPark(shooter))
@@ -61,6 +75,8 @@ namespace Game
         private void Update()
         {
             if (currentState != GameState.Playing) return;
+
+            UpdatePressure();
 
             if (boardController.RemainingCubes <= 0)
             {
