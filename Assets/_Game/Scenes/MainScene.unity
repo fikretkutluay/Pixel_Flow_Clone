@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 19336451}
   - component: {fileID: 19336450}
   - component: {fileID: 19336449}
+  - component: {fileID: 19336452}
   m_Layer: 5
   m_Name: SaveButton
   m_TagString: Untagged
@@ -526,6 +527,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 19336447}
   m_CullTransparentMesh: 1
+--- !u!114 &19336452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19336447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &65814083
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,6 +555,7 @@ GameObject:
   - component: {fileID: 65814087}
   - component: {fileID: 65814086}
   - component: {fileID: 65814085}
+  - component: {fileID: 65814088}
   m_Layer: 5
   m_Name: Tab_Store
   m_TagString: Untagged
@@ -660,6 +678,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65814083}
   m_CullTransparentMesh: 1
+--- !u!114 &65814088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65814083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &85535876
 GameObject:
   m_ObjectHideFlags: 0
@@ -1926,6 +1960,9 @@ MonoBehaviour:
   - tag: Cube
     prefab: {fileID: 6561052214353452687, guid: 0407c44fe4504b143bde6475130a19c6, type: 3}
     size: 20
+  - tag: Tracer
+    prefab: {fileID: 635600332326895665, guid: 4b487005987ab1d4d9fd9dd32770514a, type: 3}
+    size: 12
 --- !u!4 &241128650
 Transform:
   m_ObjectHideFlags: 0
@@ -2306,6 +2343,7 @@ GameObject:
   - component: {fileID: 283259842}
   - component: {fileID: 283259841}
   - component: {fileID: 283259840}
+  - component: {fileID: 283259843}
   m_Layer: 5
   m_Name: NextLevel
   m_TagString: Untagged
@@ -2427,6 +2465,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283259838}
   m_CullTransparentMesh: 1
+--- !u!114 &283259843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283259838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &284527312
 GameObject:
   m_ObjectHideFlags: 0
@@ -2871,6 +2925,7 @@ GameObject:
   - component: {fileID: 336520916}
   - component: {fileID: 336520915}
   - component: {fileID: 336520914}
+  - component: {fileID: 336520917}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -2992,6 +3047,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 336520912}
   m_CullTransparentMesh: 1
+--- !u!114 &336520917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336520912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &365123196
 GameObject:
   m_ObjectHideFlags: 0
@@ -3278,6 +3349,7 @@ GameObject:
   - component: {fileID: 395324427}
   - component: {fileID: 395324426}
   - component: {fileID: 395324425}
+  - component: {fileID: 395324428}
   m_Layer: 5
   m_Name: PlusButton
   m_TagString: Untagged
@@ -3399,6 +3471,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 395324423}
   m_CullTransparentMesh: 1
+--- !u!114 &395324428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395324423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &431223710
 GameObject:
   m_ObjectHideFlags: 0
@@ -3717,6 +3805,7 @@ GameObject:
   - component: {fileID: 460648473}
   - component: {fileID: 460648472}
   - component: {fileID: 460648474}
+  - component: {fileID: 460648475}
   m_Layer: 5
   m_Name: Slot_1
   m_TagString: Untagged
@@ -3825,6 +3914,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &460648475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 460648470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &480953121
 GameObject:
   m_ObjectHideFlags: 0
@@ -4049,6 +4154,7 @@ GameObject:
   - component: {fileID: 525558316}
   - component: {fileID: 525558315}
   - component: {fileID: 525558317}
+  - component: {fileID: 525558318}
   m_Layer: 5
   m_Name: Slot_9
   m_TagString: Untagged
@@ -4157,6 +4263,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &525558318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525558313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &541103918
 GameObject:
   m_ObjectHideFlags: 0
@@ -4553,6 +4675,7 @@ GameObject:
   - component: {fileID: 593872401}
   - component: {fileID: 593872400}
   - component: {fileID: 593872402}
+  - component: {fileID: 593872403}
   m_Layer: 5
   m_Name: Slot_8
   m_TagString: Untagged
@@ -4661,6 +4784,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &593872403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593872398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &594548857
 GameObject:
   m_ObjectHideFlags: 0
@@ -5274,6 +5413,7 @@ GameObject:
   - component: {fileID: 659210060}
   - component: {fileID: 659210059}
   - component: {fileID: 659210058}
+  - component: {fileID: 659210061}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -5395,6 +5535,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 659210056}
   m_CullTransparentMesh: 1
+--- !u!114 &659210061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659210056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &676113567
 GameObject:
   m_ObjectHideFlags: 0
@@ -5761,6 +5917,7 @@ GameObject:
   - component: {fileID: 706493334}
   - component: {fileID: 706493333}
   - component: {fileID: 706493332}
+  - component: {fileID: 706493335}
   m_Layer: 5
   m_Name: SaveButton
   m_TagString: Untagged
@@ -5870,6 +6027,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 706493330}
   m_CullTransparentMesh: 1
+--- !u!114 &706493335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706493330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &717138134
 GameObject:
   m_ObjectHideFlags: 0
@@ -6033,6 +6206,7 @@ GameObject:
   - component: {fileID: 738469167}
   - component: {fileID: 738469166}
   - component: {fileID: 738469168}
+  - component: {fileID: 738469169}
   m_Layer: 5
   m_Name: Slot_3
   m_TagString: Untagged
@@ -6141,6 +6315,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &738469169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738469164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &740807479
 GameObject:
   m_ObjectHideFlags: 0
@@ -6762,6 +6952,7 @@ GameObject:
   - component: {fileID: 851018235}
   - component: {fileID: 851018234}
   - component: {fileID: 851018233}
+  - component: {fileID: 851018236}
   m_Layer: 5
   m_Name: RetryLevel
   m_TagString: Untagged
@@ -6883,6 +7074,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 851018231}
   m_CullTransparentMesh: 1
+--- !u!114 &851018236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851018231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &856949641
 GameObject:
   m_ObjectHideFlags: 0
@@ -7059,6 +7266,7 @@ GameObject:
   - component: {fileID: 930717354}
   - component: {fileID: 930717353}
   - component: {fileID: 930717352}
+  - component: {fileID: 930717355}
   m_Layer: 5
   m_Name: PrivacyButton
   m_TagString: Untagged
@@ -7168,6 +7376,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930717350}
   m_CullTransparentMesh: 1
+--- !u!114 &930717355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 930717350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &931437190
 GameObject:
   m_ObjectHideFlags: 0
@@ -7342,6 +7566,7 @@ GameObject:
   - component: {fileID: 946412656}
   - component: {fileID: 946412655}
   - component: {fileID: 946412654}
+  - component: {fileID: 946412657}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -7463,6 +7688,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 946412652}
   m_CullTransparentMesh: 1
+--- !u!114 &946412657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 946412652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &972899781
 GameObject:
   m_ObjectHideFlags: 0
@@ -7550,6 +7791,7 @@ GameObject:
   - component: {fileID: 983349060}
   - component: {fileID: 983349059}
   - component: {fileID: 983349058}
+  - component: {fileID: 983349061}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -7671,6 +7913,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 983349056}
   m_CullTransparentMesh: 1
+--- !u!114 &983349061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983349056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &987729543
 GameObject:
   m_ObjectHideFlags: 0
@@ -8150,6 +8408,7 @@ GameObject:
   - component: {fileID: 1018265138}
   - component: {fileID: 1018265137}
   - component: {fileID: 1018265139}
+  - component: {fileID: 1018265140}
   m_Layer: 5
   m_Name: Slot_2
   m_TagString: Untagged
@@ -8258,6 +8517,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1018265140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018265135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1024583777
 GameObject:
   m_ObjectHideFlags: 0
@@ -8270,6 +8545,7 @@ GameObject:
   - component: {fileID: 1024583781}
   - component: {fileID: 1024583780}
   - component: {fileID: 1024583779}
+  - component: {fileID: 1024583782}
   m_Layer: 5
   m_Name: RestoreButton
   m_TagString: Untagged
@@ -8379,6 +8655,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1024583777}
   m_CullTransparentMesh: 1
+--- !u!114 &1024583782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024583777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1036962516
 GameObject:
   m_ObjectHideFlags: 0
@@ -8692,6 +8984,7 @@ MonoBehaviour:
   slotViewPrefab: {fileID: 3774626329875230449, guid: 53e9bdb77087ca64cb77bd5dee6eb693, type: 3}
   trackController: {fileID: 1890879080}
   inputRouter: {fileID: 142941642}
+  arrivalDistance: 1.5
 --- !u!4 &1067469443
 Transform:
   m_ObjectHideFlags: 0
@@ -8795,6 +9088,7 @@ GameObject:
   - component: {fileID: 1098525675}
   - component: {fileID: 1098525674}
   - component: {fileID: 1098525676}
+  - component: {fileID: 1098525677}
   m_Layer: 5
   m_Name: Slot_6
   m_TagString: Untagged
@@ -8903,6 +9197,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1098525677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1098525672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1126442962
 GameObject:
   m_ObjectHideFlags: 0
@@ -8915,6 +9225,7 @@ GameObject:
   - component: {fileID: 1126442966}
   - component: {fileID: 1126442965}
   - component: {fileID: 1126442964}
+  - component: {fileID: 1126442967}
   m_Layer: 5
   m_Name: ContactButton
   m_TagString: Untagged
@@ -9024,6 +9335,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126442962}
   m_CullTransparentMesh: 1
+--- !u!114 &1126442967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126442962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1126514317
 GameObject:
   m_ObjectHideFlags: 0
@@ -9197,6 +9524,7 @@ GameObject:
   - component: {fileID: 1155290594}
   - component: {fileID: 1155290593}
   - component: {fileID: 1155290592}
+  - component: {fileID: 1155290595}
   m_Layer: 5
   m_Name: Button (2)
   m_TagString: Untagged
@@ -9318,6 +9646,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155290590}
   m_CullTransparentMesh: 1
+--- !u!114 &1155290595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1155290590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1169968068
 GameObject:
   m_ObjectHideFlags: 0
@@ -9330,6 +9674,7 @@ GameObject:
   - component: {fileID: 1169968071}
   - component: {fileID: 1169968070}
   - component: {fileID: 1169968072}
+  - component: {fileID: 1169968073}
   m_Layer: 5
   m_Name: Slot_5
   m_TagString: Untagged
@@ -9438,6 +9783,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1169968073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169968068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1170961690
 GameObject:
   m_ObjectHideFlags: 0
@@ -9757,6 +10118,7 @@ GameObject:
   - component: {fileID: 1214558414}
   - component: {fileID: 1214558413}
   - component: {fileID: 1214558415}
+  - component: {fileID: 1214558416}
   m_Layer: 5
   m_Name: Slot_4
   m_TagString: Untagged
@@ -9865,6 +10227,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1214558416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214558411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1230325291
 GameObject:
   m_ObjectHideFlags: 0
@@ -10548,6 +10926,7 @@ GameObject:
   - component: {fileID: 1374235488}
   - component: {fileID: 1374235487}
   - component: {fileID: 1374235486}
+  - component: {fileID: 1374235489}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -10657,6 +11036,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1374235484}
   m_CullTransparentMesh: 1
+--- !u!114 &1374235489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374235484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1399680415
 GameObject:
   m_ObjectHideFlags: 0
@@ -11258,6 +11653,7 @@ GameObject:
   - component: {fileID: 1420501208}
   - component: {fileID: 1420501207}
   - component: {fileID: 1420501206}
+  - component: {fileID: 1420501209}
   m_Layer: 5
   m_Name: Tab_Locked
   m_TagString: Untagged
@@ -11368,6 +11764,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1420501204}
   m_CullTransparentMesh: 1
+--- !u!114 &1420501209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420501204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1432459517
 GameObject:
   m_ObjectHideFlags: 0
@@ -11380,6 +11792,7 @@ GameObject:
   - component: {fileID: 1432459521}
   - component: {fileID: 1432459520}
   - component: {fileID: 1432459519}
+  - component: {fileID: 1432459522}
   m_Layer: 5
   m_Name: Button (3)
   m_TagString: Untagged
@@ -11489,6 +11902,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1432459517}
   m_CullTransparentMesh: 1
+--- !u!114 &1432459522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1432459517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1435851761
 GameObject:
   m_ObjectHideFlags: 0
@@ -11501,6 +11930,7 @@ GameObject:
   - component: {fileID: 1435851765}
   - component: {fileID: 1435851764}
   - component: {fileID: 1435851763}
+  - component: {fileID: 1435851766}
   m_Layer: 5
   m_Name: ProfileButton
   m_TagString: Untagged
@@ -11621,6 +12051,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1435851761}
   m_CullTransparentMesh: 1
+--- !u!114 &1435851766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435851761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1443965073
 GameObject:
   m_ObjectHideFlags: 0
@@ -12551,6 +12997,7 @@ GameObject:
   - component: {fileID: 1642978838}
   - component: {fileID: 1642978837}
   - component: {fileID: 1642978836}
+  - component: {fileID: 1642978839}
   m_Layer: 5
   m_Name: Tab_Play
   m_TagString: Untagged
@@ -12661,6 +13108,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1642978834}
   m_CullTransparentMesh: 1
+--- !u!114 &1642978839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642978834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1650600845
 GameObject:
   m_ObjectHideFlags: 0
@@ -12693,6 +13156,7 @@ MonoBehaviour:
   trackController: {fileID: 1890879080}
   config: {fileID: 11400000, guid: edd0adcaaa326024d8887b2b5758d238, type: 2}
   inputRouter: {fileID: 142941642}
+  queueStagger: 0.045
 --- !u!4 &1650600847
 Transform:
   m_ObjectHideFlags: 0
@@ -13686,6 +14150,7 @@ GameObject:
   - component: {fileID: 1894022000}
   - component: {fileID: 1894021999}
   - component: {fileID: 1894021998}
+  - component: {fileID: 1894022001}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -13807,6 +14272,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1894021996}
   m_CullTransparentMesh: 1
+--- !u!114 &1894022001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894021996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1894927960
 GameObject:
   m_ObjectHideFlags: 0
@@ -14387,6 +14868,7 @@ GameObject:
   - component: {fileID: 1977422951}
   - component: {fileID: 1977422950}
   - component: {fileID: 1977422949}
+  - component: {fileID: 1977422952}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -14508,6 +14990,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977422947}
   m_CullTransparentMesh: 1
+--- !u!114 &1977422952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977422947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1980844600
 GameObject:
   m_ObjectHideFlags: 0
@@ -14520,6 +15018,7 @@ GameObject:
   - component: {fileID: 1980844604}
   - component: {fileID: 1980844603}
   - component: {fileID: 1980844602}
+  - component: {fileID: 1980844605}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -14641,6 +15140,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1980844600}
   m_CullTransparentMesh: 1
+--- !u!114 &1980844605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980844600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &1996224859
 GameObject:
   m_ObjectHideFlags: 0
@@ -14953,10 +15468,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: MobileCore::MobileCore.AudioManager
   sfxSource: {fileID: 2000460275}
   musicSource: {fileID: 2000460274}
-  cubeBreakClip: {fileID: 0}
+  cubeBreakClip: {fileID: 8300000, guid: 1745e251b00a9a1428cfda3d2ca4ca9d, type: 3}
+  shooterLaunchClip: {fileID: 8300000, guid: 9e190f52ef49e854f8c8e5987ec1e32b, type: 3}
   rescueWarningClip: {fileID: 0}
-  levelCompletedClip: {fileID: 0}
-  levelFailedClip: {fileID: 0}
+  levelCompletedClip: {fileID: 8300000, guid: 84eaf71969a073e4b891b81793c33eed, type: 3}
+  levelFailedClip: {fileID: 8300000, guid: aabe94e4fbf814a4dbd4b86a1f2477b1, type: 3}
+  uiClickClip: {fileID: 8300000, guid: 78660b8149b96a24c805db0e5b8ec21b, type: 3}
   backgroundMusic: {fileID: 0}
   sfxVolume: 1
   musicVolume: 0.5
@@ -15185,6 +15702,7 @@ GameObject:
   - component: {fileID: 2021884150}
   - component: {fileID: 2021884149}
   - component: {fileID: 2021884151}
+  - component: {fileID: 2021884152}
   m_Layer: 5
   m_Name: Slot_7
   m_TagString: Untagged
@@ -15293,6 +15811,22 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2021884152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021884147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &2049754575
 GameObject:
   m_ObjectHideFlags: 0
@@ -15730,6 +16264,7 @@ GameObject:
   - component: {fileID: 2109268379}
   - component: {fileID: 2109268378}
   - component: {fileID: 2109268377}
+  - component: {fileID: 2109268380}
   m_Layer: 5
   m_Name: Button (1)
   m_TagString: Untagged
@@ -15839,6 +16374,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2109268375}
   m_CullTransparentMesh: 1
+--- !u!114 &2109268380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109268375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf4bc70288675d4eb60aa9d50bbe18e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: MobileCore::MobileCore.ButtonPunch
+  pressedScale: 0.92
+  pressDuration: 0.07
+  releaseDuration: 0.28
+  playClickSound: 1
 --- !u!1 &2130652479
 GameObject:
   m_ObjectHideFlags: 0

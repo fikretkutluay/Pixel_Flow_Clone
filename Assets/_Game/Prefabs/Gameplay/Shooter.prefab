@@ -194,6 +194,7 @@ GameObject:
   - component: {fileID: 5110048585037213583}
   - component: {fileID: 1698951540258620776}
   - component: {fileID: 6883867555227634635}
+  - component: {fileID: 6943777521190266970}
   m_Layer: 0
   m_Name: Shooter
   m_TagString: Untagged
@@ -215,6 +216,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5844278755098376621}
+  - {fileID: 4383440184715047471}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1698951540258620776
@@ -256,9 +258,61 @@ MonoBehaviour:
   shooterRenderer: {fileID: 4706297123843326658}
   palette: {fileID: 11400000, guid: 7613fe8f9d4a8c44795b9c7947d8d0db, type: 2}
   bodyTransform: {fileID: 5844278755098376621}
+  muzzle: {fileID: 4383440184715047471}
   bodyFacingOffsetDeg: 0
   ammoText: {fileID: 4022181750957725989}
   queueBackAlpha: 0.35
+--- !u!114 &6943777521190266970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3914336245174233284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72c412c2a07e21442a9708d14d64f2c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.ShooterAnimator
+  hopPower: 0.9
+  hopDuration: 0.38
+  landSquash: 0.22
+  launchStretch: 0.3
+  launchDuration: 0.28
+  slideDuration: 0.3
+  spinDuration: 0.42
+  spinTurns: 2
+--- !u!1 &3981874659511837233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4383440184715047471}
+  m_Layer: 0
+  m_Name: MuzzlePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4383440184715047471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3981874659511837233}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.715, z: -0.856}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5110048585037213583}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6237966989482876486
 PrefabInstance:
   m_ObjectHideFlags: 0
