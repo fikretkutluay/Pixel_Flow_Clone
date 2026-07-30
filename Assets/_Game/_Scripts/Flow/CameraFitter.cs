@@ -13,7 +13,8 @@ namespace Game
     {
         [SerializeField] private Camera cam;
         [Tooltip("Ekranın yatayda kaplayacağı sabit dünya genişliği. " +
-                 "Öneri: boardPhysicalSize * 1.25 (8'lik board için 10).")]
+                 "Rayın dış genişliğinden biraz büyük olmalı — board artık " +
+                 "rayın içine sığdırıldığı için ölçüyü ray belirliyor.")]
         [SerializeField] private float visibleWorldWidth = 10f;
 
         private float lastAspect = -1f;

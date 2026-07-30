@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: Game::Game.GameConfig
   visibleQueueWindow: 3
-  boardPhysicalSize: 7
+  boardRailGap: 0.35
   topBarBand: 0.13764328
   boardBand: 0.44207123
   parkBand: 0.10171507

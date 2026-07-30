@@ -61,14 +61,21 @@ namespace Game
         public void LoadLevel(LevelData data)
         {
             currentLevel = data;
-            float cellSize = config.boardPhysicalSize / data.boardSize.x;
 
-            // Anchor the board's geometric center to boardBand's world-Y center.
-            // X stays horizontally centered (width-locked). Track uses the same origin.
-            float boardCenterY = GameLayout.BoardBandCenterY(Camera.main, config);
+            // Ray sabit bir dikdörtgen, board onun İÇİNE oturur ve küpler küçülür.
+            // Hücre boyutu bu yüzden İKİ eksenin de sığmasına göre seçilmeli:
+            // yalnızca x'e bölmek kareden uzaklaşan her board'da (32x47, 39x27)
+            // dikeyde ya da yatayda rayın dışına taşırıyordu.
+            Rect rail = railAnchor.GetCenterlineRect();
+            float gap = config.boardRailGap;
+            float cellSize = Mathf.Min(
+                (rail.width - 2f * gap) / data.boardSize.x,
+                (rail.height - 2f * gap) / data.boardSize.y);
+
+            // Board rayın merkezine oturur — boşluk dört kenarda da eşit kalsın.
             Vector3 boardOrigin = new Vector3(
-                -(data.boardSize.x - 1) * cellSize * 0.5f,
-                boardCenterY - (data.boardSize.y - 1) * cellSize * 0.5f,
+                rail.center.x - (data.boardSize.x - 1) * cellSize * 0.5f,
+                rail.center.y - (data.boardSize.y - 1) * cellSize * 0.5f,
                 0f);
 
             boardController.Setup(data, cellSize, boardOrigin);

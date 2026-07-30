@@ -6,7 +6,11 @@ namespace Game
     public class GameConfig : ScriptableObject
     {
         public int visibleQueueWindow = 3;
-        public float boardPhysicalSize = 7f;
+
+        [Tooltip("Board ile rayın merkez çizgisi arasında bırakılacak boşluk " +
+                 "(dünya birimi). Board bu payı düşerek raya sığdırılır; küpler " +
+                 "küçülür, ray hiç büyümez.")]
+        public float boardRailGap = 0.35f;
 
         [Header("Layout — ekran yüksekliğinin oranı (toplam 1.0 olmalı)")]
         public float topBarBand = 0.09f;
