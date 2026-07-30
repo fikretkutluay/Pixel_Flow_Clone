@@ -24,6 +24,7 @@ namespace Game
         [SerializeField] private float rescueTestDelaySeconds = 6f;
 
         [SerializeField] private TrackRailAnchor railAnchor;
+        [SerializeField] private TrackChevrons chevrons;
 
         private void OnEnable()
         {
@@ -73,11 +74,11 @@ namespace Game
             boardController.Setup(data, cellSize, boardOrigin);
             trackController.Init(data.boardSize.x, data.boardSize.y,
                 railAnchor.GetCenterlineRect(), data.trackCapacity, config.trackLapSeconds,
-                railAnchor.CornerRadius, railAnchor.StartOffset,
-                config.tensionSpeedMultiplier, config.tensionRampSeconds);
+                railAnchor.CornerRadius, railAnchor.StartOffset, config.tensionRampSeconds);
             queueController.Init(data.queue, data.columnCount);
             parkController.Init(data.parkCapacity);
-            gameManager.StartLevel(data);
+            if (chevrons != null) chevrons.Rebuild();   // needs the path Init just built
+            gameManager.StartLevel();
 
             // levelID is authored per asset; test levels leave it at 0, so fall
             // back to the position in the campaign list.

@@ -535,7 +535,6 @@ namespace Game.EditorTools
             level.columnCount = 4;
             level.trackCapacity = 5;
             level.parkCapacity = 5;
-            level.rescueWindowSeconds = 2f;
 
             AssetDatabase.CreateAsset(level, path);
             AssetDatabase.SaveAssets();

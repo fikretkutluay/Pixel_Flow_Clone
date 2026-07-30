@@ -31,6 +31,20 @@ namespace Game
                 inputRouter.OnTap -= HandleTap;
         }
 
+        /// <summary>Every shooter still to come: on screen plus waiting behind.</summary>
+        public int RemainingCount
+        {
+            get
+            {
+                if (visible == null) return 0;
+
+                int total = 0;
+                for (int col = 0; col < columnCount; col++)
+                    total += visible[col].Count + pending[col].Count;
+                return total;
+            }
+        }
+
         public Shooter PeekTopShooter(int column)
         {
             if (visible == null || column < 0 || column >= visible.Length) return null;

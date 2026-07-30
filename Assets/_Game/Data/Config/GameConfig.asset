@@ -22,8 +22,14 @@ MonoBehaviour:
   contentWidthFactor: 0.92
   queueSlotSpacing: 1.4
   cubeGap: 0.16
+  cubeGapVertical: 0.04
   parkSlotGap: 0.15
   trackLapSeconds: 2.7
   tensionShooterThreshold: 7
   tensionSpeedMultiplier: 1.25
   tensionRampSeconds: 0.35
+  warnLapFraction: 0.22
+  warnPulseCount: 2
+  warnPulseSeconds: 1
+  endgameShooterThreshold: 5
+  endgameSpeedMultiplier: 1.6

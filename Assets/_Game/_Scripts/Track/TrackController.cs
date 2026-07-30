@@ -7,7 +7,6 @@ namespace Game
         [SerializeField] private BoardController boardController;
 
         private float baseSpeed;                 // cells per second
-        private float tensionMultiplier = 1f;
         private float rampSeconds = 0.35f;
         private float speedMultiplier = 1f;      // current, eased toward the target
         private float targetMultiplier = 1f;
@@ -18,7 +17,7 @@ namespace Game
 
         public void Init(int boardWidth, int boardHeight, Rect centerline, int trackCapacity,
                           float lapSeconds, float cornerRadius, float startOffset,
-                          float tensionMultiplier, float rampSeconds)
+                          float rampSeconds)
         {
             path = new TrackPath(boardWidth, boardHeight, centerline, cornerRadius, startOffset);
 
@@ -28,7 +27,6 @@ namespace Game
             // that out and every level runs at the same visual pace.
             baseSpeed = path.Perimeter / Mathf.Max(lapSeconds, 0.01f);
 
-            this.tensionMultiplier = Mathf.Max(tensionMultiplier, 1f);
             this.rampSeconds = Mathf.Max(rampSeconds, 0.01f);
             speedMultiplier = targetMultiplier = 1f;
 
@@ -39,14 +37,32 @@ namespace Game
         public int Count => shooters != null ? shooters.Count : 0;
 
         /// <summary>
-        /// Raised by GameManager, which is the only place that judges combined
-        /// rail + park pressure. Deliberately not random: the design leans on the
-        /// player being able to predict when a shooter lands (GDD 1.4), so the
-        /// speed-up has to be something they can see coming.
+        /// Set by GameManager, the only place that weighs the whole board. Eased in
+        /// rather than snapped. Deliberately never random: the design leans on the
+        /// player predicting when a shooter lands (GDD 1.4), so a change of pace has
+        /// to be something they can see coming.
         /// </summary>
-        public void SetUnderPressure(bool pressured)
+        public void SetSpeedScale(float scale)
         {
-            targetMultiplier = pressured ? tensionMultiplier : 1f;
+            targetMultiplier = Mathf.Max(scale, 0.1f);
+        }
+
+        /// <summary>
+        /// Is anyone in the last stretch before landing? The rail runs
+        /// Bottom - Right - Top - Left, so this is the left-hand run home, and it is
+        /// the window the player has to clear a park slot.
+        /// </summary>
+        public bool HasShooterApproachingLapEnd(float fraction)
+        {
+            if (path == null || shooters == null) return false;
+
+            float threshold = path.Perimeter * (1f - Mathf.Clamp01(fraction));
+            for (int i = 0; i < shooters.Count; i++)
+            {
+                Shooter s = shooters[i];
+                if (!s.IsWaitingForPark && s.Distance >= threshold) return true;
+            }
+            return false;
         }
         public void Clear()
         {

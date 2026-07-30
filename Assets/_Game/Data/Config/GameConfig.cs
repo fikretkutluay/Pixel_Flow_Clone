@@ -22,8 +22,11 @@ namespace Game
         public float queueSlotSpacing = 1.4f;
 
         [Header("Görsel aralıklar")]
-        [Tooltip("Küpler arası görsel boşluk oranı (0 = bitişik, 0.1 = %10 boşluk).")]
+        [Tooltip("Küpler arası YATAY boşluk oranı (0 = bitişik, 0.1 = %10 boşluk).")]
         public float cubeGap = 0.16f;
+        [Tooltip("Küpler arası DİKEY boşluk. Yataydan küçük tutmak küpü eninden " +
+                 "uzun gösterir — referanstaki boncuk oranı buradan geliyor.")]
+        public float cubeGapVertical = 0.04f;
         [Tooltip("Park slotu ile komşu slot arası görsel boşluk oranı.")]
         public float parkSlotGap = 0.15f;
 
@@ -40,5 +43,20 @@ namespace Game
         public float tensionSpeedMultiplier = 1.25f;
         [Tooltip("Hız değişiminin oturma süresi — ani sıçramayı önler.")]
         public float tensionRampSeconds = 0.35f;
+
+        [Header("Kayıp uyarısı")]
+        [Tooltip("Turun son yüzdesi — atıcı buraya girince park doluysa uyarı yanar.")]
+        [Range(0.05f, 0.5f)] public float warnLapFraction = 0.22f;
+        [Tooltip("Uyarı başına kaç kez yanıp söner.")]
+        public int warnPulseCount = 2;
+        [Tooltip("Bir yanıp sönmenin süresi.")]
+        public float warnPulseSeconds = 0.18f;
+
+        [Header("Bitiş koşusu")]
+        [Tooltip("Kuyruk + ray + park toplamı buraya inince kaybetmek imkânsız hâle " +
+                 "gelir: atıcılar artık park etmez, ray hızlanır, sandıklar kalkar.")]
+        public int endgameShooterThreshold = 5;
+        [Tooltip("Bitiş koşusundaki hız çarpanı.")]
+        public float endgameSpeedMultiplier = 1.6f;
     }
 }

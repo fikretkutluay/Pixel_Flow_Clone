@@ -4,46 +4,57 @@ using UnityEngine;
 namespace Game
 {
     /// <summary>
-    /// Görsel katman: yuvarlatılmış köşeli koyu panel + rescue sırasında
-    /// kırmızı yanıp sönen kenarlık. SetAlert(bool) sözleşmesi LineRenderer
-    /// sürümüyle birebir aynı — ParkController'da hiçbir değişiklik gerekmez.
+    /// Görsel katman: yuvarlatılmış köşeli koyu panel + kayıp uyarısında
+    /// kırmızı yanıp sönen kenarlık.
+    ///
+    /// Uyarı sürekli değil, sayılı bir atım. Sürekli yanıp sönen bir kenarlık
+    /// kısa sürede arka plana karışıyor; asıl mesele oyuncunun tam da bir atıcı
+    /// inmek üzereyken uyarılması, o yüzden uyarı her seferinde yeniden atıyor.
     /// </summary>
     public class ParkSlotView : MonoBehaviour
     {
         [SerializeField] private Renderer borderRenderer;
         [SerializeField] private Color idleColor = new Color(0.25f, 0.25f, 0.3f);
-        [SerializeField] private Color alertColor = new Color(0.9f, 0.15f, 0.15f);
-        [SerializeField] private float blinkInterval = 0.3f;
+        [SerializeField] private Color alertColor = new Color(1f, 0.23f, 0.23f);
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private MaterialPropertyBlock mpb;
-        private Coroutine blinkRoutine;
+        private Coroutine pulseRoutine;
 
         private void Awake()
         {
             SetBorderColor(idleColor);
         }
 
-        public void SetAlert(bool active)
+        private void OnDisable()
         {
-            if (active && blinkRoutine == null)
-                blinkRoutine = StartCoroutine(BlinkRoutine());
-            else if (!active && blinkRoutine != null)
-            {
-                StopCoroutine(blinkRoutine);
-                blinkRoutine = null;
-                SetBorderColor(idleColor);
-            }
+            pulseRoutine = null;
+            SetBorderColor(idleColor);
         }
-        private IEnumerator BlinkRoutine()
+
+        /// <summary>Flashes the border a set number of times, then settles.</summary>
+        public void Pulse(int count, float pulseSeconds)
         {
-            bool on = false;
-            while (true)
+            if (!isActiveAndEnabled) return;
+
+            if (pulseRoutine != null) StopCoroutine(pulseRoutine);
+            pulseRoutine = StartCoroutine(PulseRoutine(Mathf.Max(count, 1),
+                                                       Mathf.Max(pulseSeconds, 0.05f)));
+        }
+
+        private IEnumerator PulseRoutine(int count, float pulseSeconds)
+        {
+            var half = new WaitForSeconds(pulseSeconds * 0.5f);
+
+            for (int i = 0; i < count; i++)
             {
-                SetBorderColor(on ? alertColor : idleColor);
-                on = !on;
-                yield return new WaitForSeconds(blinkInterval);
+                SetBorderColor(alertColor);
+                yield return half;
+                SetBorderColor(idleColor);
+                yield return half;
             }
+
+            pulseRoutine = null;
         }
 
         private void SetBorderColor(Color c)

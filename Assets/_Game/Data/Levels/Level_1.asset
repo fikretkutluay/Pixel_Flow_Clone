@@ -35,4 +35,3 @@ MonoBehaviour:
   columnCount: 2
   trackCapacity: 5
   parkCapacity: 5
-  rescueWindowSeconds: 2

@@ -21,6 +21,24 @@ namespace Game
         private Sequence breakSeq;
         private Vector3 liveScale;
 
+        /// <summary>
+        /// Which pool this came from. Crates have their own model and therefore their
+        /// own pool, and must go home to the right one.
+        /// </summary>
+        public string PoolTag { get; set; } = BoardController.CubePoolTag;
+
+        /// <summary>
+        /// The prefab's own scale, captured before anything resizes it. Fitting a
+        /// piece to its cell multiplies this rather than replacing it, so a prefab
+        /// authored at 1:1:2 keeps that proportion at every board size.
+        /// </summary>
+        public Vector3 BaseScale { get; private set; } = Vector3.one;
+
+        private void Awake()
+        {
+            BaseScale = transform.localScale;
+        }
+
         public void SetColor(ColorId color)
         {
             // MaterialPropertyBlock: materyali klonlamadan (draw call / instancing dostu)
@@ -48,9 +66,33 @@ namespace Game
             if (delay > 0f) breakSeq.AppendInterval(delay);
             breakSeq.Append(transform.DOScale(liveScale * popScale, popDuration).SetEase(Ease.OutQuad));
             breakSeq.Append(transform.DOScale(Vector3.zero, collapseDuration).SetEase(Ease.InBack));
-            breakSeq.Join(transform.DORotate(new Vector3(0f, spinDegrees, spinDegrees * 0.5f),
+            // Spun about Z, the axis the camera looks along — a Y spin would read as
+            // the cube squashing rather than turning.
+            breakSeq.Join(transform.DORotate(new Vector3(0f, 0f, spinDegrees),
                                              popDuration + collapseDuration, RotateMode.LocalAxisAdd)
                                    .SetEase(Ease.InQuad));
+            breakSeq.OnComplete(Despawn);
+        }
+
+        /// <summary>
+        /// Crates leaving once they stop mattering: rises and fades out rather than
+        /// shattering, since nothing broke it — it is simply being taken away.
+        /// </summary>
+        public void PlayLiftAway()
+        {
+            liveScale = transform.localScale;
+
+            breakSeq?.Kill();
+            transform.DOKill();
+
+            float rise = liveScale.y * 2.5f;
+
+            breakSeq = DOTween.Sequence();
+            breakSeq.Append(transform.DOMoveY(transform.position.y + rise, 0.45f)
+                                     .SetEase(Ease.InBack));
+            breakSeq.Join(transform.DOScale(Vector3.zero, 0.45f).SetEase(Ease.InQuad));
+            breakSeq.Join(transform.DORotate(new Vector3(0f, 0f, 160f), 0.45f,
+                                             RotateMode.LocalAxisAdd).SetEase(Ease.InOutQuad));
             breakSeq.OnComplete(Despawn);
         }
 
@@ -59,7 +101,7 @@ namespace Game
             breakSeq = null;
             transform.localScale = liveScale;
             transform.localRotation = Quaternion.identity;
-            ObjectPooler.Instance.ReturnToPool("Cube", gameObject);
+            ObjectPooler.Instance.ReturnToPool(PoolTag, gameObject);
         }
 
         // Board.Clear can recycle a cube mid-break; leave the pool a clean object.

@@ -17,6 +17,13 @@ namespace Game
         [SerializeField] private Renderer shooterRenderer;
         [SerializeField] private ColorPalette palette;
 
+        [Tooltip("\"?\" atıcının materyali. Kuyruğun tepesine gelip açılana kadar " +
+                 "gerçek rengi yerine bu görünür.")]
+        [SerializeField] private Material hiddenMaterial;
+
+        private Material revealedMaterial;
+        private bool materialsCaptured;
+
         [Header("Gövde — döndürülen görsel (AmmoText bunun DIŞINDA olmalı)")]
         [SerializeField] private Transform bodyTransform;
         [Tooltip("Merminin çıktığı nokta. Boşsa gövdenin merkezi kullanılır.")]
@@ -81,8 +88,11 @@ namespace Game
 
         public void Reveal()
         {
+            if (!isHidden) return;
+
             isHidden = false;
             ApplyVisual();
+            ApplyAmmoText();      // "?" yerini gerçek ammo alır
         }
 
         public void ConsumeAmmo()
@@ -140,24 +150,43 @@ namespace Game
         }
 
         // Board küpleriyle AYNI materyal (M_ToonCube) + AYNI ColorPalette kullanır —
-        // renk eşleşmesi tek doğruluk kaynağından geliyor. isHidden iken gerçek renk
-        // gösterilmez (görsel "?" atıcı gelene kadar geçici olarak Purple'a düşer).
+        // renk eşleşmesi tek doğruluk kaynağından geliyor. "?" atıcı ise kendi
+        // materyaliyle çizilir; rengi ancak kuyruğun tepesine gelip açılınca görünür.
         private void ApplyVisual()
         {
-            if (shooterRenderer == null || palette == null) return;
+            if (shooterRenderer == null) return;
+            CaptureMaterials();
 
-            ColorId shown = isHidden ? ColorId.Purple : color;
+            if (isHidden && hiddenMaterial != null)
+            {
+                shooterRenderer.sharedMaterial = hiddenMaterial;
+                // Renk bloğu temizlenmezse gizli materyal de o rengi alır.
+                shooterRenderer.SetPropertyBlock(null);
+                return;
+            }
+
+            if (revealedMaterial != null) shooterRenderer.sharedMaterial = revealedMaterial;
+            if (palette == null) return;
 
             if (mpb == null) mpb = new MaterialPropertyBlock();
             shooterRenderer.GetPropertyBlock(mpb);
-            mpb.SetColor(BaseColorId, palette.Of(shown));
+            mpb.SetColor(BaseColorId, palette.Of(color));
             shooterRenderer.SetPropertyBlock(mpb);
+        }
+
+        private void CaptureMaterials()
+        {
+            if (materialsCaptured || shooterRenderer == null) return;
+
+            // Prefab'ın kendi materyali "açık" hâl; gizli materyal onun yerine geçer.
+            revealedMaterial = shooterRenderer.sharedMaterial;
+            materialsCaptured = true;
         }
 
         private void ApplyAmmoText()
         {
             if (ammoText == null) return;
-            ammoText.text = ammo.ToString();
+            ammoText.text = isHidden ? "?" : ammo.ToString();
         }
     }
 }

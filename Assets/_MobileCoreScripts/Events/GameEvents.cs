@@ -15,7 +15,6 @@ namespace MobileCore
         public static event Action<int, int> OnTrackOccupancyChanged;
         public static event Action<int, int> OnParkOccupancyChanged;
         public static event Action OnRescueStarted;
-        public static event Action OnRescueEnded;
 
         /// <summary>A shooter was committed to the rail, from the queue or the park.</summary>
         public static event Action OnShooterLaunched;
@@ -31,7 +30,6 @@ namespace MobileCore
         public static void TriggerShooterLaunched() => OnShooterLaunched?.Invoke();
 
         public static void TriggerRescueStarted() => OnRescueStarted?.Invoke();
-        public static void TriggerRescueEnded() => OnRescueEnded?.Invoke();
 
         public static void TriggerGameStarted() => OnGameStarted?.Invoke();
         public static void TriggerLevelCompleted() => OnLevelCompleted?.Invoke();

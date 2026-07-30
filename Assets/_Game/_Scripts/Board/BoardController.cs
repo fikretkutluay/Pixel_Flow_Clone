@@ -6,6 +6,9 @@ namespace Game
 {
     public class BoardController : MonoBehaviour
     {
+        public const string CubePoolTag = "Cube";
+        public const string CratePoolTag = "Crate";
+
         [SerializeField] private GameConfig config;
 
         private GridManager<CubeCell> board;
@@ -93,18 +96,74 @@ namespace Game
 
         private void SpawnCubeView(int x, int y, ColorId color)
         {
-            GameObject obj = ObjectPooler.Instance.SpawnFromPool("Cube", board.GetWorldPosition(x, y), Quaternion.identity);
+            Vector3 pos = board.GetWorldPosition(x, y);
+
+            // Crates carry their own model, so they have their own pool. Falling back
+            // to the cube pool keeps levels playable before that model exists.
+            string tag = color == ColorId.Crate ? CratePoolTag : CubePoolTag;
+            GameObject obj = ObjectPooler.Instance.SpawnFromPool(tag, pos, Quaternion.identity);
+            if (obj == null && tag != CubePoolTag)
+            {
+                tag = CubePoolTag;
+                obj = ObjectPooler.Instance.SpawnFromPool(tag, pos, Quaternion.identity);
+            }
             if (obj == null) return;
 
-            // Küpü hücre boyutuna göre ölçekle (cubeGap kadar küçültülmüş → ızgara boşluğu).
-            // Prefab'ın orijinal en-boy oranı 1:1:1 varsayılıyor; z'yi de eşitliyoruz.
-            float gap = config != null ? config.cubeGap : 0f;
-            float scale = cellSize * (1f - gap);
-            obj.transform.localScale = new Vector3(scale, scale, scale);
-
             CubeView view = obj.GetComponent<CubeView>();
+            if (view == null)
+            {
+                Debug.LogError($"[{name}] '{tag}' havuzundaki prefab'da CubeView yok.");
+                ObjectPooler.Instance.ReturnToPool(tag, obj);
+                return;
+            }
+            view.PoolTag = tag;
+
+            // Hücre kare, küp değil: dikey boşluğu yataydan küçük tutmak küpü
+            // eninden uzun gösteriyor — referanstaki boncuk oranı bu.
+            float gapX = config != null ? config.cubeGap : 0f;
+            float gapY = config != null ? config.cubeGapVertical : gapX;
+            float width = cellSize * (1f - gapX);
+            float height = cellSize * (1f - gapY);
+
+            // Prefab'ın kendi oranını EZMEDEN hücreye sığdır: 1:1:2 yazan bir prefab
+            // her board boyutunda o oranı korur.
+            Vector3 scale = Vector3.Scale(view.BaseScale, new Vector3(width, height, width));
+            obj.transform.localScale = scale;
+
+            // A piece deeper than it is wide would otherwise sit half-sunk in the
+            // board plane. Pulling it toward the camera by the extra depth leaves the
+            // back face where a plain cube's would be and stands the rest proud.
+            float extraDepth = Mathf.Max(scale.z - scale.x, 0f);
+            obj.transform.position = pos + Vector3.back * (extraDepth * 0.5f);
+
             view.SetColor(color);
             cubeViews[x, y] = view;
+        }
+
+        /// <summary>
+        /// Lifts every crate off the board. Called once the level can no longer be
+        /// lost: a crate exists to block a lane, and blocking stops meaning anything
+        /// at that point. Clears the cells too, so lanes really do open up.
+        /// </summary>
+        public void ClearCrates()
+        {
+            if (board == null || cubeViews == null) return;
+
+            for (int y = 0; y < board.Height; y++)
+            {
+                for (int x = 0; x < board.Width; x++)
+                {
+                    if (!board.GetValue(x, y).isCrate) continue;
+
+                    board.SetValue(x, y, CubeCell.Create(ColorId.None, false));
+
+                    CubeView view = cubeViews[x, y];
+                    if (view == null) continue;
+
+                    view.PlayLiftAway();
+                    cubeViews[x, y] = null;
+                }
+            }
         }
 
         public void Clear()
@@ -113,7 +172,7 @@ namespace Game
             foreach (CubeView view in cubeViews)
             {
                 if (view != null)
-                    ObjectPooler.Instance.ReturnToPool("Cube", view.gameObject);
+                    ObjectPooler.Instance.ReturnToPool(view.PoolTag, view.gameObject);
             }
         }
     }

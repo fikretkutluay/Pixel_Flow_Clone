@@ -88,6 +88,20 @@ namespace Game
             return true;
         }
 
+        /// <summary>
+        /// Sends whoever is at the front back out. Used by the endgame run, where
+        /// parked shooters would otherwise just sit there with the level already won.
+        /// </summary>
+        public bool LaunchFirst()
+        {
+            if (parkBuffer == null) return false;
+
+            foreach (Shooter s in parkBuffer)
+                return TryLaunch(s);
+
+            return false;
+        }
+
         /// <summary>Where a shooter sits once parked — used to aim its landing hop.</summary>
         private int IndexOf(Shooter shooter)
         {
@@ -152,11 +166,12 @@ namespace Game
             }
         }
 
-        public void SetRescueAlert(bool active)
+        /// <summary>Flashes every slot — the only visual cue that a loss is near.</summary>
+        public void PulseWarning(int count, float pulseSeconds)
         {
             if (slotViews == null) return;
             foreach (var view in slotViews)
-                view.SetAlert(active);
+                if (view != null) view.Pulse(count, pulseSeconds);
         }
 
         // Park slotlarını yatay kutular olarak çizer — placeholder.

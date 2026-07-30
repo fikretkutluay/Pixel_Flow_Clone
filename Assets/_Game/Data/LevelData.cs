@@ -15,7 +15,7 @@ namespace Game
         public int parkCapacity = 5;
         // Rail speed is game-wide, not per level: it lives in GameConfig as a lap
         // duration so every level runs at the same visual pace (RULE 2).
-        public float rescueWindowSeconds = 2f;
+        // Kurtarma penceresi kaldırıldı: park doluyken inen atıcı anında kaybettirir.
 
 
         private void OnValidate()
