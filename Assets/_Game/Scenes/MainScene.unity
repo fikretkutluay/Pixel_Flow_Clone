@@ -1963,6 +1963,9 @@ MonoBehaviour:
   - tag: Tracer
     prefab: {fileID: 635600332326895665, guid: 4b487005987ab1d4d9fd9dd32770514a, type: 3}
     size: 12
+  - tag: Crate
+    prefab: {fileID: 2794196900058622006, guid: 71f2b05dc6eecce46aa1bf9a96933923, type: 3}
+    size: 20
 --- !u!4 &241128650
 Transform:
   m_ObjectHideFlags: 0
@@ -3519,8 +3522,8 @@ MonoBehaviour:
   trackController: {fileID: 1890879080}
   parkController: {fileID: 1067469442}
   boardController: {fileID: 1452927803}
+  queueController: {fileID: 1650600846}
   config: {fileID: 11400000, guid: edd0adcaaa326024d8887b2b5758d238, type: 2}
-  levelData: {fileID: 11400000, guid: f8ec785d429054642b2572e768206084, type: 2}
 --- !u!4 &431223712
 Transform:
   m_ObjectHideFlags: 0
@@ -6468,6 +6471,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 740807479}
   m_CullTransparentMesh: 1
+--- !u!1 &757112642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 757112643}
+  - component: {fileID: 757112644}
+  m_Layer: 0
+  m_Name: TrackChevrons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &757112643
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757112642}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1819318647}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &757112644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757112642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 421afd974814ffa42a72092aba1bb633, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.TrackChevrons
+  trackController: {fileID: 1890879080}
+  chevronPrefab: {fileID: 919132149155446097, guid: 2e8071179150e2142b201d0f1ca819e0, type: 3}
+  spacing: 2.5
+  sampleCount: 64
+  offset: {x: 0, y: 0, z: -0.1}
+  chevronScale: 300
+  facingOffsetDeg: 180
+  flowSpeed: 1
 --- !u!1 &767490850
 GameObject:
   m_ObjectHideFlags: 0
@@ -9497,6 +9552,7 @@ MonoBehaviour:
   midLevelDelaySeconds: 0.5
   rescueTestDelaySeconds: 6
   railAnchor: {fileID: 767490852}
+  chevrons: {fileID: 757112644}
 --- !u!4 &1135676411
 Transform:
   m_ObjectHideFlags: 0
@@ -14026,6 +14082,7 @@ Transform:
   - {fileID: 1650600847}
   - {fileID: 1067469443}
   - {fileID: 767490851}
+  - {fileID: 757112643}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1848157785
