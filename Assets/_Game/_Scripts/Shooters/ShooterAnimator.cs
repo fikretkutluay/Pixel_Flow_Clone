@@ -29,6 +29,10 @@ namespace Game
         [Header("Queue shuffle")]
         [SerializeField] private float slideDuration = 0.3f;
 
+        [Header("Reveal — the \"?\" opening up")]
+        [SerializeField] private float revealSquash = 0.22f;
+        [SerializeField] private float revealDuration = 0.34f;
+
         [Header("Spent — spins up, then shrinks away")]
         [SerializeField] private float spinDuration = 0.42f;
         [SerializeField] private int spinTurns = 2;
@@ -88,6 +92,25 @@ namespace Game
             flourish.Append(body.DOScale(Squash(-launchStretch), launchDuration * 0.3f)
                                 .SetEase(Ease.OutQuad));
             flourish.Append(body.DOScale(bodyBaseScale, launchDuration * 0.7f)
+                                .SetEase(Ease.OutBack));
+            flourish.OnComplete(() => flourish = null);
+        }
+
+        /// <summary>
+        /// The mystery shooter opening up as it reaches the front of the queue.
+        /// Squashes and springs back while <see cref="Shooter"/> lifts the "?" off
+        /// the body — the two run together and read as one beat.
+        /// </summary>
+        public void PunchReveal()
+        {
+            flourish?.Kill();
+            body.DOKill();
+            body.localScale = bodyBaseScale;
+
+            flourish = DOTween.Sequence();
+            flourish.Append(body.DOScale(Squash(revealSquash), revealDuration * 0.35f)
+                                .SetEase(Ease.OutQuad));
+            flourish.Append(body.DOScale(bodyBaseScale, revealDuration * 0.65f)
                                 .SetEase(Ease.OutBack));
             flourish.OnComplete(() => flourish = null);
         }

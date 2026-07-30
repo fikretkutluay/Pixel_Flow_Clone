@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using TMPro;
 
@@ -21,8 +22,15 @@ namespace Game
                  "gerçek rengi yerine bu görünür.")]
         [SerializeField] private Material hiddenMaterial;
 
+        [Tooltip("\"?\" deseninin gövdeden kalkma süresi. 0 = anında değişim.")]
+        [SerializeField] private float revealSeconds = 0.45f;
+        [Tooltip("Desen kalkarken sıklığın ineceği oran — küçük değer glifleri " +
+                 "daha çok büyütür.")]
+        [SerializeField, Range(0.1f, 1f)] private float revealSpread = 0.55f;
+
         private Material revealedMaterial;
         private bool materialsCaptured;
+        private Tween revealTween;
 
         [Header("Gövde — döndürülen görsel (AmmoText bunun DIŞINDA olmalı)")]
         [SerializeField] private Transform bodyTransform;
@@ -36,6 +44,8 @@ namespace Game
         [SerializeField, Range(0f, 1f)] private float queueBackAlpha = 0.35f;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int PatternStrengthId = Shader.PropertyToID("_PatternStrength");
+        private static readonly int PatternTilingId = Shader.PropertyToID("_PatternTiling");
         private MaterialPropertyBlock mpb;
 
         private Quaternion bodyBaseRotation;
@@ -51,9 +61,24 @@ namespace Game
         public Vector3 MuzzlePosition => muzzle != null ? muzzle.position : transform.position;
         public ShooterAnimator Animator { get; private set; }
 
-        /// <summary>Palette colour this shooter shows — used to tint its tracer.</summary>
-        public UnityEngine.Color DisplayColor =>
-            palette != null ? palette.Of(isHidden ? ColorId.Purple : color) : UnityEngine.Color.white;
+        /// <summary>
+        /// Palette colour this shooter shows — used to tint its tracer. Gizliyken
+        /// gerçek renk SIZMAMALI, o yüzden "?" materyalinin kendi tonu döner.
+        /// (Eskiden ColorId.Purple dönüyordu; Purple oynanabilir bir renk ve GDD
+        /// §4.1 "'?' atıcı rengiyle çakışmamalı" diye not düşmüş.)
+        /// </summary>
+        public UnityEngine.Color DisplayColor
+        {
+            get
+            {
+                if (isHidden)
+                    return hiddenMaterial != null
+                        ? hiddenMaterial.GetColor(BaseColorId)
+                        : UnityEngine.Color.gray;
+
+                return palette != null ? palette.Of(color) : UnityEngine.Color.white;
+            }
+        }
 
         private void Awake()
         {
@@ -63,6 +88,11 @@ namespace Game
 
         public void Init(ColorId color, int ammo, bool isHidden)
         {
+            // Havuzdan yeniden çıkan atıcı, yarım kalmış bir açılma animasyonunu
+            // taşımasın — yoksa tween ApplyVisual'ın yazdığı rengin üstüne yazar.
+            revealTween?.Kill();
+            revealTween = null;
+
             this.color = color;
             this.ammo = ammo;
             this.isHidden = isHidden;
@@ -86,13 +116,66 @@ namespace Game
             IsWaitingForPark = false;
         }
 
+        /// <summary>
+        /// Kuyruğun tepesine gelen "?" atıcı açılır. Materyal bir karede
+        /// değişmiyor: desen büyüyerek sönerken gövde rengi gerçek renge
+        /// geçiyor, yani "?" gövdeden KALKIYOR. Bittiğinde normal materyale
+        /// dönülür ki havuzdan çıkan bir sonraki atıcı temiz başlasın.
+        /// </summary>
         public void Reveal()
         {
             if (!isHidden) return;
 
             isHidden = false;
-            ApplyVisual();
             ApplyAmmoText();      // "?" yerini gerçek ammo alır
+            Animator?.PunchReveal();
+
+            revealTween?.Kill();
+            revealTween = null;
+
+            bool canAnimate = shooterRenderer != null && hiddenMaterial != null
+                              && palette != null && revealSeconds > 0f;
+            if (!canAnimate)
+            {
+                ApplyVisual();
+                return;
+            }
+
+            CaptureMaterials();
+
+            UnityEngine.Color from = hiddenMaterial.GetColor(BaseColorId);
+            UnityEngine.Color to = palette.Of(color);
+            float baseTiling = hiddenMaterial.GetFloat(PatternTilingId);
+
+            if (mpb == null) mpb = new MaterialPropertyBlock();
+
+            // Gizli materyal animasyon boyunca renderer'da kalır; sadece property
+            // block sürülür. Sıklığı düşürmek glifleri büyütüyor, sönmeyle
+            // birleşince desen dağılarak uzaklaşıyor gibi okunuyor.
+            revealTween = DOVirtual.Float(1f, 0f, revealSeconds, t =>
+                {
+                    if (shooterRenderer == null) return;
+
+                    shooterRenderer.GetPropertyBlock(mpb);
+                    mpb.SetFloat(PatternStrengthId, t);
+                    mpb.SetFloat(PatternTilingId,
+                                 Mathf.Lerp(baseTiling * revealSpread, baseTiling, t));
+                    mpb.SetColor(BaseColorId, UnityEngine.Color.Lerp(to, from, t));
+                    shooterRenderer.SetPropertyBlock(mpb);
+                })
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() =>
+                {
+                    revealTween = null;
+                    ApplyVisual();
+                });
+        }
+
+        // Havuza dönen atıcı animasyonun ortasında yakalanabilir.
+        private void OnDisable()
+        {
+            revealTween?.Kill();
+            revealTween = null;
         }
 
         public void ConsumeAmmo()
