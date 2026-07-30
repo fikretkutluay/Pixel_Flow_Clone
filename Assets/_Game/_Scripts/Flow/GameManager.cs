@@ -97,6 +97,11 @@ namespace Game
         /// lost. Holding the player there is just waiting, so the rail speeds up,
         /// shooters stop parking, and the crates — which only ever existed to block
         /// a lane — lift away.
+        ///
+        /// Deliberately does NOT empty the park or the queue. Only the shooters
+        /// already on the rail keep circling; the rest wait for the player to send
+        /// them, exactly as they do the rest of the level. Auto-launching them took
+        /// the last of the aiming away and finished the level on its own.
         /// </summary>
         private void UpdateEndgame()
         {
@@ -105,15 +110,6 @@ namespace Game
 
             endgameRunning = true;
             boardController.ClearCrates();
-            ReleaseParkedShooters();
-        }
-
-        private void ReleaseParkedShooters()
-        {
-            while (parkController.Count > 0 && trackController.HasFreeTrackSlot)
-            {
-                if (!parkController.LaunchFirst()) break;
-            }
         }
 
         /// <summary>

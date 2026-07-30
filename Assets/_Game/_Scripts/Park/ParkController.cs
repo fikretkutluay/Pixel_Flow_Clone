@@ -88,20 +88,6 @@ namespace Game
             return true;
         }
 
-        /// <summary>
-        /// Sends whoever is at the front back out. Used by the endgame run, where
-        /// parked shooters would otherwise just sit there with the level already won.
-        /// </summary>
-        public bool LaunchFirst()
-        {
-            if (parkBuffer == null) return false;
-
-            foreach (Shooter s in parkBuffer)
-                return TryLaunch(s);
-
-            return false;
-        }
-
         /// <summary>Where a shooter sits once parked — used to aim its landing hop.</summary>
         private int IndexOf(Shooter shooter)
         {
