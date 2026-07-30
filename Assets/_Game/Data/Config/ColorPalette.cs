@@ -18,14 +18,21 @@ namespace Game
             public Color color;
         }
 
+        // Doygunluk ve parlaklık referans ekran görüntülerinden ölçülerek
+        // kalibre edildi; GDD §4.1'in ham hex'leri artık geçerli değil.
+        // Referansta atıcı gövdeleri S≈0.52 (bizde 0.72 idi) ve board küpleri
+        // V 0.42-1.00 arasına yayılıyor (bizde 0.71-0.83'te sıkışıktı).
+        // Indigo ve White o aralığın iki ucunu açmak için var.
         public Entry[] entries = new Entry[]
         {
-            new Entry { id = ColorId.Red,    color = Hex(0xE8453C) },
-            new Entry { id = ColorId.Blue,   color = Hex(0x3B82F6) },
-            new Entry { id = ColorId.Green,  color = Hex(0x4ADE58) },
-            new Entry { id = ColorId.Yellow, color = Hex(0xFACC15) },
-            new Entry { id = ColorId.Purple, color = Hex(0xA855F7) },
-            new Entry { id = ColorId.Crate,  color = Hex(0xC08552) },
+            new Entry { id = ColorId.Red,    color = Hex(0xC5615C) },
+            new Entry { id = ColorId.Blue,   color = Hex(0x608BD1) },
+            new Entry { id = ColorId.Green,  color = Hex(0x5DBD66) },
+            new Entry { id = ColorId.Yellow, color = Hex(0xD5BB55) },
+            new Entry { id = ColorId.Purple, color = Hex(0x9F69D2) },
+            new Entry { id = ColorId.Indigo, color = Hex(0x3C2F70) },
+            new Entry { id = ColorId.White,  color = Hex(0xE9EDF2) },
+            new Entry { id = ColorId.Crate,  color = Hex(0xA37A56) },
         };
 
         public Color Of(ColorId id)
