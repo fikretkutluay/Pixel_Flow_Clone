@@ -28,6 +28,11 @@ import sim
 from levelio import ID_OF
 
 LEVELS_DIR = "../../Assets/_Game/Data/Levels"
+
+# Level 1-2 çok daha sade görsellerden gelecek ve ayrı üretiliyor; buradaki
+# SPECS 3'ten başlıyor. Board 1000+ küpte tutulduğu için ilk iki level'ın işi
+# mekaniği öğretmek, ve o iş az renkli sade bir resimle çok daha iyi oluyor.
+FIRST_LEVEL = 3
 SCRIPT_GUID = "271bf4ec02b1c314db3e1e139e1a6603"
 
 AMMO_STEPS = (10, 20, 40)
@@ -178,7 +183,7 @@ def main():
     rng = random.Random(4242)
     os.makedirs(LEVELS_DIR, exist_ok=True)
 
-    for i, spec in enumerate(SPECS, start=1):
+    for i, spec in enumerate(SPECS, start=FIRST_LEVEL):
         out = build(spec, rng)
         name = "Level_%d" % i
         if out is None:
