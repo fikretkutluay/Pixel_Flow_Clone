@@ -55,6 +55,13 @@ def to_lab(c):
     return (116 * Y - 16, 500 * (X - Y), 200 * (Y - Z))
 
 
+def board_size_for_cells(img, cells):
+    """Hedef küp sayısını en-boy oranını bozmadan bir board boyutuna çevirir."""
+    ar = img.width / img.height
+    h = max(4, round((cells / ar) ** 0.5))
+    return max(4, round(h * ar)), h
+
+
 def board_size(img, height=None, width=None):
     """Tablonun en-boy oranını koru — kareye zorlamak resmi eziyor."""
     ar = img.width / img.height
