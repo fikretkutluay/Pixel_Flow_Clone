@@ -4,10 +4,16 @@ Unity 6000.3.9f1 · URP 17.3 · Android portrait · Staj projesi.
 
 ## Önce bunu oku
 
+**`HANDOFF.md`** — projenin GÜNCEL durumu, alınan kararlar ve sıradaki iş.
+Oturuma buradan başla.
+
 **`Assets/_Game/Art/References/Pixel_Flow_Clone_GDD.docx`** — projenin tam tanımı.
-Mekanik, mimari sözleşme (KURAL 1-11), renk paleti, ekran tasarımları, mevcut
-durum, kalan iş planı ve teslim checklist'i orada. Bu dosya sadece bir özettir;
-çelişki olursa GDD kazanır.
+Mekanik, mimari sözleşme (KURAL 1-11), renk paleti, ekran tasarımları ve teslim
+checklist'i orada.
+
+Çelişki durumunda öncelik: **HANDOFF.md → GDD → bu dosya.** GDD'nin §6 (mevcut
+durum) ve §7 (kalan iş) bölümleri eskidir; onların yerini HANDOFF.md alır. Geri
+kalan bölümleri — özellikle mimari sözleşme ve palet — hâlâ bağlayıcıdır.
 
 Referans görseller `Assets/_Game/Art/References/` altında iki klasörde:
 
@@ -27,11 +33,19 @@ Assets/_Game/Art/References/
     └── profilpaneli.PNG
 ```
 
-UI taban dokuları (pill/panel/circle/iconframe) henüz yok — şeffaflık sorunu
-yüzünden yeniden üretilecek (GDD §4.3, doğrulama kontrol listesi). Bir görev
-bu dosyaları gerektiriyorsa önce var olup olmadığı kontrol edilir, yoksa
-üretim GDD §4.3'teki dört kısıtla (şeffaflık, nötr ton, 9-slice payı, boyut)
-yapılır ve ölçülerek doğrulanır.
+## UI asset üretimi
+
+UI sprite'ları Figma'dan değil, **`Tools/uigen/`** altındaki Python (Pillow)
+generator'ından çıkıyor — 55 sprite `Assets/_Game/Art/Sprites/UI/` altında.
+Yeni bir sprite gerekiyorsa oraya bak; Figma MCP bu hesapta ayda 6 çağrıyla
+sınırlı ve bir oturumda tükeniyor.
+
+```
+python generate_all.py && python icons.py && python avatars.py
+python import_to_unity.py     # Assets'e kopyalar + .meta ayarlarını yazar
+```
+
+Detaylar ve GDD §4.3'ten sapmanın gerekçesi: `Tools/uigen/README.md`
 
 ## Bağlayıcı kurallar
 
@@ -59,11 +73,16 @@ Claude Code Unity Editor'ı süremez. Editor adımları **talimat olarak** veril
 hangi menü, hangi alan, hangi değer — "ayarla" denmez, nasıl ayarlanacağı yazılır.
 Kod tarafı (script, .meta import ayarları, prefab) Claude Code'un işidir.
 
-## Acil durum
+## Sık düşülen tuzak
 
-GDD §6.4'e göre **build şu an çalışmaz**: `EditorBuildSettings` var olmayan bir
-sahneyi (`Assets/Scenes/SampleScene.unity`) işaret ediyor, gerçek sahne
-`Assets/_Game/Scenes/MainScene.unity`. Ayrıca Android player settings hiç
-yapılmamış (package name boş, orientation AutoRotation, scripting backend boş
-ama ARM64 IL2CPP gerektiriyor). Bu, dört devlog'dur ertelenen en yüksek riskli
-açık kalem — GDD §7.1'deki A1-A2-A3 yarım günden az sürer.
+**Sahne kaydedilmiş mi kontrol et.** Unity'nin bellekteki hâli diskte görünmez.
+Hiyerarşi veya Inspector değeri okumadan önce
+`Assets/_Game/Scenes/MainScene.unity` dosyasının `mtime`'ına bak — bu dönemde
+birkaç kez eski veriye bakılıp yanlış teşhis kondu.
+
+## En riskli açık kalem
+
+**Android build hâlâ hiç alınmadı.** Build sahne listesi ve player settings
+düzeltildi (GDD A1-A2 bitti), geriye APK alıp cihaza kurmak kaldı (A3-A4).
+Dört devlog'dur erteleniyor ve GDD §9.5 bunu "asla kesilmeyecekler" listesine
+yönelik doğrudan tehdit olarak işaretliyor.
