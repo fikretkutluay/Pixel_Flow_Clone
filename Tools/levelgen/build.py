@@ -29,38 +29,49 @@ from levelio import ID_OF
 
 LEVELS_DIR = "../../Assets/_Game/Data/Levels"
 
-# Level 1-2 çok daha sade görsellerden gelecek ve ayrı üretiliyor; buradaki
-# SPECS 3'ten başlıyor. Board 1000+ küpte tutulduğu için ilk iki level'ın işi
-# mekaniği öğretmek, ve o iş az renkli sade bir resimle çok daha iyi oluyor.
-FIRST_LEVEL = 3
+# Board 1000+ küpte tutulduğu için ilk iki level'ın tek işi mekaniği öğretmek;
+# o iş az renkli, tek özneli sade bir resimle çok daha iyi oluyor.
+FIRST_LEVEL = 1
 SCRIPT_GUID = "271bf4ec02b1c314db3e1e139e1a6603"
 
 AMMO_STEPS = (10, 20, 40)
 
-# (dosya, hedef küp, renk, sütun, hedef zirve park, sandık, gizli atıcı)
+SATURATION = 1.8
+MAX_SHARE = 0.34
+BG_RAMP = [ID_OF["Black"], ID_OF["DarkGray"], ID_OF["LightGray"]]
+
+# (dosya, hedef küp, renk, sütun, hedef zirve park, sandık, gizli atıcı, max_share)
+#
+# max_share=None olan level'larda zemin tek renk kalır. Level 1-2 için bu
+# ISTENEN durum: baskın rengin atıcısı turunda her zaman eşleşme bulur, mermisini
+# bitirir ve parka hiç düşmez.
 #
 # Renk sayısı erken level'ların ASIL kolaylık kolu. 1000+ küpte 6 renkle bir
 # atıcı turunda kendi renginden yeterince küp bulamıyor ve parka düşüyor —
 # ölçüldü: Level_1 hedefi 0-1 iken 6 renkle 3/5'e çıkıyordu. Az renk, aynı
 # board'da daha çok eşleşme demek.
 SPECS = [
-    ("Mondrian.jpeg",                                   1000, 3, 3, (0, 1),  0, 0),
-    ("Klimt.jpeg",                                      1050, 3, 3, (1, 2),  0, 0),
-    ("Vincent_Willem_van_Gogh_127.jpg",                 1100, 4, 4, (2, 3),  0, 0),
-    ("The_Scream.jpg",                                  1150, 4, 4, (3, 3), 10, 0),
-    ("Hiroshige.jpeg",                                  1200, 5, 4, (4, 4), 14, 0),
+    # max_share yalnızca baskın rengin gerçekten ARKA PLAN olduğu tablolarda
+    # açık. Ayçiçekleri'nde sarı öznenin kendisiydi ve kırpma board'un %63'ünü
+    # gri/siyaha çevirip tabloyu tanınmaz hale getirmişti; o yüzden tablo başına
+    # veriliyor, tek bir genel değer olarak değil.
+    ("apple(level1).jpeg",                              1000, 3, 2, (0, 0),  0, 0, None),
+    ("lemon(level2).jpeg",                              1000, 3, 2, (0, 1),  0, 0, None),
+    ("Mondrian.jpeg",                                   1024, 4, 3, (0, 1),  0, 0, None),
+    ("Klimt.jpeg",                                      1050, 4, 3, (1, 2),  0, 0, None),
+    # Kanagawa'da baskın Khaki, dalganın rengi değil kağıdın sararmışlığı —
+    # kırpmak dalgayı ortaya çıkarıyor.
+    ("Great_Wave_off_Kanagawa2.jpg",                    1100, 5, 4, (2, 3),  0, 0, 0.42),
+    ("The_Scream.jpg",                                  1150, 5, 4, (3, 3), 10, 0, None),
+    ("Hiroshige.jpeg",                                  1200, 5, 4, (4, 4), 14, 0, None),
     ("Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg",
-                                                        1250, 5, 4, (3, 3),  0, 3),
-    ("Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg", 1300, 6, 4, (5, 5),  0, 5),
-    ("Vermeer_-_The_Milkmaid.jpg",                       1350, 6, 4, (4, 4), 12, 4),
-    ("Girl_with_a_Pearl_Earring.jpg",                    1450, 6, 4, (4, 4), 12, 4),
-    ("mona_lisa_.jpg",                                   1500, 6, 4, (4, 5), 16, 5),
+                                                        1250, 5, 4, (3, 3),  0, 3, 0.40),
+    ("Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg", 1300, 6, 4, (5, 5),  0, 5, None),
+    ("Vermeer_-_The_Milkmaid.jpg",                       1350, 6, 4, (4, 4), 12, 4, MAX_SHARE),
+    ("Girl_with_a_Pearl_Earring.jpg",                    1450, 6, 4, (4, 4), 12, 4, MAX_SHARE),
+    ("mona_lisa_.jpg",                                   1500, 6, 4, (4, 5), 16, 5, MAX_SHARE),
 ]
 
-SATURATION = 1.8
-MAX_SHARE = 0.34
-COLOURS = 6
-BG_RAMP = [ID_OF["Black"], ID_OF["DarkGray"], ID_OF["LightGray"]]
 
 
 def guid_for(name):
@@ -123,17 +134,17 @@ def make_queue(counts, column_count, rng, steps, hidden_count):
 
 
 def make_board(spec, rng):
-    fname, cells, colours, column_count, target, crates, hidden = spec
+    fname, cells, colours, column_count, target, crates, hidden, share = spec
     path = os.path.join("src", fname)
     palette_rgb = quantize.load_palette()
     w, h = quantize.board_size_for_cells(Image.open(path), cells)
     pixels = quantize.quantize(path, w, h, palette_rgb, SATURATION, colours,
-                               MAX_SHARE, BG_RAMP)
+                               share, BG_RAMP)
     return place_crates(pixels, w, h, crates, rng), w, h
 
 
 def build(spec, rng, attempts=90):
-    fname, cells, colours, column_count, target, crates, hidden = spec
+    fname, cells, colours, column_count, target, crates, hidden, share = spec
     pixels, w, h = make_board(spec, random.Random(4242))
 
     counts = {}
@@ -144,10 +155,11 @@ def build(spec, rng, attempts=90):
 
     lo, hi = target
     # Kolay bantlarda 20'lik atıcılar, zor bantlarda 40'lık. Arama ikisini de dener.
-    if hi <= 1:
-        pool = [10, 20]
-    elif hi <= 2:
-        pool = [20]
+    if hi <= 2:
+        # 10'luk atıcılar level'ı kolaylaştırır ama kuyruğu şişirir: limonun
+        # %79'luk zemini 10'a bölününce 80 atıcı, yani 80 dokunuş çıkıyordu.
+        # Baskın renk zaten her turda eşleşme bulduğu için 20/40 da güvenli.
+        pool = [20, 40]
     elif hi <= 3:
         pool = [20, 40]
     else:
@@ -166,10 +178,16 @@ def build(spec, rng, attempts=90):
 
         losses = sum(1 for _, r in runs if r.outcome != "won")
         miss = max(0, lo - result.peak_park) + max(0, result.peak_park - hi)
-        score = (miss, -losses, -result.wasted_laps)
+
+        # Kaybeden politika sayısı ikinci zorluk göstergesi, ama yönü hedefe
+        # bağlı: zor level'da ÇOK olmalı, kolay level'da HİÇ. Tek yönlü tercih
+        # kolay bantları da gereksiz riskli yapıyordu.
+        want_pressure = hi >= 4
+        score = (miss, -losses if want_pressure else losses, len(queue))
         if best is None or score < best[0]:
             best = (score, queue, result, policy, losses)
-            if miss == 0 and losses >= (2 if hi >= 5 else 1):
+            enough = losses >= (2 if hi >= 5 else 1) if want_pressure else losses == 0
+            if miss == 0 and enough:
                 break       # bant tam tutturuldu, aramayı uzatma
 
     if best is None:
@@ -180,11 +198,16 @@ def build(spec, rng, attempts=90):
 
 
 def main():
-    rng = random.Random(4242)
+    import sys
+    only = {int(x) for x in sys.argv[1].split(",")} if len(sys.argv) > 1 else None
     os.makedirs(LEVELS_DIR, exist_ok=True)
 
     for i, spec in enumerate(SPECS, start=FIRST_LEVEL):
-        out = build(spec, rng)
+        if only and i not in only:
+            continue
+        # Level başına ayrı tohum: bir level'ı yeniden üretmek diğerlerinin
+        # sonucunu değiştirmesin.
+        out = build(spec, random.Random(4242 + i))
         name = "Level_%d" % i
         if out is None:
             print("%-8s URETILEMEDI  %s" % (name, spec[0]))

@@ -115,11 +115,15 @@ def quantize(path, w, h, palette, saturation=1.0, colours=None,
             pixels.append(max(votes, key=votes.get))
             lums.append(total / (ss * ss))
 
-    if max_share:
-        pixels = spread(pixels, lums, max_share, lab_pal, palette, ramp_ids)
 
+
+    # SIRA ONEMLI. Zemin dagitimi once calisirsa, tasidigi tonlar en cok
+    # kullanilan renkler haline geliyor ve renk indirgemesi OZNEYI eliyor —
+    # limonda sari tamamen kayboluyordu. Once hangi renkler kalacak belli olsun.
     if colours:
         pixels = restrict(pixels, colours, lab_pal)
+    if max_share:
+        pixels = spread(pixels, lums, max_share, lab_pal, palette, ramp_ids)
     return pixels
 
 

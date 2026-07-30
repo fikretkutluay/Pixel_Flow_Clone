@@ -18,257 +18,97 @@ MonoBehaviour:
   palette: 050000000d0000000e000000030000000c000000
   queue:
   - column: 0
-    color: 13
-    ammo: 40
+    color: 3
+    ammo: 10
     isHidden: 0
     linkedCount: 1
   - column: 1
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
     color: 12
-    ammo: 40
+    ammo: 20
     isHidden: 0
     linkedCount: 1
-  - column: 0
+  - column: 2
     color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 13
-    ammo: 10
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 5
-    ammo: 10
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
-    color: 3
-    ammo: 10
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 3
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
-    color: 3
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 3
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
-    color: 12
-    ammo: 10
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 13
     ammo: 40
     isHidden: 0
     linkedCount: 1
   - column: 3
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 3
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
     color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 13
-    ammo: 40
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 3
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 14
-    ammo: 10
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
-    color: 13
-    ammo: 10
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 13
     ammo: 40
     isHidden: 0
     linkedCount: 1
   - column: 0
     color: 12
-    ammo: 10
+    ammo: 20
     isHidden: 0
     linkedCount: 1
   - column: 1
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 2
-    color: 5
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 3
-    color: 14
-    ammo: 20
-    isHidden: 0
-    linkedCount: 1
-  - column: 0
     color: 3
-    ammo: 10
-    isHidden: 0
-    linkedCount: 1
-  - column: 1
-    color: 5
     ammo: 20
     isHidden: 0
     linkedCount: 1
   - column: 2
-    color: 12
+    color: 5
     ammo: 40
     isHidden: 0
     linkedCount: 1
   - column: 3
-    color: 5
+    color: 3
     ammo: 20
     isHidden: 0
     linkedCount: 1
   - column: 0
-    color: 3
-    ammo: 20
+    color: 5
+    ammo: 40
     isHidden: 0
     linkedCount: 1
   - column: 1
     color: 5
-    ammo: 20
+    ammo: 40
     isHidden: 0
     linkedCount: 1
   - column: 2
-    color: 3
+    color: 13
     ammo: 20
     isHidden: 0
     linkedCount: 1
   - column: 3
-    color: 14
+    color: 12
     ammo: 20
     isHidden: 0
     linkedCount: 1
   - column: 0
     color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 5
+    ammo: 10
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 3
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 14
     ammo: 40
     isHidden: 0
     linkedCount: 1
   - column: 1
-    color: 12
-    ammo: 40
+    color: 14
+    ammo: 10
     isHidden: 0
     linkedCount: 1
   - column: 2
-    color: 12
+    color: 5
     ammo: 40
     isHidden: 0
     linkedCount: 1
@@ -278,8 +118,88 @@ MonoBehaviour:
     isHidden: 0
     linkedCount: 1
   - column: 0
-    color: 13
+    color: 5
     ammo: 40
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 5
+    ammo: 40
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 3
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 12
+    ammo: 10
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 12
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 12
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 5
+    ammo: 40
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 3
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 12
+    ammo: 10
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 12
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 12
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 3
+    ammo: 10
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 13
+    ammo: 10
     isHidden: 0
     linkedCount: 1
   - column: 1
@@ -288,8 +208,68 @@ MonoBehaviour:
     isHidden: 0
     linkedCount: 1
   - column: 2
-    color: 14
+    color: 3
     ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 12
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 13
+    ammo: 10
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 5
+    ammo: 40
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 14
+    ammo: 40
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 3
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 3
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 0
+    color: 14
+    ammo: 40
+    isHidden: 0
+    linkedCount: 1
+  - column: 1
+    color: 13
+    ammo: 20
+    isHidden: 0
+    linkedCount: 1
+  - column: 2
+    color: 14
+    ammo: 40
     isHidden: 0
     linkedCount: 1
   columnCount: 4
