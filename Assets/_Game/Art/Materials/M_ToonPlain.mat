@@ -19,7 +19,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties:
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -51,8 +51,8 @@ Material:
     - _ShadowTintAmount: 0.18
     - _ShadowValue: 0.55
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _HighlightColor: {r: 1, g: 1, b: 0.68, a: 1}
+    - _BaseColor: {r: 0.01886791, g: 0, b: 0, a: 1}
+    - _HighlightColor: {r: 0.4113207, g: 0.384158, b: 0.384158, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadowTint: {r: 0.35, g: 0.37, b: 0.6, a: 1}
   m_BuildTextureStacks: []
