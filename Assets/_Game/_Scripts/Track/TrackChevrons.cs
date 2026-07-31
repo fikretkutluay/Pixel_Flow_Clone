@@ -5,11 +5,11 @@ namespace Game
     /// <summary>
     /// Direction arrows that drift around the rail, showing which way shooters go.
     ///
-    /// The path is geometry only. Spacing them on the distance axis would be wrong —
-    /// that axis counts cells, so Perimeter changes with the board and the same rail
-    /// would carry a different number of arrows level to level. Everything here works
-    /// in world arc length instead, which also absorbs the corner speed-up (GDD 6.4)
-    /// that would otherwise bunch them together.
+    /// Everything here works in world arc length rather than the path's distance
+    /// parameter. TrackPath is world-parameterised now too, so the two agree along
+    /// the straights — but the corners still are not: an arc spans r of distance
+    /// while covering only r·pi/4 of actual length, so arrows spaced on the raw
+    /// parameter would bunch up at every corner.
     ///
     /// They travel the whole loop rather than sitting still and blinking. A closed
     /// loop has no seam, so nothing pops when an arrow comes round again.
