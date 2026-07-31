@@ -1256,6 +1256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f31e918fa40f1fe43a9b9e25d8a5e993, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.ProfilePanel
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
   avatars:
   - {fileID: 21300000, guid: b66c7a8bd8fcfa1ae7288628b75e05d3, type: 3}
   - {fileID: 21300000, guid: 9d81f1aa4d97f50193bd33e8d813304c, type: 3}
@@ -1480,6 +1483,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5347375d05b704893c64828a509467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.LoadingScreen
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
   bootSeconds: 1.2
   coverSeconds: 0.5
 --- !u!114 &188578642
@@ -2844,6 +2850,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a66a63bdf6a724468c0a673c298f541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.MenuPanel
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
 --- !u!225 &335436060
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4476,6 +4485,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e57dceca36c4c6541b43462b4d4e724f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.HudPanel
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
   levelText: {fileID: 1894927962}
   remainingCubesText: {fileID: 365123198}
   trackOccupancyText: {fileID: 1636910653}
@@ -4855,6 +4867,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef9a399357a5b9f4ba4c89e48666e353, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.LosePanel
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
 --- !u!225 &594548860
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6571,6 +6586,7 @@ MonoBehaviour:
   centerlineSize: {x: 7.2, y: 8.8}
   cornerRadius: 1.2
   startOffset: 1
+  boardAreaSize: {x: 5.3, y: 6.8}
 --- !u!1 &778691030
 GameObject:
   m_ObjectHideFlags: 0
@@ -9438,6 +9454,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99edc0e8c8931874e82c0bacc7a41b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.OverlayPanel
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
 --- !u!114 &1126514319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9546,16 +9565,6 @@ MonoBehaviour:
   levels:
   - {fileID: 11400000, guid: e8efece1063d30150e0b87651a603dfb, type: 2}
   - {fileID: 11400000, guid: 938e762221d0a6bea118f5a586017b9d, type: 2}
-  - {fileID: 11400000, guid: 9148f66ddd2b5393bf88edd7d2ea8050, type: 2}
-  - {fileID: 11400000, guid: 373a6c922283b1e25be266f8726bb2ae, type: 2}
-  - {fileID: 11400000, guid: 43a8b1d8fa84b12fa2aa31b8d65f417c, type: 2}
-  - {fileID: 11400000, guid: d5e8c46f60024a4aa87afe4d3fcc1dcf, type: 2}
-  - {fileID: 11400000, guid: b21a8afff5fc75442a75201fb92f4c4b, type: 2}
-  - {fileID: 11400000, guid: d1a6379fed4dbd1da0c86cbb3e68b560, type: 2}
-  - {fileID: 11400000, guid: 3aa4c09a1d944ad90a3f6a0b3e48f475, type: 2}
-  - {fileID: 11400000, guid: 3dd73812998f11cb801d8346794103a1, type: 2}
-  - {fileID: 11400000, guid: f5025f4ab54bcbf9b736594e04b4c360, type: 2}
-  - {fileID: 11400000, guid: 49645f93e4f132c4db3bf0a450ebca7b, type: 2}
   testLevel: {fileID: 11400000, guid: f8ec785d429054642b2572e768206084, type: 2}
   currentLevel: {fileID: 0}
   nextTestLevel: {fileID: 11400000, guid: 4d7bd2a668507384aaa5043d7364b3fc, type: 2}
@@ -12655,6 +12664,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 377b10cc47c0061498e9cab6368b78b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.SettingsPanel
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
   soundSlider: {fileID: 906731624}
 --- !u!1 &1550346943
 GameObject:
@@ -13577,6 +13589,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03e0b93b37fc3c42be7c9514bf016e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.WinPanel
+  fadeDuration: 0.5
+  popFrom: 0.86
+  popEase: 27
+  wobbleAngle: 9
+  wobbleVibrato: 7
+  wobbleSeconds: 0.55
 --- !u!225 &1778647944
 CanvasGroup:
   m_ObjectHideFlags: 0
