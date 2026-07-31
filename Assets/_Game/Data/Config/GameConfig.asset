@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: Game::Game.GameConfig
   visibleQueueWindow: 3
-  boardRailGap: 0.35
   topBarBand: 0.13764328
   boardBand: 0.44207123
   parkBand: 0.10171507
@@ -21,10 +20,10 @@ MonoBehaviour:
   bottomBand: 0.019999996
   contentWidthFactor: 0.92
   queueSlotSpacing: 1.4
-  cubeGap: 0.16
+  cubeGap: 0.12
   cubeGapVertical: 0.04
   parkSlotGap: 0.15
-  trackLapSeconds: 2.7
+  trackLapSeconds: 7
   tensionShooterThreshold: 7
   tensionSpeedMultiplier: 1.25
   tensionRampSeconds: 0.35

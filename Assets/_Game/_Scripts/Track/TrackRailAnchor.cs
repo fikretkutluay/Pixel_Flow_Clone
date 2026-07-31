@@ -19,17 +19,30 @@ namespace Game
         [Tooltip("Path üzerinde '0 noktası'nın faz kayması.")]
         [SerializeField] private float startOffset = 0f;
 
+        [Header("Board alanı")]
+        [Tooltip("HER level'ın board'u bu dikdörtgenin içine sığdırılır. Sahne " +
+                 "görünümünde yeşil çerçeve olarak çizilir — rayla arasındaki " +
+                 "boşluğu sürükleyerek ayarla, board asla dışına taşmaz.")]
+        [SerializeField] private Vector2 boardAreaSize = new Vector2(6.5f, 8.1f);
+
         public float CornerRadius => cornerRadius;
         public float StartOffset => startOffset;
 
-        public Rect GetCenterlineRect()
+        public Rect GetCenterlineRect() => RectAround(centerlineSize);
+
+        /// <summary>
+        /// Board'un sığdırılacağı alan. Ayrı bir dikdörtgen, çünkü ray merkez
+        /// hattından sabit bir sayı düşmek yeterli değildi: rayın köşe kavisi ve
+        /// mesh kalınlığı yüzünden istenen boşluk dört kenarda aynı değil. Burası
+        /// sahnede görünür, böylece göz kararı bir sayı yerine sürüklenerek
+        /// ayarlanıyor.
+        /// </summary>
+        public Rect GetBoardAreaRect() => RectAround(boardAreaSize);
+
+        private Rect RectAround(Vector2 size)
         {
             Vector3 c = transform.position;
-            return new Rect(
-                c.x - centerlineSize.x * 0.5f,
-                c.y - centerlineSize.y * 0.5f,
-                centerlineSize.x,
-                centerlineSize.y);
+            return new Rect(c.x - size.x * 0.5f, c.y - size.y * 0.5f, size.x, size.y);
         }
 
         private void OnDrawGizmos()
@@ -47,6 +60,12 @@ namespace Game
                 Gizmos.DrawLine(prev, cur);
                 prev = cur;
             }
+
+            // Board alanı — her level bu çerçevenin içinde kalır.
+            Rect area = GetBoardAreaRect();
+            Gizmos.color = new Color(0.35f, 1f, 0.45f);
+            Gizmos.DrawWireCube(new Vector3(area.center.x, area.center.y, 0f),
+                                new Vector3(area.width, area.height, 0f));
         }
     }
 }

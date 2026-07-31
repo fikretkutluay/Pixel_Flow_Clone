@@ -33,12 +33,18 @@ namespace Game
         [SerializeField] private float revealSquash = 0.22f;
         [SerializeField] private float revealDuration = 0.34f;
 
+        [Header("Denied — tapped but cannot launch")]
+        [SerializeField] private float denyAngle = 11f;
+        [SerializeField] private int denyVibrato = 10;
+        [SerializeField] private float denyDuration = 0.3f;
+
         [Header("Spent — spins up, then shrinks away")]
         [SerializeField] private float spinDuration = 0.42f;
         [SerializeField] private int spinTurns = 2;
 
         private Transform body;
         private Vector3 bodyBaseScale;
+        private Quaternion bodyBaseRotation;
         private Vector3 rootBaseScale;
         private Sequence move;
         private Sequence flourish;
@@ -48,6 +54,7 @@ namespace Game
             Shooter shooter = GetComponent<Shooter>();
             body = shooter != null && shooter.Body != null ? shooter.Body : transform;
             bodyBaseScale = body.localScale;
+            bodyBaseRotation = body.localRotation;
             rootBaseScale = transform.localScale;
         }
 
@@ -113,6 +120,32 @@ namespace Game
             flourish.Append(body.DOScale(bodyBaseScale, revealDuration * 0.65f)
                                 .SetEase(Ease.OutBack));
             flourish.OnComplete(() => flourish = null);
+        }
+
+        /// <summary>
+        /// Tapped but it cannot go: not the front of its column, or the rail is
+        /// full. Shakes its head instead of doing nothing — a tap that produces no
+        /// response reads as a dropped input rather than a refusal.
+        ///
+        /// Rotation, not position: the rail writes a shooter's world position every
+        /// frame, so a positional shake would be fought and lost the moment this is
+        /// ever called on something already moving.
+        /// </summary>
+        public void ShakeDenied()
+        {
+            flourish?.Kill();
+            body.DOKill();
+            body.localScale = bodyBaseScale;
+            body.localRotation = bodyBaseRotation;
+
+            flourish = DOTween.Sequence();
+            flourish.Append(body.DOPunchRotation(new Vector3(0f, 0f, denyAngle),
+                                                 denyDuration, denyVibrato, 1f));
+            flourish.OnComplete(() =>
+            {
+                flourish = null;
+                body.localRotation = bodyBaseRotation;
+            });
         }
 
         /// <summary>Slides up a place in the queue. Staggered so a column ripples.</summary>

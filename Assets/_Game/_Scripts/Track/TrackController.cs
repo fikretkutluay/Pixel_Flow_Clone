@@ -13,6 +13,7 @@ namespace Game
 
         private TrackPath path;
         private BoundedBuffer<Shooter> shooters;
+        private bool running;
         public event System.Action<Shooter> OnShooterFinishedLap;
 
         public void Init(int boardWidth, int boardHeight, Rect centerline, int trackCapacity,
@@ -30,6 +31,7 @@ namespace Game
             this.rampSeconds = Mathf.Max(rampSeconds, 0.01f);
             speedMultiplier = targetMultiplier = 1f;
 
+            running = true;
             shooters = new BoundedBuffer<Shooter>(trackCapacity);
             shooters.OnChanged += () => GameEvents.TriggerTrackOccupancyChanged(shooters.Count, shooters.Capacity);
         }
@@ -64,13 +66,27 @@ namespace Game
             }
             return false;
         }
+        /// <summary>
+        /// Ray yalnızca level oynanırken dönmeli. Kazanma/kaybetme kararından
+        /// sonra da dönmeye devam ediyordu: atıcılar yeni tur bitirip parka
+        /// düşüyor, park doluysa kaybı BİR KEZ DAHA tetikliyorlardı. İki kez
+        /// tetiklenen olay UIManager'da panelin üstüne kendini kapatan bir Hide
+        /// bindiriyor ve kayıp ekranı hiç görünmüyordu.
+        /// </summary>
+        public void SetRunning(bool value) => running = value;
+
         public void Clear()
         {
+            running = false;
             if (shooters == null) return;
+
             foreach (Shooter s in shooters)
             {
                 ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
             }
+            // Tamponu da boşalt: Init yenisini kursa bile, aradaki her çağrı
+            // havuza dönmüş atıcıları canlı sanmamalı.
+            shooters.Clear();
         }
 
         public bool HasFreeTrackSlot => shooters != null && shooters.HasFreeSlot;
@@ -78,7 +94,7 @@ namespace Game
 
         private void Update()
         {
-            if (path == null || shooters == null) return;
+            if (!running || path == null || shooters == null) return;
 
             speedMultiplier = Mathf.MoveTowards(speedMultiplier, targetMultiplier,
                                                 Time.deltaTime / rampSeconds);

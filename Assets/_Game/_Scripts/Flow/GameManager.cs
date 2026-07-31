@@ -55,6 +55,11 @@ namespace Game
         /// </summary>
         private void HandleLapCompleted(Shooter shooter)
         {
+            // Level'in sonucu belliyse hicbir tur artik bir sey degistirmemeli.
+            // Bu kontrol yokken kazanilan bir level'da bile parka sigmayan bir
+            // atici kaybi tetikleyebiliyordu.
+            if (currentState != GameState.Playing) return;
+
             // In the endgame nobody parks — they keep circling until they run dry.
             if (endgameRunning)
             {
@@ -69,8 +74,28 @@ namespace Game
                 return;
             }
 
-            currentState = GameState.Lost;
-            GameEvents.TriggerLevelFailed();
+            Finish(GameState.Lost);
+        }
+
+        /// <summary>
+        /// Sonucu BİR KEZ ilan eder ve rayı durdurur.
+        ///
+        /// İkisi de şarttı: ray dönmeye devam ettiği için atıcılar yeni tur
+        /// bitirip kaybı tekrar tetikliyordu, ve UIManager.SwitchPanel aynı
+        /// paneli ikinci kez açarken önce Hide'ını çağırıyor — o Hide'ın
+        /// OnComplete'i paneli kapatıyor ve kayıp ekranı hiç görünmüyordu.
+        /// Ray durmayınca ayrıca level bittikten sonra da atıcılar turlamaya
+        /// devam edip ekranda takılı kalıyordu.
+        /// </summary>
+        private void Finish(GameState result)
+        {
+            if (currentState != GameState.Playing) return;
+
+            currentState = result;
+            trackController.SetRunning(false);
+
+            if (result == GameState.Won) GameEvents.TriggerLevelCompleted();
+            else GameEvents.TriggerLevelFailed();
         }
 
         private void Update()
@@ -82,10 +107,7 @@ namespace Game
             UpdateSpeed();
 
             if (boardController.RemainingCubes <= 0)
-            {
-                currentState = GameState.Won;
-                GameEvents.TriggerLevelCompleted();
-            }
+                Finish(GameState.Won);
         }
 
         private int ShootersLeft =>

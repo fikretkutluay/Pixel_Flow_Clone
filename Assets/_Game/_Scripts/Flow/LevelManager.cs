@@ -62,20 +62,22 @@ namespace Game
         {
             currentLevel = data;
 
-            // Ray sabit bir dikdörtgen, board onun İÇİNE oturur ve küpler küçülür.
-            // Hücre boyutu bu yüzden İKİ eksenin de sığmasına göre seçilmeli:
-            // yalnızca x'e bölmek kareden uzaklaşan her board'da (32x47, 39x27)
-            // dikeyde ya da yatayda rayın dışına taşırıyordu.
-            Rect rail = railAnchor.GetCenterlineRect();
-            float gap = config.boardRailGap;
-            float cellSize = Mathf.Min(
-                (rail.width - 2f * gap) / data.boardSize.x,
-                (rail.height - 2f * gap) / data.boardSize.y);
+            // Board, sahnede çizili board alanının İÇİNE sığdırılır ve küpler
+            // küçülür — ray hiç büyümez. Hücre boyutu İKİ eksenin de sığmasına
+            // göre seçilir: yalnızca x'e bölmek kareden uzaklaşan her board'da
+            // (32x47, 39x27) taşmaya yol açıyordu.
+            //
+            // Hücreler KARE kalır, o yüzden board alanı doldurmayabilir: board'un
+            // en-boy oranı alanınkinden farklıysa artan pay boşluk olarak kalır.
+            // Esnetmek küpleri ve dolayısıyla tabloyu bozardı.
+            Rect area = railAnchor.GetBoardAreaRect();
+            float cellSize = Mathf.Min(area.width / data.boardSize.x,
+                                       area.height / data.boardSize.y);
 
-            // Board rayın merkezine oturur — boşluk dört kenarda da eşit kalsın.
+            // Board alanın merkezine oturur — artan pay dört kenara eşit dağılsın.
             Vector3 boardOrigin = new Vector3(
-                rail.center.x - (data.boardSize.x - 1) * cellSize * 0.5f,
-                rail.center.y - (data.boardSize.y - 1) * cellSize * 0.5f,
+                area.center.x - (data.boardSize.x - 1) * cellSize * 0.5f,
+                area.center.y - (data.boardSize.y - 1) * cellSize * 0.5f,
                 0f);
 
             boardController.Setup(data, cellSize, boardOrigin);

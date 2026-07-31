@@ -186,10 +186,11 @@ namespace Game
             FillWindow(column);
         }
 
-        // Intentionally silent: invalid taps (not top of column, track full) are
-        // ignored rather than surfaced — the shooter simply stays put.
+        // Geçersiz tap (sütunun önü değil, ya da ray dolu). Sessiz kalmak yanlıştı:
+        // hiçbir tepki vermeyen dokunuş "girdim ama algılamadı" gibi okunuyor.
         private void RejectTap(Shooter s)
         {
+            s.Animator?.ShakeDenied();
         }
 
         private int FindColumn(Shooter s)

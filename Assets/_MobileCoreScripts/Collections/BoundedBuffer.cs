@@ -49,5 +49,14 @@ namespace MobileCore
         {
             return items.Contains(item);
         }
+
+        /// <summary>Empties the buffer. Used when a level is torn down.</summary>
+        public void Clear()
+        {
+            if (items.Count == 0) return;
+
+            items.Clear();
+            OnChanged?.Invoke();
+        }
     }
 }

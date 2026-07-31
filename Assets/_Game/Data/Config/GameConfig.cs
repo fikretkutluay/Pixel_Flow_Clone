@@ -7,11 +7,6 @@ namespace Game
     {
         public int visibleQueueWindow = 3;
 
-        [Tooltip("Board ile rayın merkez çizgisi arasında bırakılacak boşluk " +
-                 "(dünya birimi). Board bu payı düşerek raya sığdırılır; küpler " +
-                 "küçülür, ray hiç büyümez.")]
-        public float boardRailGap = 0.35f;
-
         [Header("Layout — ekran yüksekliğinin oranı (toplam 1.0 olmalı)")]
         public float topBarBand = 0.09f;
         public float boardBand  = 0.44f;

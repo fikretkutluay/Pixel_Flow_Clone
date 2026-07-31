@@ -46,7 +46,8 @@ namespace Game
             if (s == null) return;
             if (!parkBuffer.Contains(s)) return;   // Shooters in the queue/rail aren't ours to handle
 
-            TryLaunch(s);   // Silently rejected if the rail is full — see TryLaunch below
+            // Ray doluysa reddedilir; sessiz kalmak yerine atıcı başını sallasın.
+            if (!TryLaunch(s)) s.Animator?.ShakeDenied();
         }
 
         public void Init(int parkCapacity)
