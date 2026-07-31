@@ -75,6 +75,24 @@ namespace Game.EditorTools
                 if (GUILayout.Button("Board'u Sıfırla", EditorStyles.toolbarButton, GUILayout.Width(100)))
                     InitBoardPixels();
 
+                // Güvenli olsun diye geniş açılıp ortası doldurulan board'larda
+                // kenarda boş sıralar kalıyor. Boş hücre oyunda yer kaplamaz ama
+                // board'un en-boy oranını bozar, o da board alanına sığdırılırken
+                // hücreleri gereksiz küçültür.
+                if (TryGetContentBounds(out int bx0, out int by0, out int bx1, out int by1))
+                {
+                    int tw = bx1 - bx0 + 1, th = by1 - by0 + 1;
+                    bool canTrim = tw != target.boardSize.x || th != target.boardSize.y;
+                    using (new EditorGUI.DisabledScope(!canTrim))
+                    {
+                        string label = canTrim
+                            ? $"Kırp ({target.boardSize.x}×{target.boardSize.y} → {tw}×{th})"
+                            : "Kırp";
+                        if (GUILayout.Button(label, EditorStyles.toolbarButton, GUILayout.Width(150)))
+                            TrimBoard();
+                    }
+                }
+
                 GUILayout.Space(10);
                 EditorGUILayout.LabelField("Sütun", GUILayout.Width(42));
                 int newCols = Mathf.Clamp(EditorGUILayout.IntField(target.columnCount, GUILayout.Width(40)), 1, 8);
@@ -509,6 +527,57 @@ namespace Game.EditorTools
             }
 
             Undo.RecordObject(target, "Resize Board");
+            target.boardSize = new Vector2Int(nw, nh);
+            target.boardPixels = next;
+            EditorUtility.SetDirty(target);
+        }
+
+        /// <summary>
+        /// Dolu hücrelerin sınır kutusu. Sandık da içeriktir — kırpma onu dışarıda
+        /// bırakırsa level'ın engeli kaybolur.
+        /// </summary>
+        private bool TryGetContentBounds(out int minX, out int minY, out int maxX, out int maxY)
+        {
+            minX = minY = int.MaxValue;
+            maxX = maxY = -1;
+
+            int w = target.boardSize.x, h = target.boardSize.y;
+            var px = target.boardPixels;
+            if (px == null || px.Length != w * h) return false;
+
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    if (px[y * w + x] == ColorId.None) continue;
+
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
+            }
+
+            return maxX >= 0;
+        }
+
+        /// <summary>Board'u dolu bölgeye daraltır. Kuyruk ve palete dokunmaz.</summary>
+        private void TrimBoard()
+        {
+            if (!TryGetContentBounds(out int minX, out int minY, out int maxX, out int maxY))
+                return;
+
+            int w = target.boardSize.x;
+            int nw = maxX - minX + 1, nh = maxY - minY + 1;
+            if (nw == w && nh == target.boardSize.y) return;
+
+            var old = target.boardPixels;
+            var next = new ColorId[nw * nh];
+            for (int y = 0; y < nh; y++)
+                for (int x = 0; x < nw; x++)
+                    next[y * nw + x] = old[(y + minY) * w + (x + minX)];
+
+            Undo.RecordObject(target, "Trim Board");
             target.boardSize = new Vector2Int(nw, nh);
             target.boardPixels = next;
             EditorUtility.SetDirty(target);
