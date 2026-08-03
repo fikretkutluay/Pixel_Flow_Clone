@@ -1,7 +1,5 @@
 using UnityEngine;
 using MobileCore;
-using System.Collections;
-using System;
 
 namespace Game
 {
@@ -16,15 +14,27 @@ namespace Game
         [SerializeField] private LevelData[] levels;
         private int currentLevelIndex;
         private readonly ISerializer serializer = new JsonSaveSystem();
-        [SerializeField] private LevelData testLevel;
         [SerializeField] private LevelData currentLevel;
-        [SerializeField] private LevelData nextTestLevel;   // rescue senaryosu için crate/park-full level
-
-        [SerializeField] private float midLevelDelaySeconds = 0.5f;
-        [SerializeField] private float rescueTestDelaySeconds = 6f;
 
         [SerializeField] private TrackRailAnchor railAnchor;
         [SerializeField] private TrackChevrons chevrons;
+
+        [Header("Test — Play modunda kullanılır")]
+        [Tooltip("1-tabanlı: 'Load Test Level' bu sıradaki level'ı yükler. Kampanya " +
+                 "akışını (Level 1'den başlama) atlayıp üstünde çalıştığın level'ı " +
+                 "doğrudan test etmek için.")]
+        [SerializeField] private int testLevelIndex = 1;
+
+        private void Awake()
+        {
+            // Kaydedilen ilerleme burada okunmazsa Play her zaman Level 1'den
+            // başlar — Save() her level bitişinde çalışıyordu ama onu geri okuyan
+            // tek yer bir context menu'ydü ve runtime'da hiçbir şey onu çağırmıyordu.
+            serializer.Load("save", out SaveData data);
+            currentLevelIndex = data != null
+                ? Mathf.Clamp(data.currentLevelIndex, 0, Mathf.Max(0, levels.Length - 1))
+                : 0;
+        }
 
         private void OnEnable()
         {
@@ -114,71 +124,22 @@ namespace Game
             LoadLevel(newData);
         }
 
-        [ContextMenu("Continue From Save")]
-        private void ContinueFromSave()
-        {
-            serializer.Load("save", out SaveData data);
-
-            currentLevelIndex = data != null ? data.currentLevelIndex : 0;
-            currentLevelIndex = Mathf.Clamp(currentLevelIndex, 0, levels.Length - 1);
-
-            LoadLevel(levels[currentLevelIndex]);
-        }
-
+        /// <summary>
+        /// Kampanya sırasını atlayıp doğrudan <see cref="testLevelIndex"/>'teki
+        /// level'ı yükler — Play modunda component başlığına sağ tık.
+        /// </summary>
         [ContextMenu("Load Test Level")]
         private void LoadTestLevel()
         {
-            LoadLevel(testLevel);
-        }
+            if (levels == null || levels.Length == 0)
+            {
+                Debug.LogWarning($"[{name}] levels dizisi boş.");
+                return;
+            }
 
-        [ContextMenu("Reload Level")]
-        private void ReloadTestLevel()
-        {
-            ReloadLevel();
-        }
-
-        [ContextMenu("Load Next Test Level")]
-        private void LoadNextTestLevel()
-        {
-            LoadNext(nextTestLevel);
-        }
-
-        [ContextMenu("Log Pool Status")]
-        private void LogPoolStatus()
-        {
-            int available = ObjectPooler.Instance.GetAvailableCount("Shooter");
-            Debug.Log($"[Pool] 'Shooter' havuzda bekleyen (kullanılmayan) obje sayısı: {available}");
-        }
-
-        [ContextMenu("Test: Auto Reload Mid-Flight (testLevel)")]
-        private void TestAutoReloadMidLevel()
-        {
-            StartCoroutine(AutoReloadTestRoutine(testLevel, midLevelDelaySeconds));
-        }
-
-        [ContextMenu("Test: Auto Reload During Rescue (nextTestLevel)")]
-        private void TestAutoReloadDuringRescue()
-        {
-            StartCoroutine(AutoReloadTestRoutine(nextTestLevel, rescueTestDelaySeconds));
-        }
-
-        private IEnumerator AutoReloadTestRoutine(LevelData level, float delaySeconds)
-        {
-            LoadLevel(level);
-            yield return null;   // bir frame bekle, Init'ler otursun
-
-            LogPoolStatus();
-
-            Shooter s = queueController.PeekTopShooter(0);
-            if (s != null)
-                queueController.OnShooterTapped(s);   // Same path as a real tap
-            else
-                Debug.LogWarning("No shooter found in queue — check the level data's queue[0].column value.");
-
-            yield return new WaitForSeconds(delaySeconds);
-
-            ReloadLevel();
-            LogPoolStatus();
+            int index = Mathf.Clamp(testLevelIndex - 1, 0, levels.Length - 1);
+            currentLevelIndex = index;
+            LoadNext(levels[index]);
         }
     }
 }
