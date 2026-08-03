@@ -9565,13 +9565,18 @@ MonoBehaviour:
   levels:
   - {fileID: 11400000, guid: e8efece1063d30150e0b87651a603dfb, type: 2}
   - {fileID: 11400000, guid: 938e762221d0a6bea118f5a586017b9d, type: 2}
-  testLevel: {fileID: 11400000, guid: f8ec785d429054642b2572e768206084, type: 2}
+  - {fileID: 11400000, guid: e2019445be8789e4ebb11b0c9240ff80, type: 2}
+  - {fileID: 11400000, guid: 136e82c970d815c49b324df43d13bdd0, type: 2}
+  - {fileID: 11400000, guid: 32fde250264d3704284646275cec3a7e, type: 2}
+  - {fileID: 11400000, guid: 247b235883b8225468bf291b8870a79e, type: 2}
+  - {fileID: 11400000, guid: d9682c0776814d343bad7e12a783829f, type: 2}
+  - {fileID: 11400000, guid: 707b5dca8164ae4449c629a9b6aa22e8, type: 2}
+  - {fileID: 11400000, guid: 295ef77075aae614ba95a5544b452706, type: 2}
+  - {fileID: 11400000, guid: b1ebd4402d4acfd4597a864d37785e63, type: 2}
   currentLevel: {fileID: 0}
-  nextTestLevel: {fileID: 11400000, guid: 4d7bd2a668507384aaa5043d7364b3fc, type: 2}
-  midLevelDelaySeconds: 0.5
-  rescueTestDelaySeconds: 6
   railAnchor: {fileID: 767490852}
   chevrons: {fileID: 757112644}
+  testLevelIndex: 1
 --- !u!4 &1135676411
 Transform:
   m_ObjectHideFlags: 0
