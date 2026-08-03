@@ -113,6 +113,22 @@ class Board:
             self.version -= 1
             self._invalidate(idx)
 
+    def lift_crates(self):
+        """BoardController.ClearCrates() birebir. Bu olmadan endgame'e giren bir
+        level'da sandıkların arkasında kalan küpler simülatörde SONSUZA DEK
+        erişilemez kalıyordu — gerçek oyunda ise tam bu anda kalkıyorlar.
+        Bunu unutmak Level_8 gibi sandık-ağırlıklı level'ları OLDUĞUNDAN ÇOK
+        daha zor/çözülemez gösteriyordu.
+        """
+        changed = False
+        for idx, c in enumerate(self.cells):
+            if c == CRATE:
+                self.cells[idx] = NONE
+                changed = True
+        if changed:
+            self.fronts.clear()
+            self.version += 1
+
 
 def preview_lap(board, seq, colour, ammo):
     """Bu atıcı şu anki board'da turunu yaparsa kaç isabet alır?
@@ -178,11 +194,18 @@ def play(level, policy="cautious", endgame_threshold=5):
     memo = {}
     tick = 0
     idle = 0
+    endgame_started = False
     max_ticks = lap_len * (len(level.queue) + 8) * 3
 
     while tick < max_ticks:
         tick += 1
         endgame = total_shooters() <= endgame_threshold
+
+        # GameManager.UpdateEndgame() -> BoardController.ClearCrates(), tek sefer.
+        if endgame and not endgame_started:
+            endgame_started = True
+            board.lift_crates()
+            memo.clear()   # kalkan sandiklar onceki hit-onizlemelerini gecersiz kilar
 
         for s in list(track):
             lane, direction = seq[s["progress"] % lap_len]

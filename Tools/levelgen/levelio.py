@@ -11,6 +11,7 @@ COLORS = {
     0: "None", 1: "Crate", 2: "Red", 3: "Blue", 4: "Green", 5: "Yellow",
     6: "Purple", 7: "Navy", 8: "White", 9: "Khaki", 10: "Maroon",
     11: "DarkPurple", 12: "DarkGray", 13: "LightGray", 14: "Black",
+    15: "Pink", 16: "Orange", 17: "Flesh", 18: "Brawn", 19: "LightBrawn",
 }
 ID_OF = {v: k for k, v in COLORS.items()}
 
@@ -18,6 +19,7 @@ ID_OF = {v: k for k, v in COLORS.items()}
 GLYPH = {
     0: ".", 1: "#", 2: "R", 3: "B", 4: "G", 5: "Y", 6: "P", 7: "N",
     8: "W", 9: "K", 10: "M", 11: "D", 12: "g", 13: "l", 14: "X",
+    15: "I", 16: "O", 17: "F", 18: "A", 19: "L",
 }
 
 
