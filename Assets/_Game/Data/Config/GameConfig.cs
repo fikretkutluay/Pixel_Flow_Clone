@@ -20,12 +20,32 @@ namespace Game
         [Tooltip("Kuyrukta derinlik (dikey) yönünde slotlar arası aralık.")]
         public float queueSlotSpacing = 1.4f;
 
+        // --- Küpler arası boşluk: TABAN + YÜZDE (afin model) ---
+        //
+        // Saf yüzde kullanmak hatalıydı: hücre küçüldükçe (Level_10, 40x35)
+        // mutlak boşluk 1px'in altına düşüp anti-aliasing'de tamamen eriyordu.
+        // Saf sabit de yanlış olurdu — referansta ölçtük, çizgi board yoğunluğuna
+        // göre DEĞİŞİYOR ama orantılı değil:
+        //
+        //     küp 20.0px -> dikiş 3.0px (%15.0)
+        //     küp 50.8px -> dikiş 5.0px (%9.9)
+        //
+        // Küp 2.5 kat büyürken dikiş 1.67 kat büyümüş. Bu iki noktadan çözülen
+        // afin model (taban 1.7px + hücrenin %6.5'i) her iki ölçümü de tutturuyor
+        // ve iki uçta da bozulmuyor. Her iki terim de dünya birimi olduğu için
+        // çözünürlükten bağımsız: kamera sabit dünya genişliğine oturtulduğundan
+        // dünya birimi = sabit ekran oranı.
         [Header("Görsel aralıklar")]
-        [Tooltip("Küpler arası YATAY boşluk oranı (0 = bitişik, 0.1 = %10 boşluk).")]
-        public float cubeGap = 0.16f;
-        [Tooltip("Küpler arası DİKEY boşluk. Yataydan küçük tutmak küpü eninden " +
-                 "uzun gösterir — referanstaki boncuk oranı buradan geliyor.")]
-        public float cubeGapVertical = 0.04f;
+        [Tooltip("Boşluğun hücre boyutuyla ölçeklenen kısmı (referanstan: %6.5).")]
+        public float cubeGap = 0.065f;
+        [Tooltip("Boşluğun hücre boyutundan BAĞIMSIZ taban kısmı (dünya birimi). " +
+                 "Yoğun board'larda çizginin kaybolmasını bu engelliyor.")]
+        public float cubeGapBaseWorld = 0.0158f;
+        [Tooltip("Dikey boşluk çarpanı: yatayın bu oranı. 1'den küçük tutmak küpü " +
+                 "eninden uzun gösterir — referanstaki boncuk oranı buradan geliyor.")]
+        [Range(0.1f, 1f)] public float cubeGapVerticalRatio = 0.5f;
+        [Tooltip("Güvenlik sınırı: boşluk hücrenin bu oranını asla geçemez.")]
+        [Range(0.1f, 0.5f)] public float cubeGapMaxFraction = 0.35f;
         [Tooltip("Park slotu ile komşu slot arası görsel boşluk oranı.")]
         public float parkSlotGap = 0.15f;
 

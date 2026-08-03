@@ -118,12 +118,20 @@ namespace Game
             }
             view.PoolTag = tag;
 
-            // Hücre kare, küp değil: dikey boşluğu yataydan küçük tutmak küpü
-            // eninden uzun gösteriyor — referanstaki boncuk oranı bu.
-            float gapX = config != null ? config.cubeGap : 0f;
-            float gapY = config != null ? config.cubeGapVertical : gapX;
-            float width = cellSize * (1f - gapX);
-            float height = cellSize * (1f - gapY);
+            // Boşluk = TABAN + hücrenin YÜZDESİ. Gerekçe ve referans ölçümleri
+            // GameConfig'te; özeti: saf yüzde yoğun board'larda 1px altına düşüp
+            // kayboluyor, saf sabit ise seyrek board'larda referansla uyuşmuyor.
+            // Dikey, yatayın bir oranı — küpü eninden uzun gösteren boncuk oranı.
+            float gapXWorld = cellSize * config.cubeGap + config.cubeGapBaseWorld;
+            float gapYWorld = gapXWorld * config.cubeGapVerticalRatio;
+
+            // Boşluk hücreyi yutamaz.
+            float maxGap = cellSize * config.cubeGapMaxFraction;
+            gapXWorld = Mathf.Min(gapXWorld, maxGap);
+            gapYWorld = Mathf.Min(gapYWorld, maxGap);
+
+            float width = cellSize - gapXWorld;
+            float height = cellSize - gapYWorld;
 
             // Prefab'ın kendi oranını EZMEDEN hücreye sığdır: 1:1:2 yazan bir prefab
             // her board boyutunda o oranı korur.
