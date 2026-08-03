@@ -54,7 +54,7 @@ MonoBehaviour:
     linkedCount: 1
   - column: 2
     color: 12
-    ammo: 40
+    ammo: 30
     isHidden: 0
     linkedCount: 1
   - column: 3
