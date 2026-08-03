@@ -70,6 +70,24 @@ namespace Game
 
         public void LoadLevel(LevelData data)
         {
+            // Önceki level'dan kalan HER ŞEY burada, tek yerden temizlenir.
+            //
+            // Eskiden bu dört Clear() çağrısını her çağıran (ReloadLevel, LoadTestLevel)
+            // kendi başına tekrarlıyordu — HandlePlayRequested
+            // (menüdeki gerçek Play butonu) bunu HİÇ yapmıyordu. Win/Lose panelinin
+            // "Devam Et" / "Kapat" butonu sadece ana menüyü açıyor, board'a/park'a/
+            // kuyruğa dokunmuyor; oyuncu o an tahtası bitmiş ama parkta veya
+            // kuyrukta hâlâ atıcı varken Play'e tekrar basınca yeni level'ın
+            // atıcıları TAM O SLOTLARA binip üst üste görünüyordu.
+            //
+            // Clear() metodlarının hepsi kendi null/uninitialized durumunu koruyor,
+            // yani ilk çağrıda (henüz hiçbir şey kurulmamışken) da güvenli.
+            gameManager.Clear();
+            boardController.Clear();
+            parkController.Clear();
+            trackController.Clear();
+            queueController.Clear();
+
             currentLevel = data;
 
             // Board, sahnede çizili board alanının İÇİNE sığdırılır ve küpler
@@ -104,25 +122,7 @@ namespace Game
             GameEvents.TriggerLevelStarted(data.levelID > 0 ? data.levelID : currentLevelIndex + 1);
         }
 
-        public void ReloadLevel()
-        {
-            gameManager.Clear();
-            boardController.Clear();
-            parkController.Clear();
-            trackController.Clear();
-            queueController.Clear();
-            LoadLevel(currentLevel);
-        }
-
-        public void LoadNext(LevelData newData)
-        {
-            gameManager.Clear();
-            boardController.Clear();
-            parkController.Clear();
-            trackController.Clear();
-            queueController.Clear();
-            LoadLevel(newData);
-        }
+        public void ReloadLevel() => LoadLevel(currentLevel);
 
         /// <summary>
         /// Kampanya sırasını atlayıp doğrudan <see cref="testLevelIndex"/>'teki
@@ -139,7 +139,7 @@ namespace Game
 
             int index = Mathf.Clamp(testLevelIndex - 1, 0, levels.Length - 1);
             currentLevelIndex = index;
-            LoadNext(levels[index]);
+            LoadLevel(levels[index]);
         }
     }
 }
