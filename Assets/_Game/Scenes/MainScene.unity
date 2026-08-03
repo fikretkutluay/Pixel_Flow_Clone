@@ -1962,10 +1962,10 @@ MonoBehaviour:
   pools:
   - tag: Shooter
     prefab: {fileID: 3914336245174233284, guid: 2b2c79d4095438646b822ccc7e6c5e36, type: 3}
-    size: 20
+    size: 28
   - tag: Cube
     prefab: {fileID: 6561052214353452687, guid: 0407c44fe4504b143bde6475130a19c6, type: 3}
-    size: 20
+    size: 1450
   - tag: Tracer
     prefab: {fileID: 635600332326895665, guid: 4b487005987ab1d4d9fd9dd32770514a, type: 3}
     size: 12
