@@ -24,6 +24,12 @@ namespace Game
         DarkPurple,
         DarkGray,
         LightGray,
-        Black
+        Black,
+
+        Pink,
+        Orange,
+        Flesh,
+        Brawn,
+        LightBrawn
     }
 }

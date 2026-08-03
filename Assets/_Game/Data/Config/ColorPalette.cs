@@ -43,7 +43,12 @@ namespace Game
             new Entry { id = ColorId.DarkGray,   color = Hex(0x585A61) },
             new Entry { id = ColorId.LightGray,  color = Hex(0xA0A5AD) },
             new Entry { id = ColorId.Black,      color = Hex(0x18181F) },
+            new Entry { id = ColorId.Pink,       color = Hex(0xDB0081) },
             new Entry { id = ColorId.Crate,      color = Hex(0xA37A56) },
+            new Entry { id = ColorId.Orange,     color = Hex(0xf89800) },
+            new Entry { id = ColorId.Flesh,      color = Hex(0xF8C096) },
+            new Entry { id = ColorId.Brawn,      color = Hex(0x3F2004) },
+            new Entry { id = ColorId.LightBrawn, color = Hex(0x90582D) }
         };
 
         public Color Of(ColorId id)
