@@ -21,7 +21,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties:
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -34,7 +34,7 @@ Material:
     - _EdgeDarken: 0.47
     - _EdgePower: 2.5
     - _FaceExtent: 0.5
-    - _FaceGradient: 0.12
+    - _FaceGradient: 0.6
     - _HighlightAmount: 0
     - _HighlightSmooth: 0.25
     - _HighlightStart: 0.45
