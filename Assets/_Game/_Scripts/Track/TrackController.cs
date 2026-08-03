@@ -67,11 +67,11 @@ namespace Game
             return false;
         }
         /// <summary>
-        /// Ray yalnızca level oynanırken dönmeli. Kazanma/kaybetme kararından
-        /// sonra da dönmeye devam ediyordu: atıcılar yeni tur bitirip parka
-        /// düşüyor, park doluysa kaybı BİR KEZ DAHA tetikliyorlardı. İki kez
-        /// tetiklenen olay UIManager'da panelin üstüne kendini kapatan bir Hide
-        /// bindiriyor ve kayıp ekranı hiç görünmüyordu.
+        /// The rail may only turn while a level is actually being played. Left
+        /// running past the win/lose decision, shooters kept completing laps and
+        /// falling into a full park, raising the failure event a second time. The
+        /// duplicate event stacked a self-closing Hide on top of the panel in
+        /// UIManager, so the lose screen never became visible.
         /// </summary>
         public void SetRunning(bool value) => running = value;
 
@@ -84,8 +84,8 @@ namespace Game
             {
                 ObjectPooler.Instance.ReturnToPool("Shooter", s.gameObject);
             }
-            // Tamponu da boşalt: Init yenisini kursa bile, aradaki her çağrı
-            // havuza dönmüş atıcıları canlı sanmamalı.
+            // Empty the buffer as well. Init builds a fresh one, but any call in
+            // between must not treat pooled-away shooters as still live.
             shooters.Clear();
         }
 
@@ -119,8 +119,9 @@ namespace Game
                 TrackSample sample = path.Evaluate(s.Distance);
                 s.transform.position = sample.worldPos;
 
-                // Atıcı ATEŞ EDECEĞİ yöne bakar (hareket yönüne değil) = teğetin 90° solu.
-                // Köşelerde teğet yay boyunca yumuşak döndüğü için dönüş de smooth.
+                // A shooter faces where it will fire, not where it is moving:
+                // 90 degrees left of the tangent. The tangent turns smoothly along
+                // the corner arcs, so the rotation follows without snapping.
                 Vector3 ahead = path.Evaluate(s.Distance + 0.1f).worldPos;
                 Vector3 forward = ahead - sample.worldPos;
                 if (forward.sqrMagnitude > 0.0001f)
@@ -177,38 +178,8 @@ namespace Game
         public void ReleaseShooter(Shooter s)
         {
             shooters.TryRemove(s);
-            // ObjectPooler'a DÖNMÜYOR — hâlâ sahnede, ParkController'a taşındı
-        }
-
-        // Ray yolunu (atıcıların gerçekten dolaştığı perimetre) çizer — placeholder.
-        // Gerçek rail görseli Faz 3'te gelene kadar test için dikdörtgeni gösterir.
-        private void OnDrawGizmos()
-        {
-            if (path == null) return;
-
-            Gizmos.color = new Color(0.56f, 0.53f, 0.78f);   // açık lavanta (ray rengi)
-            const int steps = 160;
-            Vector3 prev = path.Evaluate(0f).worldPos;
-            for (int i = 1; i <= steps; i++)
-            {
-                float d = path.Perimeter * i / steps;
-                Vector3 cur = path.Evaluate(d).worldPos;
-                Gizmos.DrawLine(prev, cur);
-                prev = cur;
-            }
-        }
-
-        [ContextMenu("Spawn Test Shooter")]
-        private void SpawnTestShooter()
-        {
-            if (!shooters.HasFreeSlot) return;
-
-            GameObject obj = ObjectPooler.Instance.SpawnFromPool("Shooter", Vector3.zero, Quaternion.identity);
-            if (obj == null) return;
-
-            Shooter s = obj.GetComponent<Shooter>();
-            s.Init(ColorId.Red, 3, false);
-            TryAddShooter(s);
+            // Deliberately NOT returned to the pool: the object stays in the
+            // scene, ownership just moves to ParkController.
         }
     }
 }

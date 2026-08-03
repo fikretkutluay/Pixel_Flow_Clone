@@ -55,9 +55,9 @@ namespace Game
         /// </summary>
         private void HandleLapCompleted(Shooter shooter)
         {
-            // Level'in sonucu belliyse hicbir tur artik bir sey degistirmemeli.
-            // Bu kontrol yokken kazanilan bir level'da bile parka sigmayan bir
-            // atici kaybi tetikleyebiliyordu.
+            // Once the level's outcome is decided, no further lap may change it.
+            // Without this guard a shooter that did not fit the park could raise a
+            // loss even on a level that had already been won.
             if (currentState != GameState.Playing) return;
 
             // In the endgame nobody parks — they keep circling until they run dry.
@@ -78,14 +78,13 @@ namespace Game
         }
 
         /// <summary>
-        /// Sonucu BİR KEZ ilan eder ve rayı durdurur.
+        /// Announces the outcome exactly once and stops the rail.
         ///
-        /// İkisi de şarttı: ray dönmeye devam ettiği için atıcılar yeni tur
-        /// bitirip kaybı tekrar tetikliyordu, ve UIManager.SwitchPanel aynı
-        /// paneli ikinci kez açarken önce Hide'ını çağırıyor — o Hide'ın
-        /// OnComplete'i paneli kapatıyor ve kayıp ekranı hiç görünmüyordu.
-        /// Ray durmayınca ayrıca level bittikten sonra da atıcılar turlamaya
-        /// devam edip ekranda takılı kalıyordu.
+        /// Both halves are required. While the rail kept turning, shooters finished
+        /// further laps and raised the loss again, and UIManager.SwitchPanel calls
+        /// Hide before reopening the same panel — that Hide's OnComplete closed the
+        /// panel, so the lose screen never became visible. Leaving the rail running
+        /// also left shooters circling on screen after the level was over.
         /// </summary>
         private void Finish(GameState result)
         {
@@ -158,7 +157,6 @@ namespace Game
         private void Warn()
         {
             parkController.PulseWarning(config.warnPulseCount, config.warnPulseSeconds);
-            GameEvents.TriggerRescueStarted();
         }
 
         private void UpdateSpeed()

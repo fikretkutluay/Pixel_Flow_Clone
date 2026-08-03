@@ -16,7 +16,6 @@ namespace MobileCore
         [Header("Gameplay Clips")]
         [SerializeField] private AudioClip cubeBreakClip;
         [SerializeField] private AudioClip shooterLaunchClip;
-        [SerializeField] private AudioClip rescueWarningClip;
 
         [Header("Stingers — short pieces played over the win/lose panels")]
         [SerializeField] private AudioClip levelCompletedClip;
@@ -24,9 +23,6 @@ namespace MobileCore
 
         [Header("UI")]
         [SerializeField] private AudioClip uiClickClip;
-
-        [Header("Music")]
-        [SerializeField] private AudioClip backgroundMusic;
 
         [Header("Settings")]
         [SerializeField, Range(0f, 1f)] private float sfxVolume = 1f;
@@ -57,7 +53,6 @@ namespace MobileCore
         {
             GameEvents.OnRemainingCubesChanged += HandleCubeBroken;
             GameEvents.OnShooterLaunched += HandleShooterLaunched;
-            GameEvents.OnRescueStarted += HandleRescueStarted;
             GameEvents.OnLevelCompleted += HandleLevelCompleted;
             GameEvents.OnLevelFailed += HandleLevelFailed;
         }
@@ -66,23 +61,15 @@ namespace MobileCore
         {
             GameEvents.OnRemainingCubesChanged -= HandleCubeBroken;
             GameEvents.OnShooterLaunched -= HandleShooterLaunched;
-            GameEvents.OnRescueStarted -= HandleRescueStarted;
             GameEvents.OnLevelCompleted -= HandleLevelCompleted;
             GameEvents.OnLevelFailed -= HandleLevelFailed;
         }
-
-        private void Start()
-        {
-            PlayMusic(backgroundMusic);
-        }
-
 
         // Slight pitch scatter so a fast chain of breaks doesn't sound like a machine.
         private void HandleCubeBroken(int remaining) =>
             PlaySfx(cubeBreakClip, Random.Range(0.94f, 1.06f));
 
         private void HandleShooterLaunched() => PlaySfx(shooterLaunchClip);
-        private void HandleRescueStarted() => PlaySfx(rescueWarningClip);
         private void HandleLevelCompleted() => PlayStinger(levelCompletedClip);
         private void HandleLevelFailed() => PlayStinger(levelFailedClip);
 

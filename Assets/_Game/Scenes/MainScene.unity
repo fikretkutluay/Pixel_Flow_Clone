@@ -5086,13 +5086,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 634503985}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.5713938, y: -0.07139385, z: 0.049990498, w: 0.816035}
+  m_LocalPosition: {x: 0, y: 10, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 70, y: -10, z: 0}
 --- !u!114 &634503988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15560,11 +15560,9 @@ MonoBehaviour:
   musicSource: {fileID: 2000460274}
   cubeBreakClip: {fileID: 8300000, guid: 1745e251b00a9a1428cfda3d2ca4ca9d, type: 3}
   shooterLaunchClip: {fileID: 8300000, guid: 9e190f52ef49e854f8c8e5987ec1e32b, type: 3}
-  rescueWarningClip: {fileID: 0}
   levelCompletedClip: {fileID: 8300000, guid: 84eaf71969a073e4b891b81793c33eed, type: 3}
   levelFailedClip: {fileID: 8300000, guid: aabe94e4fbf814a4dbd4b86a1f2477b1, type: 3}
   uiClickClip: {fileID: 8300000, guid: 78660b8149b96a24c805db0e5b8ec21b, type: 3}
-  backgroundMusic: {fileID: 0}
   sfxVolume: 1
   musicVolume: 0.5
   minSfxInterval: 0.04

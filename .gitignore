@@ -11,6 +11,8 @@
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 .utmp/
+/[Aa]ssets/[Rr]esources/PerformanceTestRunInfo.json*
+/[Aa]ssets/[Rr]esources/PerformanceTestRunSettings.json*
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/

@@ -46,7 +46,8 @@ namespace Game
             if (s == null) return;
             if (!parkBuffer.Contains(s)) return;   // Shooters in the queue/rail aren't ours to handle
 
-            // Ray doluysa reddedilir; sessiz kalmak yerine atıcı başını sallasın.
+            // Rejected when the rail is full. Rather than stay silent, the shooter
+            // shakes its head.
             if (!TryLaunch(s)) s.Animator?.ShakeDenied();
         }
 
@@ -59,7 +60,7 @@ namespace Game
             slotViews = new ParkSlotView[parkCapacity];
             float usableWidth = GameLayout.VisibleWidth(mainCam) * config.contentWidthFactor;
             float spacing = usableWidth / parkCapacity;
-            float scale = spacing * (1f - config.parkSlotGap);   // BoardController.SpawnCubeView ile aynı desen
+            float scale = spacing * (1f - config.parkSlotGap);   // same pattern as BoardController.SpawnCubeView
 
             for (int i = 0; i < parkCapacity; i++)
             {
@@ -84,7 +85,7 @@ namespace Game
         {
             if (!parkBuffer.TryAdd(shooter)) return false;
 
-            shooter.ResetFacing();   // rayda kalan dönüşü sıfırla — park'ta dik dursun
+            shooter.ResetFacing();   // drop the rail's rotation so it stands upright in the park
             RefreshSlotPositions();
             return true;
         }
@@ -109,7 +110,7 @@ namespace Game
             if (!trackController.HasFreeTrackSlot) return false;
             if (!parkBuffer.TryRemove(shooter)) return false;
 
-            shooter.ResetLap();                      // KRİTİK — bkz. Shooter.ResetLap
+            shooter.ResetLap();                      // critical, see Shooter.ResetLap
             trackController.TryAddShooter(shooter);
 
             // A stretch, not a jump: the rail owns this shooter's position from the
@@ -121,7 +122,8 @@ namespace Game
             return true;
         }
 
-        // Park yatay dizilir: parkBand merkezinde, ekran genişliğine yayılmış slotlar.
+        // The park lays out horizontally: slots centred on the park band and spread
+        // across the screen width.
         private Vector3 SlotPosition(int index)
         {
             int capacity = parkBuffer.Capacity;
@@ -159,21 +161,6 @@ namespace Game
             if (slotViews == null) return;
             foreach (var view in slotViews)
                 if (view != null) view.Pulse(count, pulseSeconds);
-        }
-
-        // Park slotlarını yatay kutular olarak çizer — placeholder.
-        private void OnDrawGizmos()
-        {
-            if (parkBuffer == null || mainCam == null || config == null) return;
-
-            float usableWidth = GameLayout.VisibleWidth(mainCam) * config.contentWidthFactor;
-            float spacing = usableWidth / parkBuffer.Capacity;
-            float scale = spacing * (1f - config.parkSlotGap);
-            Vector3 slotSize = new Vector3(scale, scale, 0.01f);
-
-            Gizmos.color = Color.cyan;
-            for (int i = 0; i < parkBuffer.Capacity; i++)
-                Gizmos.DrawWireCube(SlotPosition(i), slotSize);
         }
     }
 }
