@@ -14,32 +14,32 @@ namespace Game
         public int Ammo => ammo;
         public bool IsSpent => ammo <= 0;
 
-        [Header("Görsel — CubeView ile AYNI materyal/palet (renk eşleşmesi şart)")]
+        [Header("Visuals — must share CubeView's material and palette")]
         [SerializeField] private Renderer shooterRenderer;
         [SerializeField] private ColorPalette palette;
 
-        [Tooltip("\"?\" atıcının materyali. Kuyruğun tepesine gelip açılana kadar " +
-                 "gerçek rengi yerine bu görünür.")]
+        [Tooltip("Material for a \"?\" shooter. Shown instead of the real colour " +
+                 "until the shooter reaches the front of the queue and reveals.")]
         [SerializeField] private Material hiddenMaterial;
 
-        [Tooltip("\"?\" deseninin gövdeden kalkma süresi. 0 = anında değişim.")]
+        [Tooltip("How long the \"?\" pattern takes to lift off the body. 0 = instant.")]
         [SerializeField] private float revealSeconds = 0.45f;
-        [Tooltip("Desen kalkarken sıklığın ineceği oran — küçük değer glifleri " +
-                 "daha çok büyütür.")]
+        [Tooltip("Fraction the pattern tiling drops to during the reveal. Lower " +
+                 "values enlarge the glyphs more.")]
         [SerializeField, Range(0.1f, 1f)] private float revealSpread = 0.55f;
 
         private Material revealedMaterial;
         private bool materialsCaptured;
         private Tween revealTween;
 
-        [Header("Gövde — döndürülen görsel (AmmoText bunun DIŞINDA olmalı)")]
+        [Header("Body — the rotated visual. AmmoText must sit OUTSIDE this transform")]
         [SerializeField] private Transform bodyTransform;
-        [Tooltip("Merminin çıktığı nokta. Boşsa gövdenin merkezi kullanılır.")]
+        [Tooltip("Where the projectile leaves from. Falls back to the body centre.")]
         [SerializeField] private Transform muzzle;
-        [Tooltip("Modelin kendi 'ön' yönü +X değilse düzeltme açısı (90 / -90 / 180 dene).")]
+        [Tooltip("Correction angle if the model's own forward is not +X (try 90 / -90 / 180).")]
         [SerializeField] private float bodyFacingOffsetDeg = 0f;
 
-        [Header("Kuyruk feedback'i — sadece kuyrukta anlamlı (ray/park'ta tam alpha kalır)")]
+        [Header("Queue feedback — only meaningful in the queue; full alpha on rail and park")]
         [SerializeField] private TMP_Text ammoText;
         [SerializeField, Range(0f, 1f)] private float queueBackAlpha = 0.35f;
 
@@ -62,10 +62,11 @@ namespace Game
         public ShooterAnimator Animator { get; private set; }
 
         /// <summary>
-        /// Palette colour this shooter shows — used to tint its tracer. Gizliyken
-        /// gerçek renk SIZMAMALI, o yüzden "?" materyalinin kendi tonu döner.
-        /// (Eskiden ColorId.Purple dönüyordu; Purple oynanabilir bir renk ve GDD
-        /// §4.1 "'?' atıcı rengiyle çakışmamalı" diye not düşmüş.)
+        /// Palette colour this shooter shows, used to tint its tracer. While hidden
+        /// the real colour must not leak, so the "?" material's own tone is
+        /// returned instead. This previously returned ColorId.Purple, but Purple is
+        /// a playable colour and GDD 4.1 requires the "?" shooter not to collide
+        /// with one.
         /// </summary>
         public UnityEngine.Color DisplayColor
         {
@@ -88,8 +89,8 @@ namespace Game
 
         public void Init(ColorId color, int ammo, bool isHidden)
         {
-            // Havuzdan yeniden çıkan atıcı, yarım kalmış bir açılma animasyonunu
-            // taşımasın — yoksa tween ApplyVisual'ın yazdığı rengin üstüne yazar.
+            // A shooter re-issued from the pool must not carry a half-finished
+            // reveal, or the tween would overwrite the colour ApplyVisual sets.
             revealTween?.Kill();
             revealTween = null;
 
@@ -100,13 +101,14 @@ namespace Game
             ResetFacing();
             ApplyVisual();
             ApplyAmmoText();
-            SetQueueFront(true);   // varsayılan: tam alpha (yalnızca QueueController arkaya düşürür)
+            SetQueueFront(true);   // default to full alpha; only QueueController dims it
         }
 
         /// <summary>
-        /// Tur durumunu sıfırlar. Park'tan raya geri yollarken ZORUNLU:
-        /// Distance perimetreyi aşmış halde kalırsa atıcı raya girer girmez
-        /// yeniden "tur bitti" sayılır ve park'a geri düşer.
+        /// Resets lap state. Mandatory when sending a shooter from the park back to
+        /// the rail: if Distance is left past the perimeter, the shooter counts as
+        /// having finished a lap the moment it rejoins and drops straight back into
+        /// the park.
         /// </summary>
         public void ResetLap()
         {
@@ -117,17 +119,18 @@ namespace Game
         }
 
         /// <summary>
-        /// Kuyruğun tepesine gelen "?" atıcı açılır. Materyal bir karede
-        /// değişmiyor: desen büyüyerek sönerken gövde rengi gerçek renge
-        /// geçiyor, yani "?" gövdeden KALKIYOR. Bittiğinde normal materyale
-        /// dönülür ki havuzdan çıkan bir sonraki atıcı temiz başlasın.
+        /// Reveals a "?" shooter once it reaches the front of the queue. The
+        /// material does not swap in a single frame: the pattern grows as it fades
+        /// while the body crosses to its real colour, so the "?" reads as lifting
+        /// off the body. The normal material is restored at the end so the next
+        /// shooter out of the pool starts clean.
         /// </summary>
         public void Reveal()
         {
             if (!isHidden) return;
 
             isHidden = false;
-            ApplyAmmoText();      // "?" yerini gerçek ammo alır
+            ApplyAmmoText();      // the real ammo count replaces the "?"
             Animator?.PunchReveal();
 
             revealTween?.Kill();
@@ -149,9 +152,10 @@ namespace Game
 
             if (mpb == null) mpb = new MaterialPropertyBlock();
 
-            // Gizli materyal animasyon boyunca renderer'da kalır; sadece property
-            // block sürülür. Sıklığı düşürmek glifleri büyütüyor, sönmeyle
-            // birleşince desen dağılarak uzaklaşıyor gibi okunuyor.
+            // The hidden material stays on the renderer for the whole animation;
+            // only the property block is driven. Lowering the tiling enlarges the
+            // glyphs, and combined with the fade the pattern reads as scattering
+            // away from the body.
             revealTween = DOVirtual.Float(1f, 0f, revealSeconds, t =>
                 {
                     if (shooterRenderer == null) return;
@@ -171,7 +175,7 @@ namespace Game
                 });
         }
 
-        // Havuza dönen atıcı animasyonun ortasında yakalanabilir.
+        // A shooter can be returned to the pool mid-animation.
         private void OnDisable()
         {
             revealTween?.Kill();
@@ -196,8 +200,9 @@ namespace Game
             LastFiredLane = lane;
         }
 
-        // QueueController.RefreshColumn her sütunda çağırır: index 0 = tıklanabilir
-        // (tam alpha), gerisi soluk. Tek sinyal bu — mekanik zaten ikili.
+        // Called by QueueController.RefreshColumn for every column: index 0 is the
+        // tappable one (full alpha), the rest are dimmed. One signal is enough, the
+        // mechanic itself is binary.
         public void SetQueueFront(bool isFront)
         {
             if (ammoText == null) return;
@@ -205,9 +210,9 @@ namespace Game
         }
 
         /// <summary>
-        /// Gövdeyi verilen dünya-Z açısına döndürür. Kök dönmez, dolayısıyla
-        /// AmmoText de dönmez (okunur kalır). Modelin kendi baz rotasyonu
-        /// (X=180 gibi import düzeltmeleri) korunur.
+        /// Rotates the body to the given world-Z angle. The root does not rotate, so
+        /// AmmoText stays upright and readable. The model's own base rotation
+        /// (import fixes such as X=180) is preserved.
         /// </summary>
         public void SetFacing(float zAngleDeg)
         {
@@ -217,7 +222,7 @@ namespace Game
                 bodyBaseRotation * Quaternion.Euler(0f, 0f, zAngleDeg + bodyFacingOffsetDeg);
         }
 
-        /// <summary>Pool'dan yeniden çıkan atıcı, kuyrukta baz yönüne dönsün.</summary>
+        /// <summary>Returns a pooled shooter to its base facing for the queue.</summary>
         public void ResetFacing()
         {
             if (bodyTransform == null) return;
@@ -232,9 +237,10 @@ namespace Game
             bodyBaseCaptured = true;
         }
 
-        // Board küpleriyle AYNI materyal (M_ToonCube) + AYNI ColorPalette kullanır —
-        // renk eşleşmesi tek doğruluk kaynağından geliyor. "?" atıcı ise kendi
-        // materyaliyle çizilir; rengi ancak kuyruğun tepesine gelip açılınca görünür.
+        // Uses the same material (M_ToonCube) and the same ColorPalette as the board
+        // cubes, so colour matching comes from a single source of truth. A hidden
+        // shooter is drawn with its own material and only shows its colour once it
+        // reaches the front of the queue and reveals.
         private void ApplyVisual()
         {
             if (shooterRenderer == null) return;
@@ -243,7 +249,7 @@ namespace Game
             if (isHidden && hiddenMaterial != null)
             {
                 shooterRenderer.sharedMaterial = hiddenMaterial;
-                // Renk bloğu temizlenmezse gizli materyal de o rengi alır.
+                // Without clearing the block the hidden material inherits that colour.
                 shooterRenderer.SetPropertyBlock(null);
                 return;
             }
@@ -261,7 +267,8 @@ namespace Game
         {
             if (materialsCaptured || shooterRenderer == null) return;
 
-            // Prefab'ın kendi materyali "açık" hâl; gizli materyal onun yerine geçer.
+            // The prefab's own material is the revealed state; the hidden material
+            // temporarily takes its place.
             revealedMaterial = shooterRenderer.sharedMaterial;
             materialsCaptured = true;
         }

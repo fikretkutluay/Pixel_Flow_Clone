@@ -10,13 +10,14 @@ namespace Game
         Yellow,
         Purple,
 
-        // Kontrast uçları ve ara tonlar. Referans board'unun yarısından fazlası
-        // koyu bir kütle, geri kalanı parlak vurgu — resmin okunmasını sağlayan
-        // o aralık. İlk altı renk orta bantta sıkışıktı (V 0.71-0.83), bunlarla
-        // 0.12-0.95'e açıldı.
+        // Contrast extremes and mid tones. More than half of the reference board is
+        // a dark mass with the remainder as bright accent, and that range is what
+        // makes the picture readable. The first six colours were bunched in the
+        // middle band (V 0.71-0.83); these open it out to 0.12-0.95.
         //
-        // HEPSİ SONA eklendi: önceki id'ler kaymıyor, mevcut level'lar bozulmuyor.
-        // Bir renk SİLİNMEMELİ, sonrasındaki her id kayar ve tüm level'lar bozulur.
+        // All of them are appended at the END so existing ids do not shift and
+        // authored levels stay intact. Never delete a colour: every id after it
+        // would shift and every level would be corrupted.
         Navy,
         White,
         Khaki,

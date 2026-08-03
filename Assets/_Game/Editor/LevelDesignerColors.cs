@@ -4,16 +4,16 @@ using UnityEngine;
 namespace Game.EditorTools
 {
     /// <summary>
-    /// Editör içi ColorId → görüntü rengi eşlemesi.
+    /// Maps ColorId to a display colour inside the editor tools.
     ///
-    /// Renkleri ARTIK KENDİ İÇİNDE TUTMUYOR: doğrudan ColorPalette asset'ini
-    /// okuyor. Önceden hex'ler burada da kopyalıydı ve palet kalibre edilince
-    /// Level Designer oyunda görünmeyen renkleri göstermeye başladı — level
-    /// tasarımının en çok güvenmesi gereken yerde yanlış bilgi.
+    /// It no longer holds any colours of its own and reads the ColorPalette asset
+    /// directly. The hex values used to be duplicated here, and once the palette was
+    /// recalibrated the Level Designer began showing colours that did not appear in
+    /// the game — wrong information in the one place level design has to trust.
     /// </summary>
     public static class LevelDesignerColors
     {
-        public static readonly Color Empty = new Color(0.17f, 0.16f, 0.29f); // boş hücre (koyu)
+        public static readonly Color Empty = new Color(0.17f, 0.16f, 0.29f); // empty cell (dark)
         public static readonly Color GridLine = new Color(0f, 0f, 0f, 0.25f);
 
         private static ColorPalette cached;
@@ -38,7 +38,7 @@ namespace Game.EditorTools
             if (c == ColorId.None) return Empty;
 
             ColorPalette palette = Palette;
-            return palette != null ? palette.Of(c) : Color.magenta; // tanımsız = göze batsın
+            return palette != null ? palette.Of(c) : Color.magenta; // undefined ids should stand out
         }
     }
 }

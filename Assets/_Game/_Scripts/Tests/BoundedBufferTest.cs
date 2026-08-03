@@ -78,7 +78,7 @@ public class BoundedBufferTests
         buffer.TryRemove("a");
 
         Assert.IsTrue(buffer.HasFreeSlot);
-        Assert.IsTrue(buffer.TryAdd("b"));    // yer açıldı
+        Assert.IsTrue(buffer.TryAdd("b"));    // a slot has been freed
     }
 
     [Test]

@@ -5,17 +5,18 @@ using UnityEngine;
 namespace Game.EditorTools
 {
     /// <summary>
-    /// LevelData.OnValidate ile birebir aynı kontrolleri canlı gösterir + ammo bütçesi tablosu.
+    /// Shows the same checks as LevelData.OnValidate live, plus an ammo budget table.
     ///
-    /// Bütçe artık TAM eşitlik arıyor. Fazla ammo "yeterli" sayılıp yeşil geçiyordu,
-    /// ama bir rengin ammo'su küp sayısını aşınca o fazlalığı harcayacak küp
-    /// bulunamıyor: atıcı asla boşalmıyor ve rayda/parkta sonsuza dek takılı
-    /// kalıyor (Level_2'deki DarkGray +10 tam olarak buydu).
+    /// The budget now requires exact equality. Surplus ammo used to count as
+    /// "enough" and pass green, but once a colour's ammo exceeds its cube count
+    /// there is no cube left to spend the surplus on: the shooter never empties and
+    /// stays stuck on the rail or in the park forever (Level_2's DarkGray +10 was
+    /// exactly this).
     /// </summary>
     public static class LevelValidationView
     {
-        /// <param name="hasSurplus">Bir rengin ammo'su küp sayısını aşıyor mu —
-        /// eksik değil ama istenmeyen, çünkü fazlalığı harcayacak küp yok.</param>
+        /// <param name="hasSurplus">Whether any colour's ammo exceeds its cube count.
+        /// Not a shortfall, but still unwanted: there is no cube to spend it on.</param>
         public static bool Draw(LevelData level, out bool hasSurplus)
         {
             EditorGUILayout.LabelField("Doğrulama", EditorStyles.boldLabel);
@@ -24,7 +25,7 @@ namespace Game.EditorTools
             hasSurplus = false;
             int w = level.boardSize.x, h = level.boardSize.y;
 
-            // 1) boardPixels uzunluğu
+            // 1) boardPixels length
             if (level.boardPixels == null || level.boardPixels.Length != w * h)
                 Msg($"boardPixels uzunluğu ({level.boardPixels?.Length ?? 0}) != {w}x{h} = {w * h}", MessageType.Error);
 
@@ -36,7 +37,7 @@ namespace Game.EditorTools
                         Msg($"queue rengi '{s.color}' palette'te yok", MessageType.Error);
             }
 
-            // 4) queue sütunları columnCount sınırında mı
+            // 4) queue columns within the columnCount bound
             if (level.queue != null)
             {
                 foreach (var s in level.queue)
@@ -47,7 +48,7 @@ namespace Game.EditorTools
             EditorGUILayout.Space(4);
             EditorGUILayout.LabelField("Ammo Bütçesi (renk bazında)", EditorStyles.boldLabel);
 
-            // 3) renk bazında board küp sayısı vs. queue ammo
+            // 3) per-colour board cube count against queue ammo
             var cubeByColor = new Dictionary<ColorId, int>();
             if (level.boardPixels != null)
                 foreach (var p in level.boardPixels)
@@ -65,7 +66,7 @@ namespace Game.EditorTools
                     ammoByColor[s.color] = a + s.ammo;
                 }
 
-            // board'da veya queue'da geçen tüm renklerin birleşimi
+            // union of every colour appearing on the board or in the queue
             var colors = new HashSet<ColorId>(cubeByColor.Keys);
             colors.UnionWith(ammoByColor.Keys);
 

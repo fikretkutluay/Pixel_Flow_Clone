@@ -19,9 +19,9 @@ namespace MobileCore
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class BasePanel : MonoBehaviour
     {
-        [Header("Panel geçişi")]
+        [Header("Panel transition")]
         [SerializeField] protected float fadeDuration = 0.28f;
-        [Tooltip("Açılırken bu ölçekten 1'e yaylanır. 1 = pop yok.")]
+        [Tooltip("Springs from this scale to 1 on open. 1 disables the pop.")]
         [SerializeField] private float popFrom = 0.86f;
         [SerializeField] private Ease popEase = Ease.OutBack;
 
@@ -39,7 +39,7 @@ namespace MobileCore
             }
         }
 
-        /// <summary>Ölçeklenecek gövde — tam ekran karartma bundan hariç kalsın.</summary>
+        /// <summary>The body that scales; the full-screen dim is deliberately outside it.</summary>
         protected Transform Body
         {
             get
@@ -81,7 +81,7 @@ namespace MobileCore
             });
         }
 
-        /// <summary>Yarım kalmış her geçişi keser — açılış ve kapanış çakışmasın.</summary>
+        /// <summary>Cancels any half-finished transition so open and close cannot overlap.</summary>
         protected void KillTweens()
         {
             CanvasGroup.DOKill();

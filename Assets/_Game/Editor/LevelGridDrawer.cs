@@ -4,22 +4,24 @@ using UnityEngine;
 namespace Game.EditorTools
 {
     /// <summary>
-    /// Board grid'ini çizer ve tıklama/sürükleme ile boyar.
-    /// boardPixels index'i: (height-1-editorRow)*width + x  →  editör üstü = oyun tepesi.
-    /// Sol tık: aktif renk. Sağ tık: sil (None). Bir sürükleme = tek undo adımı.
+    /// Draws the board grid and paints it on click or drag.
+    ///
+    /// boardPixels index: (height-1-editorRow)*width + x, so the top of the editor
+    /// maps to the top of the board in game. Left click paints the active colour,
+    /// right click erases to None, and one drag collapses into a single undo step.
     /// </summary>
     public static class LevelGridDrawer
     {
         private static int activeUndoGroup = -1;
 
-        /// <summary>Editör hücresi → boardPixels index'i (y-flip burada).</summary>
+        /// <summary>Editor cell to boardPixels index. The y-flip happens here.</summary>
         public static int IndexOf(LevelData level, int x, int editorRow)
         {
             int gameY = level.boardSize.y - 1 - editorRow;
             return gameY * level.boardSize.x + x;
         }
 
-        /// <summary>Grid'i verilen alana çizer, tıklamayı işler.</summary>
+        /// <summary>Draws the grid into the given rect and handles clicks.</summary>
         public static void Draw(Rect area, LevelData level, ColorId activePaint, float cellSize)
         {
             int w = level.boardSize.x;
@@ -87,11 +89,11 @@ namespace Game.EditorTools
                 EditorUtility.SetDirty(level);
             }
 
-            GUI.changed = true;   // pencere kendini repaint etsin (dışarıdan Repaint yok)
+            GUI.changed = true;   // let the window repaint itself; nothing calls Repaint from outside
             e.Use();
         }
 
-        /// <summary>MouseUp'ta çağrılır: stroke'u tek undo adımına toplar.</summary>
+        /// <summary>Called on MouseUp to collapse the stroke into one undo step.</summary>
         public static void EndStroke()
         {
             if (activeUndoGroup >= 0)

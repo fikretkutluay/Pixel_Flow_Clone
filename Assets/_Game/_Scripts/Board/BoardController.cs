@@ -13,7 +13,7 @@ namespace Game
 
         private GridManager<CubeCell> board;
         private int remainingCubes;
-        private float cellSize;   // Setup'ta saklanır, SpawnCubeView kullanır
+        private float cellSize;   // stored in Setup, consumed by SpawnCubeView
 
         public int RemainingCubes => remainingCubes;
         private CubeView[,] cubeViews;
@@ -82,7 +82,7 @@ namespace Game
                     }
                     else if (pixel == ColorId.None)
                     {
-                        // boş, spawn yok
+                        // empty cell, nothing to spawn
                     }
                     else
                     {
@@ -112,20 +112,22 @@ namespace Game
             CubeView view = obj.GetComponent<CubeView>();
             if (view == null)
             {
-                Debug.LogError($"[{name}] '{tag}' havuzundaki prefab'da CubeView yok.");
+                Debug.LogError($"[{name}] The prefab in pool '{tag}' has no CubeView.");
                 ObjectPooler.Instance.ReturnToPool(tag, obj);
                 return;
             }
             view.PoolTag = tag;
 
-            // Boşluk = TABAN + hücrenin YÜZDESİ. Gerekçe ve referans ölçümleri
-            // GameConfig'te; özeti: saf yüzde yoğun board'larda 1px altına düşüp
-            // kayboluyor, saf sabit ise seyrek board'larda referansla uyuşmuyor.
-            // Dikey, yatayın bir oranı — küpü eninden uzun gösteren boncuk oranı.
+            // Gap = base + a percentage of the cell. The rationale and the reference
+            // measurements live in GameConfig; in short, a pure percentage falls
+            // below one pixel on dense boards and disappears, while a pure constant
+            // does not match the reference on sparse ones. The vertical gap is a
+            // ratio of the horizontal, which is what makes a cube read taller than
+            // it is wide.
             float gapXWorld = cellSize * config.cubeGap + config.cubeGapBaseWorld;
             float gapYWorld = gapXWorld * config.cubeGapVerticalRatio;
 
-            // Boşluk hücreyi yutamaz.
+            // The gap must never swallow the cell.
             float maxGap = cellSize * config.cubeGapMaxFraction;
             gapXWorld = Mathf.Min(gapXWorld, maxGap);
             gapYWorld = Mathf.Min(gapYWorld, maxGap);
@@ -133,8 +135,8 @@ namespace Game
             float width = cellSize - gapXWorld;
             float height = cellSize - gapYWorld;
 
-            // Prefab'ın kendi oranını EZMEDEN hücreye sığdır: 1:1:2 yazan bir prefab
-            // her board boyutunda o oranı korur.
+            // Fit to the cell without overriding the prefab's own proportions: a
+            // prefab authored at 1:1:2 keeps that ratio at every board size.
             Vector3 scale = Vector3.Scale(view.BaseScale, new Vector3(width, height, width));
             obj.transform.localScale = scale;
 

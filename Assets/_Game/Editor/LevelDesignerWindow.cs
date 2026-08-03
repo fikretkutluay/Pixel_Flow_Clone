@@ -17,7 +17,7 @@ namespace Game.EditorTools
         private int selectedQueueIndex = -1;
         private int queueStampAmmo = 20;
 
-        // Queue önizleme ölçüleri
+        // Queue preview metrics
         private const float BoxH = 26f;
         private const float BoxGap = 3f;
         private const float AddH = 20f;
@@ -53,7 +53,7 @@ namespace Game.EditorTools
                 LevelGridDrawer.EndStroke();
         }
 
-        // ---- ÜST ŞERİT ----
+        // ---- TOOLBAR ----
         private void DrawTopStrip()
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
@@ -75,10 +75,10 @@ namespace Game.EditorTools
                 if (GUILayout.Button("Board'u Sıfırla", EditorStyles.toolbarButton, GUILayout.Width(100)))
                     InitBoardPixels();
 
-                // Güvenli olsun diye geniş açılıp ortası doldurulan board'larda
-                // kenarda boş sıralar kalıyor. Boş hücre oyunda yer kaplamaz ama
-                // board'un en-boy oranını bozar, o da board alanına sığdırılırken
-                // hücreleri gereksiz küçültür.
+                // Boards opened up wide "to be safe" and filled in the middle
+                // leave empty rows around the edge. An empty cell takes no space in
+                // game, but it does distort the board's aspect ratio, which shrinks
+                // the cells needlessly when the board is fitted to its area.
                 if (TryGetContentBounds(out int bx0, out int by0, out int bx1, out int by1))
                 {
                     int tw = bx1 - bx0 + 1, th = by1 - by0 + 1;
@@ -122,7 +122,7 @@ namespace Game.EditorTools
             EditorGUILayout.EndHorizontal();
         }
 
-        // ---- SOL PANEL: araçlar + palet + fırça ----
+        // ---- LEFT PANEL: tools, palette and brush ----
         private void DrawLeftPanel()
         {
             EditorGUILayout.BeginVertical(GUILayout.Width(160));
@@ -141,7 +141,7 @@ namespace Game.EditorTools
             EditorGUILayout.Space(6);
             EditorGUILayout.LabelField($"Aktif fırça: {activePaint}", EditorStyles.miniBoldLabel);
 
-            // Queue "+" ile eklenecek atıcının ammo'su
+            // Ammo given to a shooter added with the queue's "+" button
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Atıcı ammo:", GUILayout.Width(70));
             queueStampAmmo = Mathf.Max(0, EditorGUILayout.IntField(queueStampAmmo, GUILayout.Width(50)));
@@ -202,7 +202,7 @@ namespace Game.EditorTools
             EditorUtility.SetDirty(target);
         }
 
-        // ---- ORTA: board + queue önizleme (tek scroll, mutlak Rect) ----
+        // ---- CENTRE: board and queue preview, one scroll view, absolute rects ----
         private void DrawCenterPreview()
         {
             Rect outer = GUILayoutUtility.GetRect(
@@ -212,7 +212,7 @@ namespace Game.EditorTools
             float boardW = target.boardSize.x * cellSize;
             float boardH = target.boardSize.y * cellSize;
 
-            // Queue metriklerini önden hesapla (content yüksekliği için)
+            // Compute the queue metrics up front, for the content height
             int cols = Mathf.Max(1, target.columnCount);
             var queue = target.queue ?? new ShooterDef[0];
             int maxInCol = 0;
@@ -233,10 +233,10 @@ namespace Game.EditorTools
 
             centerScroll = GUI.BeginScrollView(outer, centerScroll, new Rect(0, 0, contentW, contentH));
 
-            // Board (0,0)'dan başlar
+            // The board starts at (0,0)
             LevelGridDrawer.Draw(new Rect(0, 0, boardW, boardH), target, activePaint, cellSize);
 
-            // Queue board'un altında, board GENİŞLİĞİNE yayılıp aynı x'te (board ile hizalı)
+            // The queue sits below the board, spread across its width and aligned to the same x
             Rect queueArea = new Rect(0, boardH + BoardQueueGap, boardW, queueH);
             DrawQueuePreview(queueArea, cols, overflow);
 
@@ -252,10 +252,10 @@ namespace Game.EditorTools
 
             float colW = area.width / cols;
 
-            // "Kuyruk önizleme" etiketi
+            // Queue preview label
             GUI.Label(new Rect(area.x, area.y - 16f, 200f, 14f), "Kuyruk (oyundaki gibi)", EditorStyles.miniBoldLabel);
 
-            // Sütun arka planları + başlıkları
+            // Column backgrounds and headers
             for (int c = 0; c < cols; c++)
             {
                 float cx = area.x + c * colW;
@@ -263,11 +263,11 @@ namespace Game.EditorTools
                 GUI.Label(new Rect(cx + 4, area.y, colW, 14f), $"S{c}", EditorStyles.miniLabel);
             }
 
-            // Her sütun için yığın y takibi
+            // Track the stack y per column
             var colY = new float[cols];
             for (int c = 0; c < cols; c++) colY[c] = area.y + QueueHeaderH;
 
-            // Atıcı kutuları (list sırasında = oynanma sırası)
+            // Shooter boxes, in list order, which is the order they are played
             for (int i = 0; i < list.Count; i++)
             {
                 int c = list[i].column;
@@ -282,7 +282,7 @@ namespace Game.EditorTools
                     selectedQueueIndex = i;
             }
 
-            // Her sütunun altına "+" ekle butonu
+            // An "add" button under each column
             for (int c = 0; c < cols; c++)
             {
                 float cx = area.x + c * colW;
@@ -293,7 +293,7 @@ namespace Game.EditorTools
                 GUI.enabled = prev;
             }
 
-            // Geçersiz sütunlu (overflow) atıcılar — altta ayrı satır
+            // Shooters with an invalid column, shown on a separate row below
             if (overflowCount > 0)
             {
                 float oy = area.y + (QueueHeaderH + MaxColHeight(colY, area.y));
@@ -366,13 +366,13 @@ namespace Game.EditorTools
             EditorGUI.DrawRect(new Rect(r.xMax - t, r.y, t, r.height), c);
         }
 
-        // ---- SAĞ: doğrulama + seçili atıcı düzenleyici ----
+        // ---- RIGHT: validation and the selected shooter editor ----
         private void DrawRightPanel()
         {
             EditorGUILayout.BeginVertical(GUILayout.Width(300));
             rightScroll = EditorGUILayout.BeginScrollView(rightScroll);
 
-            // Seçili atıcı düzenleyici
+            // Selected shooter editor
             var list = new List<ShooterDef>(target.queue ?? new ShooterDef[0]);
             if (selectedQueueIndex >= 0 && selectedQueueIndex < list.Count)
             {
@@ -487,7 +487,7 @@ namespace Game.EditorTools
             return lum > 0.55f ? Color.black : Color.white;
         }
 
-        // ---- İşlemler ----
+        // ---- Operations ----
         private void EnsureUsableBoard()
         {
             bool invalidSize = target.boardSize.x <= 0 || target.boardSize.y <= 0;
@@ -536,8 +536,8 @@ namespace Game.EditorTools
         }
 
         /// <summary>
-        /// Dolu hücrelerin sınır kutusu. Sandık da içeriktir — kırpma onu dışarıda
-        /// bırakırsa level'ın engeli kaybolur.
+        /// Bounding box of the occupied cells. Crates count as content: if trimming
+        /// left one outside, the level would lose its obstacle.
         /// </summary>
         private bool TryGetContentBounds(out int minX, out int minY, out int maxX, out int maxY)
         {
@@ -564,7 +564,7 @@ namespace Game.EditorTools
             return maxX >= 0;
         }
 
-        /// <summary>Board'u dolu bölgeye daraltır. Kuyruk ve palete dokunmaz.</summary>
+        /// <summary>Shrinks the board to its occupied region. Leaves queue and palette untouched.</summary>
         private void TrimBoard()
         {
             if (!TryGetContentBounds(out int minX, out int minY, out int maxX, out int maxY))

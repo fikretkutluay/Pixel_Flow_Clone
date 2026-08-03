@@ -5,6 +5,6 @@ namespace MobileCore
 {
     public interface IInputRouter
     {
-        event Action<Vector2> OnTap;   // ekran koordinatı
+        event Action<Vector2> OnTap;   // screen coordinates
     }
 }

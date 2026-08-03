@@ -15,8 +15,9 @@ namespace Game
         public int parkCapacity = 5;
         // Rail speed is game-wide, not per level: it lives in GameConfig as a lap
         // duration so every level runs at the same visual pace (RULE 2).
-        // Kurtarma penceresi kaldırıldı: park doluyken inen atıcı anında kaybettirir.
-
+        //
+        // There is no rescue window. A shooter landing while the park is full is an
+        // immediate loss.
 
         private void OnValidate()
         {
@@ -55,11 +56,11 @@ namespace Game
                     ammoByColor[shooter.color] = ammo + shooter.ammo;
                 }
 
-                // Renk bazında ammo, küp sayısına TAM eşit olmalı. Eksikse level
-                // çözülemez (hata). Fazlaysa o rengi taşıyan atıcı fazlalığı
-                // harcayacak küp bulamaz ve hiç boşalmaz — ray veya park'ta
-                // sonsuza dek takılı kalır (uyarı; Level_2'deki DarkGray +10 tam
-                // olarak buydu).
+                // Per colour, total ammo must equal the cube count exactly. Too
+                // little and the level is unsolvable (error). Too much and the
+                // shooter carrying the surplus finds no cube to spend it on, never
+                // empties, and stays stuck on the rail or in the park forever
+                // (warning; Level_2's DarkGray +10 was exactly this).
                 var allColors = new System.Collections.Generic.HashSet<ColorId>(cubeCountByColor.Keys);
                 allColors.UnionWith(ammoByColor.Keys);
 

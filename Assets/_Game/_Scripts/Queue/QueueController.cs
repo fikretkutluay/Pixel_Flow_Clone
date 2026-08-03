@@ -12,11 +12,11 @@ namespace Game
         private Queue<ShooterDef>[] pending;
         private List<Shooter>[] visible;
         private int columnCount;
-        private Camera mainCam;   // Init'te cache — her SlotPosition'da Camera.main aramamak için
+        private Camera mainCam;   // cached in Init to avoid a Camera.main lookup per SlotPosition
 
         [SerializeField] private PointerRouter inputRouter;
 
-        [Tooltip("Gecikme adımı — sütunun dalga hâlinde ilerlemesini sağlar.")]
+        [Tooltip("Delay step that makes the column ripple forward instead of moving as one.")]
         [SerializeField] private float queueStagger = 0.045f;
 
         private void OnEnable()
@@ -53,7 +53,7 @@ namespace Game
 
         private void HandleTap(Vector2 screenPos)
         {
-            if (mainCam == null) return;   // level yüklenmeden gelen tap'i yok say
+            if (mainCam == null) return;   // ignore taps that arrive before a level is loaded
             Ray ray = mainCam.ScreenPointToRay(screenPos);
             if (!Physics.Raycast(ray, out RaycastHit hit)) return;
 
@@ -144,13 +144,14 @@ namespace Game
                 else
                     s.transform.position = target;
 
-                s.SetQueueFront(i == 0);          // YENİ — index 0 tam alpha, gerisi soluk
+                s.SetQueueFront(i == 0);          // index 0 at full alpha, the rest dimmed
                 if (i == 0 && s.IsHidden) s.Reveal();
             }
         }
 
-        // Sütunlar yatay yayılır (ekran genişliğine), derinlik (index) dikey aşağı yığılır.
-        // Konum sabit origin'den değil, queueBand + görünür genişlikten türetilir.
+        // Columns spread horizontally across the screen width; depth (index) stacks
+        // downward. Positions derive from the queue band and the visible width
+        // rather than from a fixed origin.
         private Vector3 SlotPosition(int column, int index)
         {
             float usableWidth = GameLayout.VisibleWidth(mainCam) * config.contentWidthFactor;
@@ -186,8 +187,9 @@ namespace Game
             FillWindow(column);
         }
 
-        // Geçersiz tap (sütunun önü değil, ya da ray dolu). Sessiz kalmak yanlıştı:
-        // hiçbir tepki vermeyen dokunuş "girdim ama algılamadı" gibi okunuyor.
+        // Invalid tap: not the front of the column, or the rail is full. Staying
+        // silent was wrong — a touch with no response reads as "it missed my input"
+        // rather than "that move is not allowed".
         private void RejectTap(Shooter s)
         {
             s.Animator?.ShakeDenied();

@@ -18,20 +18,21 @@ namespace Game
         private readonly float startOffset;
 
         private readonly float leftX, rightX, bottomY, topY;
-        private readonly float edgeX, edgeY;   // kenarların DÜNYA uzunlukları
+        private readonly float edgeX, edgeY;   // world-space lengths of the edges
 
         /// <summary>
-        /// Turun dünya birimindeki uzunluğu. Eskiden lane sayısıydı
-        /// (2*(width+height)) ve bu, board kareden uzaklaşınca atıcının hızını
-        /// kenara göre değiştiriyordu: 39x27 bir board'da alt kenarın 39 lane'i
-        /// 7.2 birime, sağ kenarın 27 lane'i 8.8 birime yayılıyor, yani sabit
-        /// lane hızı sağ/solda 1.77 kat daha hızlı görünüyordu.
+        /// Length of one lap in world units. This used to be the lane count
+        /// (2*(width+height)), which made a shooter's apparent speed depend on which
+        /// edge it was on as boards moved away from square: on a 39x27 board the
+        /// bottom edge spread 39 lanes over 7.2 units while the right edge spread 27
+        /// lanes over 8.8, so a constant lane speed looked 1.77 times faster down the
+        /// sides.
         /// </summary>
         public float Perimeter => 2f * (edgeX + edgeY);
 
-        // centerline: rayın merkez hattı dikdörtgeni (dünya uzayı).
-        // width/height yalnızca LANE SAYISI için — dünya konumu artık board'a
-        // değil bu dikdörtgene bağlı.
+        // centerline is the rail's centreline rectangle in world space. width and
+        // height only set the lane count — world position now depends on this
+        // rectangle, not on the board.
         public TrackPath(int width, int height, Rect centerline, float cornerRadius, float startOffset)
         {
             this.width = width;
@@ -55,7 +56,7 @@ namespace Game
             distance = (distance + startOffset) % Perimeter;
             if (distance < 0f) distance += Perimeter;
 
-            // offset artık DÜNYA birimi, lane değil.
+            // offset is in world units now, not lanes.
             TrackEdge edge;
             float offset;
             int lane;
@@ -88,7 +89,7 @@ namespace Game
             return new TrackSample { edge = edge, lane = lane, worldPos = worldPos };
         }
 
-        /// <summary>Kenar üzerindeki dünya konumunu lane indeksine çevirir.</summary>
+        /// <summary>Converts a world offset along an edge to a lane index.</summary>
         private static int LaneOf(float offset, float edgeLength, int laneCount, bool reversed)
         {
             int i = Mathf.Clamp(Mathf.FloorToInt(offset / edgeLength * laneCount),

@@ -41,8 +41,12 @@ namespace Game
 
         public void SetColor(ColorId color)
         {
-            // MaterialPropertyBlock: materyali klonlamadan (draw call / instancing dostu)
-            // instance başına renk verir. Tek materyal (M_ToonCube), N renk.
+            // A MaterialPropertyBlock gives each instance its own colour without
+            // cloning the material: one material (M_ToonCube), N colours.
+            //
+            // Note that this does take the renderer out of the SRP Batcher. Making it
+            // batch again would need per-instance properties in the shader, which
+            // ToonCube.shader does not declare yet.
             if (mpb == null) mpb = new MaterialPropertyBlock();
             cubeRenderer.GetPropertyBlock(mpb);
             mpb.SetColor(BaseColorId, palette.Of(color));

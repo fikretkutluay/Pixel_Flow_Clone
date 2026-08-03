@@ -3,26 +3,26 @@ using UnityEngine;
 namespace Game
 {
     /// <summary>
-    /// Rayın merkez hattını (atıcıların üzerinde yürüdüğü çizgi) tanımlar.
-    /// Path artık board'dan değil BURADAN türüyor — rail sahnede sabit bir
-    /// obje olduğu için hizalama board boyutundan bağımsız kalır.
-    /// Gizmo, mesh'e gözle hizalamak için merkez hattını çizer.
+    /// Defines the rail's centreline, the line the shooters travel along. The path
+    /// now derives from here rather than from the board: the rail is a fixed object
+    /// in the scene, so alignment stays independent of board size. The gizmo draws
+    /// the centreline so it can be lined up against the mesh by eye.
     /// </summary>
     public class TrackRailAnchor : MonoBehaviour
     {
-        [Tooltip("Merkez hattı dikdörtgeninin boyutu (dünya birimi).")]
+        [Tooltip("Size of the centreline rectangle, in world units.")]
         [SerializeField] private Vector2 centerlineSize = new Vector2(7.2f, 8.8f);
 
-        [Tooltip("Köşe yuvarlanma yarıçapı. Mesh'in görsel köşe kavisine yaklaştır.")]
+        [Tooltip("Corner rounding radius. Match it to the mesh's visual corner arc.")]
         [SerializeField] private float cornerRadius = 1.2f;
 
-        [Tooltip("Path üzerinde '0 noktası'nın faz kayması.")]
+        [Tooltip("Phase shift of the path's zero point.")]
         [SerializeField] private float startOffset = 0f;
 
-        [Header("Board alanı")]
-        [Tooltip("HER level'ın board'u bu dikdörtgenin içine sığdırılır. Sahne " +
-                 "görünümünde yeşil çerçeve olarak çizilir — rayla arasındaki " +
-                 "boşluğu sürükleyerek ayarla, board asla dışına taşmaz.")]
+        [Header("Board area")]
+        [Tooltip("Every level's board is fitted inside this rectangle. Drawn as a " +
+                 "green frame in the scene view — drag it to set the clearance " +
+                 "against the rail; the board never spills outside it.")]
         [SerializeField] private Vector2 boardAreaSize = new Vector2(6.5f, 8.1f);
 
         public float CornerRadius => cornerRadius;
@@ -31,11 +31,11 @@ namespace Game
         public Rect GetCenterlineRect() => RectAround(centerlineSize);
 
         /// <summary>
-        /// Board'un sığdırılacağı alan. Ayrı bir dikdörtgen, çünkü ray merkez
-        /// hattından sabit bir sayı düşmek yeterli değildi: rayın köşe kavisi ve
-        /// mesh kalınlığı yüzünden istenen boşluk dört kenarda aynı değil. Burası
-        /// sahnede görünür, böylece göz kararı bir sayı yerine sürüklenerek
-        /// ayarlanıyor.
+        /// The area the board is fitted into. It is a separate rectangle because
+        /// insetting the centreline by a fixed amount was not enough: the rail's
+        /// corner arc and mesh thickness mean the clearance differs on all four
+        /// sides. Being visible in the scene, it is dragged into place rather than
+        /// guessed at as a number.
         /// </summary>
         public Rect GetBoardAreaRect() => RectAround(boardAreaSize);
 
@@ -47,8 +47,8 @@ namespace Game
 
         private void OnDrawGizmos()
         {
-            // Şekil width/height'tan bağımsız (onlar sadece lane sayısı), o yüzden
-            // gizmo için sabit bir değer yeterli.
+            // The shape does not depend on width/height — those only set the lane
+            // count — so a fixed value is enough for the gizmo.
             var preview = new TrackPath(10, 10, GetCenterlineRect(), cornerRadius, 0f);
 
             Gizmos.color = new Color(1f, 0.85f, 0.2f);
@@ -61,7 +61,7 @@ namespace Game
                 prev = cur;
             }
 
-            // Board alanı — her level bu çerçevenin içinde kalır.
+            // Board area: every level stays inside this frame.
             Rect area = GetBoardAreaRect();
             Gizmos.color = new Color(0.35f, 1f, 0.45f);
             Gizmos.DrawWireCube(new Vector3(area.center.x, area.center.y, 0f),

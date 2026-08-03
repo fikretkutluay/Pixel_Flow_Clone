@@ -3,10 +3,10 @@ using UnityEngine;
 namespace Game
 {
     /// <summary>
-    /// ColorId → render rengi eşlemesi, tek doğruluk kaynağı.
-    /// Değerler görsel plan Bölüm 4.1'deki hex paletidir.
-    /// Kod değil asset olmasının sebebi: Faz 3 boyunca renk üzerinde sık
-    /// oynanacak, her denemede derleme beklememek için ScriptableObject.
+    /// Single source of truth mapping ColorId to a render colour.
+    ///
+    /// An asset rather than code because colours were tuned constantly during the
+    /// art pass, and a ScriptableObject avoids waiting on a recompile per attempt.
     /// </summary>
     [CreateAssetMenu(fileName = "ColorPalette", menuName = "Scriptable Objects/ColorPalette")]
     public class ColorPalette : ScriptableObject
@@ -18,16 +18,16 @@ namespace Game
             public Color color;
         }
 
-        // Doygunluk ve parlaklık referans ekran görüntülerinden ölçülerek
-        // kalibre edildi; GDD §4.1'in ham hex'leri artık geçerli değil.
-        // Referansta atıcı gövdeleri S≈0.52 (bizde 0.72 idi) ve board küpleri
-        // V 0.42-1.00 arasına yayılıyor (bizde 0.71-0.83'te sıkışıktı).
-        // Koyu ve nötr tonlar o aralığın uçlarını açmak için var.
+        // Saturation and value were calibrated by measuring the reference
+        // screenshots; the raw hex values in GDD 4.1 no longer apply. In the
+        // reference, shooter bodies sit at S~0.52 (ours were 0.72) and board cubes
+        // spread across V 0.42-1.00 (ours were bunched at 0.71-0.83). The dark and
+        // neutral tones exist to open out the ends of that range.
         //
-        // 13 oynanabilir renk birbirine yaklaşıyor, o yüzden ayırt edilebilirlik
-        // ölçüldü: en yakın çift CIELAB'da dE 26.1 (White/LightGray). Karışma
-        // riski asıl olarak level'ın SEÇTİĞİ alt palette'te; yeni renk eklerken
-        // veya bir level'a renk seçerken o alt kümenin dE'si kontrol edilmeli.
+        // With 13 playable colours the palette gets crowded, so distinguishability
+        // was measured: the closest pair is dE 26.1 in CIELAB (White/LightGray).
+        // The real risk of confusion is within the subset a level selects, so check
+        // that subset's dE when adding a colour or choosing colours for a level.
         public Entry[] entries = new Entry[]
         {
             new Entry { id = ColorId.Red,        color = Hex(0xC5615C) },
@@ -55,7 +55,7 @@ namespace Game
         {
             foreach (var e in entries)
                 if (e.id == id) return e.color;
-            return Color.magenta; // tanımsız = göze batsın
+            return Color.magenta; // undefined ids should be impossible to miss
         }
 
         private static Color Hex(int rgb) => new Color(

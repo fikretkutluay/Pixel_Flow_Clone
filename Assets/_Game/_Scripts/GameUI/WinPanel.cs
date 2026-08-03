@@ -6,16 +6,16 @@ namespace Game
 {
     public class WinPanel : BasePanel
     {
-        [Header("Kazanma sallanması")]
-        [Tooltip("Açılışta gövdenin salınacağı açı.")]
+        [Header("Win wobble")]
+        [Tooltip("Angle the body swings through on open.")]
         [SerializeField] private float wobbleAngle = 9f;
         [SerializeField] private int wobbleVibrato = 7;
         [SerializeField] private float wobbleSeconds = 0.55f;
 
         /// <summary>
-        /// Kayıp paneliyle aynı sakin açılış olmasın: kazanma paneli yaylanarak
-        /// gelir ve bir de sallanır. Dönme, ölçek pop'unun ÜSTÜNE biner — ikisi
-        /// farklı özelliği sürdüğü için çakışmazlar.
+        /// Deliberately not the same calm entrance as the lose panel: the win panel
+        /// springs in and wobbles. The rotation rides on top of the scale pop —
+        /// they drive different properties, so they do not fight.
         /// </summary>
         public override void Show()
         {

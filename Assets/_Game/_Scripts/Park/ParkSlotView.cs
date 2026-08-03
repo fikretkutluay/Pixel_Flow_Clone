@@ -4,12 +4,13 @@ using UnityEngine;
 namespace Game
 {
     /// <summary>
-    /// Görsel katman: yuvarlatılmış köşeli koyu panel + kayıp uyarısında
-    /// kırmızı yanıp sönen kenarlık.
+    /// Visual layer for a park slot: a dark rounded panel whose border flashes red
+    /// when a loss is near.
     ///
-    /// Uyarı sürekli değil, sayılı bir atım. Sürekli yanıp sönen bir kenarlık
-    /// kısa sürede arka plana karışıyor; asıl mesele oyuncunun tam da bir atıcı
-    /// inmek üzereyken uyarılması, o yüzden uyarı her seferinde yeniden atıyor.
+    /// The warning is a counted burst rather than a continuous blink. A border that
+    /// never stops flashing fades into the background within seconds, and what
+    /// matters is warning the player at the moment a shooter is about to land, so
+    /// the warning fires afresh each time.
     /// </summary>
     public class ParkSlotView : MonoBehaviour
     {

@@ -19,17 +19,17 @@ namespace Game
         [SerializeField] private TrackRailAnchor railAnchor;
         [SerializeField] private TrackChevrons chevrons;
 
-        [Header("Test — Play modunda kullanılır")]
-        [Tooltip("1-tabanlı: 'Load Test Level' bu sıradaki level'ı yükler. Kampanya " +
-                 "akışını (Level 1'den başlama) atlayıp üstünde çalıştığın level'ı " +
-                 "doğrudan test etmek için.")]
+        [Header("Testing — used in Play mode")]
+        [Tooltip("One-based: 'Load Test Level' loads the level at this position. " +
+                 "Skips the campaign flow (starting from Level 1) so the level " +
+                 "being worked on can be tested directly.")]
         [SerializeField] private int testLevelIndex = 1;
 
         private void Awake()
         {
-            // Kaydedilen ilerleme burada okunmazsa Play her zaman Level 1'den
-            // başlar — Save() her level bitişinde çalışıyordu ama onu geri okuyan
-            // tek yer bir context menu'ydü ve runtime'da hiçbir şey onu çağırmıyordu.
+            // Without reading saved progress here, Play always restarts at Level 1.
+            // Save() ran at the end of every level, but the only place that read it
+            // back was a context menu, so nothing called it at runtime.
             serializer.Load("save", out SaveData data);
             currentLevelIndex = data != null
                 ? Mathf.Clamp(data.currentLevelIndex, 0, Mathf.Max(0, levels.Length - 1))
@@ -70,18 +70,19 @@ namespace Game
 
         public void LoadLevel(LevelData data)
         {
-            // Önceki level'dan kalan HER ŞEY burada, tek yerden temizlenir.
+            // Everything left over from the previous level is torn down here, in one
+            // place.
             //
-            // Eskiden bu dört Clear() çağrısını her çağıran (ReloadLevel, LoadTestLevel)
-            // kendi başına tekrarlıyordu — HandlePlayRequested
-            // (menüdeki gerçek Play butonu) bunu HİÇ yapmıyordu. Win/Lose panelinin
-            // "Devam Et" / "Kapat" butonu sadece ana menüyü açıyor, board'a/park'a/
-            // kuyruğa dokunmuyor; oyuncu o an tahtası bitmiş ama parkta veya
-            // kuyrukta hâlâ atıcı varken Play'e tekrar basınca yeni level'ın
-            // atıcıları TAM O SLOTLARA binip üst üste görünüyordu.
+            // These four Clear() calls used to be repeated by each caller
+            // (ReloadLevel, LoadTestLevel), and HandlePlayRequested — the actual Play
+            // button in the menu — never made them at all. The win/lose panel's
+            // continue and close buttons only open the main menu; they do not touch
+            // the board, park or queue. So if the player pressed Play again while
+            // shooters were still parked or queued, the new level's shooters landed
+            // on those exact slots and overlapped them.
             //
-            // Clear() metodlarının hepsi kendi null/uninitialized durumunu koruyor,
-            // yani ilk çağrıda (henüz hiçbir şey kurulmamışken) da güvenli.
+            // Every Clear() guards its own null/uninitialised state, so this is safe
+            // on the first call too, before anything has been built.
             gameManager.Clear();
             boardController.Clear();
             parkController.Clear();
@@ -90,19 +91,19 @@ namespace Game
 
             currentLevel = data;
 
-            // Board, sahnede çizili board alanının İÇİNE sığdırılır ve küpler
-            // küçülür — ray hiç büyümez. Hücre boyutu İKİ eksenin de sığmasına
-            // göre seçilir: yalnızca x'e bölmek kareden uzaklaşan her board'da
-            // (32x47, 39x27) taşmaya yol açıyordu.
+            // The board is fitted inside the board area drawn in the scene and the
+            // cubes shrink to suit; the rail never grows. Cell size is chosen so
+            // both axes fit — dividing by x alone overflowed on every board far
+            // from square (32x47, 39x27).
             //
-            // Hücreler KARE kalır, o yüzden board alanı doldurmayabilir: board'un
-            // en-boy oranı alanınkinden farklıysa artan pay boşluk olarak kalır.
-            // Esnetmek küpleri ve dolayısıyla tabloyu bozardı.
+            // Cells stay square, so the board may not fill the area: when its
+            // aspect ratio differs from the area's, the surplus is left as margin.
+            // Stretching would distort the cubes and with them the picture.
             Rect area = railAnchor.GetBoardAreaRect();
             float cellSize = Mathf.Min(area.width / data.boardSize.x,
                                        area.height / data.boardSize.y);
 
-            // Board alanın merkezine oturur — artan pay dört kenara eşit dağılsın.
+            // Centre the board in the area so the surplus splits evenly on all sides.
             Vector3 boardOrigin = new Vector3(
                 area.center.x - (data.boardSize.x - 1) * cellSize * 0.5f,
                 area.center.y - (data.boardSize.y - 1) * cellSize * 0.5f,
@@ -125,15 +126,15 @@ namespace Game
         public void ReloadLevel() => LoadLevel(currentLevel);
 
         /// <summary>
-        /// Kampanya sırasını atlayıp doğrudan <see cref="testLevelIndex"/>'teki
-        /// level'ı yükler — Play modunda component başlığına sağ tık.
+        /// Skips the campaign order and loads the level at <see cref="testLevelIndex"/>.
+        /// Right-click the component header in Play mode.
         /// </summary>
         [ContextMenu("Load Test Level")]
         private void LoadTestLevel()
         {
             if (levels == null || levels.Length == 0)
             {
-                Debug.LogWarning($"[{name}] levels dizisi boş.");
+                Debug.LogWarning($"[{name}] The levels array is empty.");
                 return;
             }
 

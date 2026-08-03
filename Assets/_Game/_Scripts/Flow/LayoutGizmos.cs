@@ -8,7 +8,7 @@ namespace Game
         [SerializeField] private Camera cam;
         [SerializeField] private bool show = true;
 
-        // LayoutGizmosEditor (sürüklenebilir tutamaçlar) buradan erişir.
+        // LayoutGizmosEditor reads these to drive its draggable handles.
         public GameConfig GizmoConfig => config;
         public Camera GizmoCamera { get { if (cam == null) cam = Camera.main; return cam; } }
 

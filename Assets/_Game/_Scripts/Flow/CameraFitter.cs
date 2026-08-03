@@ -3,18 +3,19 @@ using UnityEngine;
 namespace Game
 {
     /// <summary>
-    /// Ortografik kamerayı GENİŞLİĞE kilitler: board her cihazda yatayda
-    /// aynı dünya-genişliğini kaplar, en-boy farkı dikeyde açılıp kapanır.
-    /// Oyuna özgü bir framing kuralı olduğu için Core'da değil Game'de.
+    /// Locks the orthographic camera to a fixed world WIDTH: the board covers the
+    /// same horizontal span on every device and aspect-ratio differences are
+    /// absorbed vertically. This is a game-specific framing rule, so it lives in
+    /// Game rather than Core.
     /// </summary>
     [ExecuteAlways]
     [RequireComponent(typeof(Camera))]
     public class CameraFitter : MonoBehaviour
     {
         [SerializeField] private Camera cam;
-        [Tooltip("Ekranın yatayda kaplayacağı sabit dünya genişliği. " +
-                 "Rayın dış genişliğinden biraz büyük olmalı — board artık " +
-                 "rayın içine sığdırıldığı için ölçüyü ray belirliyor.")]
+        [Tooltip("Fixed world width the screen spans horizontally. Should be a little " +
+                 "wider than the rail's outer width: the board is fitted inside the " +
+                 "rail, so the rail sets the scale.")]
         [SerializeField] private float visibleWorldWidth = 10f;
 
         private float lastAspect = -1f;
@@ -26,9 +27,9 @@ namespace Game
             Fit();
         }
 
-        // Editor'de Game view aspect'ini değiştirerek test ederken (adım 8)
-        // ve olası çözünürlük değişiminde canlı yeniden hesaplasın diye.
-        // Her frame'de değil, yalnızca aspect gerçekten değişince iş yapar.
+        // Recomputes live when the Game view aspect is changed in the editor, and on
+        // any runtime resolution change. Does work only when the aspect actually
+        // changes, not every frame.
         private void Update()
         {
             if (!Mathf.Approximately(cam.aspect, lastAspect))

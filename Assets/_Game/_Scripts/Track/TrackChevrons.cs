@@ -18,30 +18,30 @@ namespace Game
     /// </summary>
     public class TrackChevrons : MonoBehaviour
     {
-        [Header("Kaynak")]
+        [Header("Source")]
         [SerializeField] private TrackController trackController;
         [SerializeField] private GameObject chevronPrefab;
 
-        [Header("Yerleşim")]
-        [Tooltip("Oklar arası mesafe — DÜNYA birimi, hücre değil.")]
+        [Header("Layout")]
+        [Tooltip("Distance between arrows, in world units rather than cells.")]
         [SerializeField] private float spacing = 0.45f;
-        [Tooltip("Yol örnekleme çözünürlüğü. Yükseltmek köşeleri yumuşatır.")]
+        [Tooltip("Path sampling resolution. Raising it smooths the corners.")]
         [SerializeField] private int sampleCount = 720;
         [SerializeField] private Vector3 offset = Vector3.zero;
-        [Tooltip("Okların boyutu. 0 = prefab'ın kendi ölçeği.")]
+        [Tooltip("Arrow size. 0 keeps the prefab's own scale.")]
         [SerializeField] private float chevronScale = 0f;
-        [Tooltip("Modelin 'ileri' yönü +X değilse düzeltme. Oklar tersse 180.")]
+        [Tooltip("Correction if the model's forward is not +X. Use 180 if the arrows point backwards.")]
         [SerializeField] private float facingOffsetDeg = 0f;
 
-        [Header("Akış")]
-        [Tooltip("Okların ilerleme hızı — saniyede dünya birimi.")]
+        [Header("Flow")]
+        [Tooltip("How fast the arrows travel, in world units per second.")]
         [SerializeField] private float flowSpeed = 0.6f;
 
         private Transform[] chevrons;
         private float[] baseArc;
 
         private Vector3[] samples;
-        private float[] arc;              // arc[i] = samples[0]'dan samples[i]'ye mesafe
+        private float[] arc;              // arc[i] = distance from samples[0] to samples[i]
         private float totalArc;
         private float travel;
 

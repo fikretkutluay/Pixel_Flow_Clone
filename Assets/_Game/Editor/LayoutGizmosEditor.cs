@@ -4,10 +4,11 @@ using UnityEngine;
 namespace Game.EditorTools
 {
     /// <summary>
-    /// LayoutGizmos için Scene view'da sürüklenebilir bant sınırları.
-    /// GameConfig tek doğruluk kaynağı kalır — tutamaçlar onu düzenlemenin
-    /// görsel bir yolu. Bir sınırı sürüklemek komşu iki bandın oranını
-    /// (toplamları sabit kalacak şekilde) karşılıklı değiştirir.
+    /// Draggable band boundaries in the Scene view for LayoutGizmos.
+    ///
+    /// GameConfig remains the single source of truth; the handles are just a visual
+    /// way to edit it. Dragging a boundary trades the two neighbouring bands against
+    /// each other, keeping their sum constant.
     /// </summary>
     [CustomEditor(typeof(LayoutGizmos))]
     public class LayoutGizmosEditor : Editor
@@ -49,8 +50,9 @@ namespace Game.EditorTools
 
                 if (newPos != handlePos)
                 {
-                    // Sürüklenen noktanın SADECE dikey (viewport-Y) bileşeni işimize yarıyor;
-                    // yan/derinlik sapması olsa da fraksiyon hesabını etkilemez.
+                    // Only the vertical (viewport-Y) component of the dragged point
+                    // matters here; any lateral or depth drift does not affect the
+                    // fraction.
                     Vector3 vp = cam.WorldToViewportPoint(newPos);
                     float newCum = Mathf.Clamp(1f - vp.y, cum[d - 1] + MinBandFraction, cum[d + 1] - MinBandFraction);
 
