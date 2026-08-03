@@ -1,9 +1,9 @@
 # Handoff — durum ve devam noktası
 
-Son güncelleme: 2026-07-30 · HEAD `07be446`
+Son güncelleme: 2026-08-03 · HEAD `0ac08a4` · etiket `m5-levels`
 
 Bu dosya, GDD'nin (`Assets/_Game/Art/References/Pixel_Flow_Clone_GDD.docx`) yazıldığı
-andan bu yana olan **25 commit'lik** değişikliği kaydeder. GDD hâlâ oyunun tanımı ve
+andan bu yana olan değişikliği kaydeder (toplam 77 commit). GDD hâlâ oyunun tanımı ve
 mimari sözleşmesi için birincil kaynak, ama **§6 (mevcut durum) ve §7 (kalan iş)
 bölümleri artık geçersiz** — onların yerine bu dosya geçer.
 
@@ -180,6 +180,82 @@ parçalar kameraya doğru kaydırılıyor, yoksa yarısı board düzlemine göm�
 
 ---
 
+### Level üretimi ve doğrulama
+
+**10 level elle yapıldı, ama bir simülatörle doğrulanıyor.** `Tools/levelgen/sim.py`
+oyunun kurallarını birebir taklit ediyor (lane peeling, tur, park, kapasiteler,
+bitiş koşusunda sandık kalkması) ve üç farklı oyuncu politikasıyla level'ı oynuyor.
+Bu, GDD'nin "her level ≥3 tam oynanışla kanıtlanmalı" şartının otomatik hâli.
+
+Simülatör yazılırken çıkan asıl bulgu, zorluğun nereden geldiğiydi:
+`TrackController` mermiyi **yalnızca isabette** harcıyor, yani ıskalar bedava.
+Dolayısıyla zorluk "mermi yetmemesi" değil — atıcı turunu **tek turda**
+bitiremezse parka düşüyor, park doluyken bir tur biterse anında kayıp.
+Bunun sezgiye aykırı sonucu: **yüksek mermili atıcı kolay değil, zor.**
+
+Bundan çıkan level tasarım kuralları:
+
+- Renk başına ammo, küp sayısına **TAM eşit** olmalı. Eksikse level çözülemez;
+  fazlaysa o rengi taşıyan atıcı hiç boşalmaz ve rayda/parkta sonsuza dek takılı
+  kalır. `LevelData.OnValidate` ve Level Designer paneli ikisini de yakalıyor
+  (fazlalık uyarısı Level_2'deki DarkGray +10 hatasından sonra eklendi).
+- Sandık yerleşimi tehlikeli: bir renk dört yönden birden sandıkla kapanırsa,
+  o renk ancak bitiş koşusunda açığa çıkar — ama bitiş koşusu sahada ≤5 atıcı
+  kalmasını beklediği için kilitlenme oluşabiliyor.
+
+**Level Designer'a "Kırp" eklendi.** Geniş açıp ortasını doldurmak yaygın bir
+alışkanlık ama boş kenarlar board'un en-boy oranını bozuyor, o da board alanına
+sığdırma hesabında hücreleri gereksiz küçültüyor (20×20 → 18×18 kırpınca küpler
+%11 büyüyor).
+
+**Kampanya — 10 level, hepsi elle yapıldı ve simülatörde doğrulandı:**
+
+| Level | Board | Küp | Renk | Atıcı | Sandık | Not |
+|---|---|---|---|---|---|---|
+| L1 | 18×10 | 120 | 2 | 8 | — | öğretici |
+| L2 | 16×15 | 240 | 4 | 12 | — | |
+| L3 | 20×19 | 380 | 6 | 22 | — | 11 gizli "?" |
+| L4 | 20×20 | 400 | 3 | 16 | — | 3 gizli |
+| L5 | 24×24 | 560 | 6 | 21 | 16 | 3 gizli |
+| L6 | 30×30 | 890 | 6 | 34 | 8 | |
+| L7 | 16×16 | 200 | 6 | 12 | — | |
+| L8 | 20×20 | 370 | 7 | 17 | 12 | sandık köşe kilidi bilinçli |
+| L9 | 35×41 | 700 | 6 | 30 | — | piksel-art portre |
+| L10 | 40×35 | 1400 | 7 | 44 | — | final, en yoğun |
+
+Palet 19 renge çıktı: ilk 14'ü referanstan kalibre edildi, portreler için
+`Pink · Orange · Flesh · Brawn · LightBrawn` sonradan elle eklendi (bunlar
+kalibrasyondan geçmedi, doygunlukları yüksek).
+
+### Görsel kalibrasyon (bu dönem)
+
+**Küp yüzeyi düzdü, referansta değil.** Ölçüm: bizim küpün her pikseli aynı
+(`[196 97 91]`), referansta yüzey yukarıdan aşağı ~%12 açılıyor. `_FaceGradient`
+eklendi; ölçülen %12 bir **taban** çıktı, gözle 0.6'ya çekildi.
+
+**Küpler arası çizgi kayboluyordu.** `cubeGap` bir yüzdeydi; hücre küçüldükçe
+mutlak boşluk 1px altına düşüp anti-aliasing'de eriyordu (Level_10'da dikey boşluk
+0.76px). Konturu kalınlaştırmak bunu **çözmez**: iki küp gerçekten değiyorsa her
+birinin konturu komşusunun ön yüzeyine karşı derinlik testini kaybediyor.
+
+Referansta iki farklı yoğunluk ölçüldü — çizgi ne sabit ne orantılı:
+
+```
+küp 20.0px -> dikiş 3.0px (%15.0)
+küp 50.8px -> dikiş 5.0px ( %9.9)
+```
+
+Küp 2.5 kat büyürken dikiş 1.67 kat büyümüş. İki noktadan çözülen **afin model**
+(taban + hücrenin yüzdesi) her iki uçta da tutuyor ve şu an kullanılan model bu.
+Her iki terim de dünya birimi; kamera sabit dünya genişliğine oturtulduğu için
+çözünürlükten bağımsız sabit ekran oranı veriyor.
+
+**Kamera dik değil, -25° eğik** (ortografik). Referansın da ortografik olduğu
+board'un üst ve alt sıralarındaki küp genişliklerini ölçerek doğrulandı: 22.2px vs
+22.0px, yani perspektif yakınsaması yok.
+
+---
+
 ## 2. Sahne yapısı
 
 ```
@@ -206,7 +282,17 @@ Main Camera       CameraFitter · LayoutGizmos
 - `LoadingScreen` kendini **deaktive etmez** — sonraki geçişi dinlemeye devam etmesi
   gerekiyor.
 
-**Havuzlar:** `Shooter` 20 · `Cube` 20 · `Tracer` 12 · `Crate` 20
+**Havuzlar:** `Shooter` 28 · `Cube` 1450 · `Tracer` 12 · `Crate` 20
+
+Cube havuzu 20'den 1450'ye çıktı: kampanyanın en yoğun board'u (Level_10) aynı anda
+1400 küp gösteriyor ve havuz küçük kaldığında `ObjectPooler` her level açılışında
+yüzlerce senkron `Instantiate` yapıyordu.
+
+**Post-process:** `MainScene/GameplayVolumeProfile` — Bloom (eşik 1, şiddet 0.25),
+Color Adjustments (+15 doygunluk, +8 kontrast), Tonemapping **Neutral**. ACES
+bilinçli seçilmedi: referansa göre kalibre ettiğimiz paleti donuklaştırıyor.
+Vinyet denendi ve **kaldırıldı** — üst HUD'u okunmaz hale getiriyordu, referansta da
+yok (arka plan parlaklığı orada her yerde 84-97 aralığında düz).
 
 ---
 
@@ -214,34 +300,30 @@ Main Camera       CameraFitter · LayoutGizmos
 
 | Konu | Durum |
 |---|---|
-| **Android build** | Hiç alınmadı. `EditorBuildSettings` ve player settings düzeltildi (A1-A2 bitti), APK adımı duruyor |
-| **Cihazda touch testi** | Yapılmadı |
-| **Level sayısı** | **2/10** — Level_1 (10×10), Level_2 (20×20, 9 sandıklı) |
+| **README / development note** | **Yazılmadı** — teslimin en büyük eksiği |
+| **Gameplay videosu** | Çekilmedi (en az 3 level isteniyor) |
+| **Bilinen hatalar listesi** | Yazılmadı |
+| **Android build** | APK alındı, arkadaşın cihazında oynandı, çalışıyor (A3-A4 bitti). Hafif FPS düşüşü gözlendi — ama o testten sonra board'lar 1400 küpe çıktı, tekrar ölçüm gerekiyor. Teslim paketine APK konmadı |
+| **GPU instancing** | `M_ToonCube` hâlâ `m_EnableInstancingVariants: 0`. Board'lar 1400 küpe çıktı, kontur pass'i draw call'ı ikiye katlıyor. Cihazda bir kez hafif FPS düşüşü görüldü — ama o testten sonra board'lar büyüdü, yeniden ölçüm borçlu |
 | `rescueWarningClip` | Boş — park uyarısı sessiz |
 | `backgroundMusic` | Boş |
-| `Indigo` / `White` kullanan level | Yok. Palet aralığı açıldı ama Level_1/2 hâlâ sadece canlı renklerden oluşuyor, kazanç ancak yeni level'larda görünür |
 | `ToonCube_SG.shadergraph` | Ölü — hiçbir materyal kullanmıyor, silinebilir |
-| Testler | 17 test var (LaneRaycaster 7 + BoundedBuffer 10), bu dönemde koşturuldu, geçti |
-| TMP Examples | Bilinçli duruyor — font çalışmaları için |
-| README / development note | Yazılmadı |
+| TMP Examples | 6.2 MB, hâlâ duruyor. Font işi bittiği için artık gerekçesi yok |
+| Testler | 17 test (LaneRaycaster 7 + BoundedBuffer 10). `BoundedBuffer.Clear()` eklendi, tekrar koşturulmalı |
+| Simülatör vs. gerçek oyun | `sim.py` Level_5'i "3/3 politika kaybediyor" diyor ama elle rahat kazanılıyor. Bot bir **alt sınır**, mutlak doğru değil |
 
 ---
 
 ## 4. Sıradaki iş
 
-GDD §7.6'nın sırası şu şekilde güncellendi:
-
-1. **Android build + cihaz testi** (GDD A3-A4) — dört devlog'dur ertelenen en riskli
-   kalem, yarım günden az. Ayrıca konturun gerçek cihazdaki draw call maliyeti
-   ancak burada ölçülebilir
-2. **8 yeni level + playtest** (E3-E4) — asıl kritik yol, 1.5-2 gün. Level Designer
-   (`Tools/Level Designer`) hazır ve hızlı. Artık `Indigo`/`White` de var: koyu
-   kütle + parlak vurgu kurgusu referansın okunabilirliğinin temeli
-3. **Juice kalanı** — D4 rescue kırmızı vinyet, D5 kazanma dalgası (kesilebilir)
-4. **Gameplay videosu, README, development note** (A9-A11)
-
-**Level 5-6 sandık, 7-8 "?" mekaniğine dayanıyor** — ikisi de artık görsel olarak
-hazır, o level'lar körlemesine tasarlanmayacak.
+1. **README + development note + bilinen hatalar** (A10-A11) — ödevin zorunlu
+   teslim kalemleri, üçü de eksik. Bu dosyanın §1'i development note'un altı
+   başlığından dördünü doğrudan besliyor
+2. **Gameplay videosu** (A9) — en az 3 level. Instancing'den SONRA çekilmeli,
+   yoksa takılmalı bir kayıt teslim edilir
+3. **GPU instancing** — 1400 küplük board'larda artık ertelenebilir değil
+4. **Temizlik**: TMP Examples sil, `ToonCube_SG` sil, testleri koştur
+5. **Cihazda son bir tur** — instancing sonrası FPS doğrulaması
 
 ---
 
@@ -252,6 +334,15 @@ CLAUDE.md'deki kurallar geçerli. Bu dönemde işe yarayan iki alışkanlık:
 **Ölç, göz kararı geçme.** Renk, oran, glif kapsamı — hepsi referans görselden ya da
 dosyadan programatik olarak ölçüldü. Lilita One'ın eksik glifleri, butonların
 doygunluk artışı ve ray hızı hatası ancak böyle yakalandı.
+
+Ama ölçüm **hedef değil taban** verir: `_FaceGradient` için ölçülen %12 doğruydu,
+gözle 0.6 çok daha iyi durdu. Ölçüm nereye bakılacağını söylüyor, ne kadar
+gideceğini değil.
+
+**Ölçümün sınırını da bil.** Video karesinden alınan referanslar (level6.png,
+level200.png) JPEG sıkıştırması yüzünden aynı görselin farklı satırlarında %17-33
+arası sonuç veriyordu — bu spread ölçümün kendi hatası. Telefon ekran görüntüleri
+(sıkıştırmasız, 1179px) güvenilir dayanak; video kareleri sadece doğrulama için.
 
 **Sahnenin kaydedilip kaydedilmediğini kontrol et.** Unity'nin bellekteki hâli diskte
 görünmez; birkaç kez eski veriye bakıp yanlış teşhis kondu. Hiyerarşi/Inspector
