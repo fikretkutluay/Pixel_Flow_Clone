@@ -390,9 +390,12 @@ namespace Game.EditorTools
             }
 
             EditorGUILayout.Space(8);
-            bool deficit = LevelValidationView.Draw(target);
+            bool deficit = LevelValidationView.Draw(target, out bool surplus);
             if (deficit)
                 EditorGUILayout.HelpBox("Eksik ammo var — level çözülemeyebilir. Yine de kaydedebilirsin.", MessageType.Warning);
+            if (surplus)
+                EditorGUILayout.HelpBox("Fazla ammo var — bir atıcı hiçbir zaman boşalmaz ve rayda/parkta " +
+                                        "takılı kalır. İstenmeyen bir durum; kaydetmeden önce düzelt.", MessageType.Warning);
 
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();

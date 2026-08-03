@@ -55,16 +55,25 @@ namespace Game
                     ammoByColor[shooter.color] = ammo + shooter.ammo;
                 }
 
-                foreach (var kvp in cubeCountByColor)
+                // Renk bazında ammo, küp sayısına TAM eşit olmalı. Eksikse level
+                // çözülemez (hata). Fazlaysa o rengi taşıyan atıcı fazlalığı
+                // harcayacak küp bulamaz ve hiç boşalmaz — ray veya park'ta
+                // sonsuza dek takılı kalır (uyarı; Level_2'deki DarkGray +10 tam
+                // olarak buydu).
+                var allColors = new System.Collections.Generic.HashSet<ColorId>(cubeCountByColor.Keys);
+                allColors.UnionWith(ammoByColor.Keys);
+
+                foreach (var color in allColors)
                 {
-                    ammoByColor.TryGetValue(kvp.Key, out int totalAmmo);
-                    if (totalAmmo < kvp.Value)
-                    {
-                        Debug.LogError($"[{name}] color '{kvp.Key}' has {kvp.Value} cubes but only {totalAmmo} ammo in queue");
-                    }
+                    cubeCountByColor.TryGetValue(color, out int cubes);
+                    ammoByColor.TryGetValue(color, out int totalAmmo);
+
+                    if (totalAmmo < cubes)
+                        Debug.LogError($"[{name}] color '{color}' has {cubes} cubes but only {totalAmmo} ammo in queue");
+                    else if (totalAmmo > cubes)
+                        Debug.LogWarning($"[{name}] color '{color}' has {totalAmmo} ammo but only {cubes} cubes — " +
+                                          "the surplus can never be fired, so a shooter carrying it will never empty");
                 }
-
-
             }
 
             if (queue != null)

@@ -6,15 +6,22 @@ namespace Game.EditorTools
 {
     /// <summary>
     /// LevelData.OnValidate ile birebir aynı kontrolleri canlı gösterir + ammo bütçesi tablosu.
-    /// Dönen değer: level'da eksik-ammo (çözülemez) durumu var mı — Kaydet uyarısı için.
+    ///
+    /// Bütçe artık TAM eşitlik arıyor. Fazla ammo "yeterli" sayılıp yeşil geçiyordu,
+    /// ama bir rengin ammo'su küp sayısını aşınca o fazlalığı harcayacak küp
+    /// bulunamıyor: atıcı asla boşalmıyor ve rayda/parkta sonsuza dek takılı
+    /// kalıyor (Level_2'deki DarkGray +10 tam olarak buydu).
     /// </summary>
     public static class LevelValidationView
     {
-        public static bool Draw(LevelData level)
+        /// <param name="hasSurplus">Bir rengin ammo'su küp sayısını aşıyor mu —
+        /// eksik değil ama istenmeyen, çünkü fazlalığı harcayacak küp yok.</param>
+        public static bool Draw(LevelData level, out bool hasSurplus)
         {
             EditorGUILayout.LabelField("Doğrulama", EditorStyles.boldLabel);
 
             bool hasDeficit = false;
+            hasSurplus = false;
             int w = level.boardSize.x, h = level.boardSize.y;
 
             // 1) boardPixels uzunluğu
@@ -72,20 +79,28 @@ namespace Game.EditorTools
                 cubeByColor.TryGetValue(color, out int cubes);
                 ammoByColor.TryGetValue(color, out int ammo);
                 int diff = ammo - cubes;
-                bool ok = diff >= 0;
-                if (!ok) hasDeficit = true;
+                bool exact = diff == 0;
+                bool deficit = diff < 0;
+                if (deficit) hasDeficit = true;
+                else if (!exact) hasSurplus = true;   // diff > 0
 
                 var prev = GUI.color;
-                GUI.color = ok ? new Color(0.7f, 1f, 0.7f) : new Color(1f, 0.6f, 0.6f);
-                string diffText = ok ? $"fazla: +{diff}" : $"EKSİK: {diff}";
+                string diffText, mark;
+                if (exact) { GUI.color = new Color(0.7f, 1f, 0.7f); diffText = "tam eşit"; mark = "✓"; }
+                else if (deficit) { GUI.color = new Color(1f, 0.6f, 0.6f); diffText = $"EKSİK: {diff}"; mark = "✗"; }
+                else { GUI.color = new Color(1f, 0.85f, 0.4f); diffText = $"FAZLA: +{diff}"; mark = "⚠"; }
+
                 EditorGUILayout.LabelField(
-                    $"{color,-7} board: {cubes,3}   |   ammo: {ammo,3}   |   {diffText}   {(ok ? "✓" : "✗")}");
+                    $"{color,-7} board: {cubes,3}   |   ammo: {ammo,3}   |   {diffText}   {mark}");
                 GUI.color = prev;
             }
 
             EditorGUILayout.Space(2);
             EditorGUILayout.HelpBox(
-                "Ammo bütçesi yalnızca GEREKLİ koşuldur. Sıralama yüzünden çözülemeyen level'lar hâlâ mümkün — en az 3 tam oynanışla doğrula.",
+                "Her rengin ammo'su küp sayısına TAM eşit olmalı. Eksik level'ı çözülemez " +
+                "yapar; fazla ise o rengi taşıyan bir atıcının hiçbir zaman boşalmamasına " +
+                "yol açar — sıralama yüzünden çözülemeyen level'lar yine de mümkün, en az " +
+                "3 tam oynanışla doğrula.",
                 MessageType.None);
 
             return hasDeficit;
