@@ -33,12 +33,13 @@ Assets/_Game/Art/References/
     └── profilpaneli.PNG
 ```
 
-## UI asset üretimi
+## Python araçları
 
-UI sprite'ları Figma'dan değil, **`Tools/uigen/`** altındaki Python (Pillow)
-generator'ından çıkıyor — 55 sprite `Assets/_Game/Art/Sprites/UI/` altında.
-Yeni bir sprite gerekiyorsa oraya bak; Figma MCP bu hesapta ayda 6 çağrıyla
-sınırlı ve bir oturumda tükeniyor.
+İki ayrı araç seti var, ikisi de Pillow kullanıyor:
+
+**`Tools/uigen/`** — UI sprite'ları Figma'dan değil buradan çıkıyor (55 sprite,
+`Assets/_Game/Art/Sprites/UI/`). Figma MCP bu hesapta ayda 6 çağrıyla sınırlı ve
+bir oturumda tükeniyor.
 
 ```
 python generate_all.py && python icons.py && python avatars.py
@@ -46,6 +47,18 @@ python import_to_unity.py     # Assets'e kopyalar + .meta ayarlarını yazar
 ```
 
 Detaylar ve GDD §4.3'ten sapmanın gerekçesi: `Tools/uigen/README.md`
+
+**`Tools/levelgen/`** — level okuma/yazma ve doğrulama:
+
+| Dosya | İş |
+|---|---|
+| `levelio.py` | `LevelData.asset` oku/yaz, board'u ASCII çiz |
+| `sim.py` | Level'ı oyunun kurallarıyla oyna — kazanılabilir mi, park ne kadar doluyor |
+| `quantize.py` | Görseli palete kuantala (üretilen level'lar terk edildi, ölçüm için hâlâ kullanışlı) |
+| `build.py` | Toplu üretim — **artık kullanılmıyor**, level'lar elle yapılıyor |
+
+`sim.py` bir **alt sınır** verir, mutlak doğru değil: Level_5'i "kaybediliyor"
+diyor ama elle rahat kazanılıyor. Bot bir sıralamayı kaçırabiliyor.
 
 ## Bağlayıcı kurallar
 
@@ -62,6 +75,11 @@ Detaylar ve GDD §4.3'ten sapmanın gerekçesi: `Tools/uigen/README.md`
   development note'a girer.
 - **Doğrulama:** Üretilen asset'ler ÖLÇÜLEREK doğrulanır, gözle bakılıp geçilmez.
   Özellikle UI dokularında: şeffaflık (alpha kanalı), nötr ton, 9-slice payı, boyut.
+  Ama ölçüm **taban** verir, hedef değil: `_FaceGradient` için ölçülen %12 doğruydu,
+  gözle 0.6 çok daha iyi durdu.
+- **Level verisi:** Renk başına ammo, küp sayısına **TAM eşit** olmalı. Eksikse
+  level çözülemez, fazlaysa o rengin atıcısı hiç boşalmaz ve sahnede takılı kalır.
+  `LevelData.OnValidate` ve Level Designer paneli ikisini de yakalıyor.
 
 ## Dil
 
@@ -80,9 +98,26 @@ Hiyerarşi veya Inspector değeri okumadan önce
 `Assets/_Game/Scenes/MainScene.unity` dosyasının `mtime`'ına bak — bu dönemde
 birkaç kez eski veriye bakılıp yanlış teşhis kondu.
 
+## Level tasarımı
+
+10 level var, **hepsi elle yapıldı** ve `sim.py` ile doğrulandı. Level'lara
+dokunma — üretici script'ler (`build.py`) terk edildi.
+
+Zorluğun nereden geldiği sezgiye aykırı: `TrackController` mermiyi **yalnızca
+isabette** harcıyor, ıskalar bedava. Yani zorluk "mermi yetmemesi" değil — atıcı
+mermisini **tek turda** bitiremezse parka düşüyor, park doluyken bir tur biterse
+anında kayıp. Sonuç: **yüksek mermili atıcı kolay değil, zor.**
+
+Level Designer'da **Kırp** butonu var: board'u dolu bölgeye daraltır. Boş kenarlar
+en-boy oranını bozup hücreleri gereksiz küçültüyor.
+
 ## En riskli açık kalem
 
-**Android build hâlâ hiç alınmadı.** Build sahne listesi ve player settings
-düzeltildi (GDD A1-A2 bitti), geriye APK alıp cihaza kurmak kaldı (A3-A4).
-Dört devlog'dur erteleniyor ve GDD §9.5 bunu "asla kesilmeyecekler" listesine
-yönelik doğrudan tehdit olarak işaretliyor.
+**Teslimin üç zorunlu kalemi eksik:** README, development note (İngilizce, 6
+başlıklı şablon) ve gameplay videosu. Kod tarafı hazır; eksik olan dokümantasyon.
+
+`HANDOFF.md` §1 development note'un altı başlığından dördünü doğrudan besliyor —
+oradan başla, sıfırdan yazma.
+
+İkinci risk: **GPU instancing hiç açılmadı** ve board'lar 1400 küpe çıktı. Video
+çekmeden önce halledilmeli, yoksa takılmalı bir kayıt teslim edilir.
