@@ -2,7 +2,7 @@
 
 Son güncelleme: 2026-08-03 · HEAD `0ac08a4` · etiket `m5-levels`
 
-Bu dosya, GDD'nin (`Assets/_Game/Art/References/Pixel_Flow_Clone_GDD.docx`) yazıldığı
+Bu dosya, GDD'nin (`Pixel_Flow_Clone_GDD.docx`, aynı `Docs/` klasöründe) yazıldığı
 andan bu yana olan değişikliği kaydeder (toplam 77 commit). GDD hâlâ oyunun tanımı ve
 mimari sözleşmesi için birincil kaynak, ama **§6 (mevcut durum) ve §7 (kalan iş)
 bölümleri artık geçersiz** — onların yerine bu dosya geçer.

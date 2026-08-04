@@ -4,10 +4,10 @@ Unity 6000.3.9f1 · URP 17.3 · Android portrait · Staj projesi.
 
 ## Önce bunu oku
 
-**`HANDOFF.md`** — projenin GÜNCEL durumu, alınan kararlar ve sıradaki iş.
+**`Docs/HANDOFF.md`** — projenin GÜNCEL durumu, alınan kararlar ve sıradaki iş.
 Oturuma buradan başla.
 
-**`Assets/_Game/Art/References/Pixel_Flow_Clone_GDD.docx`** — projenin tam tanımı.
+**`Docs/Pixel_Flow_Clone_GDD.docx`** — projenin tam tanımı.
 Mekanik, mimari sözleşme (KURAL 1-11), renk paleti, ekran tasarımları ve teslim
 checklist'i orada.
 
@@ -15,11 +15,12 @@ checklist'i orada.
 durum) ve §7 (kalan iş) bölümleri eskidir; onların yerini HANDOFF.md alır. Geri
 kalan bölümleri — özellikle mimari sözleşme ve palet — hâlâ bağlayıcıdır.
 
-Referans görseller `Assets/_Game/Art/References/` altında iki klasörde:
+Tüm doküman dosyaları (`Docs/`) Assets dışında — Unity'ye asset olarak import
+edilmesinler diye. Referans görseller ise (görsel kalibrasyon için gerçekten
+kullanıldığından) `Assets/_Game/Art/References/` altında iki klasörde kalıyor:
 
 ```
 Assets/_Game/Art/References/
-├── Pixel_Flow_Clone_GDD.docx
 ├── inGameResources/          (gameplay ekran görüntüleri)
 │   ├── Ekran Resmi 2026-07-27 - 23.12.08.png
 │   ├── Ekran Resmi 2026-07-28 - 17.45.16.png
@@ -113,11 +114,9 @@ en-boy oranını bozup hücreleri gereksiz küçültüyor.
 
 ## En riskli açık kalem
 
-**Teslimin üç zorunlu kalemi eksik:** README, development note (İngilizce, 6
-başlıklı şablon) ve gameplay videosu. Kod tarafı hazır; eksik olan dokümantasyon.
+README, development note ve known issues yazıldı (`Docs/`). Gameplay videosu
+çekildi. Kalan tek zorunlu teslim kalemi: **Android build (APK/AAB)**.
 
-`HANDOFF.md` §1 development note'un altı başlığından dördünü doğrudan besliyor —
-oradan başla, sıfırdan yazma.
-
-İkinci risk: **GPU instancing hiç açılmadı** ve board'lar 1400 küpe çıktı. Video
-çekmeden önce halledilmeli, yoksa takılmalı bir kayıt teslim edilir.
+**GPU instancing hâlâ açılmadı** ve board'lar 1400 küpe çıktı — `M_ToonCube`'da
+kutucuğu işaretlemek yetmiyor, shader'da instancing pragma'sı ve per-instance
+`_BaseColor` yok. Detay: `Docs/KNOWN_ISSUES.md`.

@@ -214,10 +214,23 @@ the mascot and avatars are derived from the project's own `Cubic_Dog` model.
 
 ## Documentation
 
-- **`DEVELOPMENT_NOTE.md`** — decisions, deviations, and what was measured to
-  justify them.
-- **`KNOWN_ISSUES.md`** — current defects and limitations.
-- **`HANDOFF.md`** — working state and next steps (Turkish).
-- **`Assets/_Game/Art/References/Pixel_Flow_Clone_GDD.docx`** — the original
+Everything below lives in [`Docs/`](Docs/), outside `Assets/` so none of it is
+imported into the Unity project as an asset.
+
+- **[`DEVELOPMENT_NOTE.md`](Docs/DEVELOPMENT_NOTE.md)** — decisions, deviations,
+  and what was measured to justify them.
+- **[`KNOWN_ISSUES.md`](Docs/KNOWN_ISSUES.md)** — current defects and limitations.
+- **[`HANDOFF.md`](Docs/HANDOFF.md)** — working state and next steps (Turkish).
+- **[`Pixel_Flow_Clone_GDD.docx`](Docs/Pixel_Flow_Clone_GDD.docx)** — the original
   design document. Sections 6 and 7 are superseded by `HANDOFF.md`; the
   architectural contract and palette sections still stand.
+- **[`Pixel Flow Assignment.pdf`](<Docs/Pixel Flow Assignment.pdf>)** — the
+  original internship brief this project answers.
+
+---
+
+## Delivery
+
+- **Repository:** this page — code, README, and everything in `Docs/`.
+- **Android build (APK) and gameplay video:** _(Google Drive link — added here
+  once the build is exported)_
