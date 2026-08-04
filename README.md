@@ -232,5 +232,4 @@ imported into the Unity project as an asset.
 ## Delivery
 
 - **Repository:** this page — code, README, and everything in `Docs/`.
-- **Android build (APK) and gameplay video:** _(Google Drive link — added here
-  once the build is exported)_
+- **Android build (APK) and gameplay video:** [Google Drive folder](https://drive.google.com/drive/folders/17JeAlhVoAYYIxj2IxnA1MqlUUv_bbva2?usp=sharing)
